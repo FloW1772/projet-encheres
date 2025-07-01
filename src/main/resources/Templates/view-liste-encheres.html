@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Liste des enchères</title>
+</head>
+<body>
+
+    <h1>Liste des enchères</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Montant</th>
+                <th>Utilisateur</th>
+                <th>Article</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="enchere : ${encheres}">
+                <td th:text="${enchere.idEnchere}">ID</td>
+                <td th:text="${enchere.dateEnchere}">Date</td>
+                <td th:text="${enchere.montant}">Montant</td>
+                <td th:text="${enchere.encherisseur.idUtilisateur}">Utilisateur</td>
+                <td th:text="${enchere.article.idArticle}">Article</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
