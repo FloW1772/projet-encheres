@@ -1,0 +1,90 @@
+package fr.eni.encheres.dal;
+
+import fr.eni.encheres.bo.Adresse;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+@Repository
+public class AdresseDAO {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public AdresseDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    // CREATE
+    public void save(Adresse adresse) {
+        String sql = "INSERT INTO Adresse (rue, codePostal, ville, pays,idUtilisateur) VALUES (?, ?, ?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, adresse.getRue());
+            ps.setString(2, adresse.getCodePostal());
+            ps.setString(3, adresse.getVille());
+            ps.setString(4, adresse.getPays());
+            ps.setLong(5, adresse.getIdUtilisateur());
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key != null) {
+            adresse.setIdAdresse(key.longValue());
+        }
+    }
+
+    // READ (by ID)
+    public Adresse findById(long id) {
+        String sql = "SELECT * FROM Adresse WHERE idAdresse = ?";
+
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, adresseRowMapper);
+    }
+
+    // READ (all)
+    public List<Adresse> findAll() {
+        String sql = "SELECT * FROM Adresse";
+
+        return jdbcTemplate.query(sql, adresseRowMapper);
+    }
+
+    // UPDATE
+    public void update(Adresse adresse) {
+        String sql = "UPDATE Adresse SET rue = ?, codePostal = ?, ville = ?, pays = ? WHERE idAdresse = ?";
+
+        jdbcTemplate.update(sql,
+                adresse.getRue(),
+                adresse.getCodePostal(),
+                adresse.getVille(),
+                adresse.getPays(),
+                adresse.getIdAdresse());
+    }
+
+    // DELETE
+    public void delete(long id) {
+        String sql = "DELETE FROM Adresse WHERE idUtilisateur = ?";
+
+        jdbcTemplate.update(sql, id);
+    }
+
+    // RowMapper pour convertir un ResultSet en objet Adresse
+    private final RowMapper<Adresse> adresseRowMapper = (ResultSet rs, int rowNum) -> {
+        return new Adresse(
+                rs.getLong("idAdresse"),
+                rs.getString("rue"),
+                rs.getString("codePostal"),
+                rs.getString("ville"),
+                rs.getString("pays")
+        );
+    };
+}

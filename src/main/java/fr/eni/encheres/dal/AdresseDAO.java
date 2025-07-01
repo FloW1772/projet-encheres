@@ -1,4 +1,4 @@
 package fr.eni.encheres.dal;
 
-public class AdresseDAO {
+public interface AdresseDAO1 {
 }
