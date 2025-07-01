@@ -2,25 +2,27 @@ package fr.eni.encheres.dal;
 
 import java.util.List;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.encheres.bo.Categorie;
 
 @Repository
-public class CategorieDAOImpl implements CategorieDAO{
+public class CategorieDAOImpl implements CategorieDAO {
 
-	private final NamedParameterJdbcTemplate jdbcTemplate;
-	
-	public CategorieDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+    private final String SELECT_ALL = "SELECT idCategorie, libelle FROM CATEGORIE";
+    private final String INSERT = "INSERT INTO CATEGORIE(libelle) VALUES (:libelle)";
 
-	}
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-	@Override
+    public CategorieDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
     public List<Categorie> findAll() {
-        String sql = "SELECT idCategorie, libelle FROM CATEGORIE";
-        return jdbcTemplate.query(sql, 
+        return jdbcTemplate.query(SELECT_ALL,
             (rs, rowNum) -> new Categorie(
                 rs.getInt("idCategorie"),
                 rs.getString("libelle")
@@ -30,8 +32,9 @@ public class CategorieDAOImpl implements CategorieDAO{
 
     @Override
     public void insert(Categorie categorie) {
-       //TODO A implémenter au besoin
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("libelle", categorie.getLibelle());
+
+        jdbcTemplate.update(INSERT, params);
     }
-		
-	
 }
