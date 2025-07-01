@@ -1,4 +1,4 @@
-package fr.eni.projet.enchere.bll;
+package fr.eni.encheres.bll;
 
 import org.springframework.stereotype.Service;
 

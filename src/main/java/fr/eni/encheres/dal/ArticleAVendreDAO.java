@@ -1,8 +1,8 @@
-package fr.eni.projet.enchere.dal;
+package fr.eni.encheres.dal;
 
 import java.util.List;
 
-import fr.eni.projet.enchere.bo.ArticleAVendre;
+import fr.eni.encheres.bo.ArticleAVendre;
 
 public interface ArticleAVendreDAO {
 

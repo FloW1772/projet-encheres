@@ -1,9 +1,9 @@
-package fr.eni.projet.enchere.bll;
+package fr.eni.encheres.bll;
 
 import java.security.Principal;
 import java.util.List;
 
-import fr.eni.projet.enchere.bo.ArticleAVendre;
+import fr.eni.encheres.bo.ArticleAVendre;
 import fr.eni.projet.encheres.bo.Adresse;
 import fr.eni.projet.encheres.bo.Categorie;
 import fr.eni.projet.encheres.bo.Utilisateur;

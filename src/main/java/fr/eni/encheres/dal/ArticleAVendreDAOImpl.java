@@ -1,4 +1,4 @@
-package fr.eni.projet.enchere.dal;
+package fr.eni.encheres.dal;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import fr.eni.projet.enchere.bo.ArticleAVendre;
+import fr.eni.encheres.bo.ArticleAVendre;
 
 
 public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
