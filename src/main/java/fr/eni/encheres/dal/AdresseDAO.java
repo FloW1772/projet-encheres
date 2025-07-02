@@ -22,5 +22,5 @@ public interface AdresseDAO {
 
     Adresse selectById(long idAdresse);
 
-    List<Adresse> selectAllByUtilisateurId(long idUtilisateur);
+    Adresse selectAllByUtilisateurId(long idUtilisateur);
 }
