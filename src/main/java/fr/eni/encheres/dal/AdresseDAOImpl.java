@@ -95,8 +95,10 @@ public class AdresseDAOImpl implements AdresseDAO {
     }
 
     @Override
-    public List<Adresse> selectAllByUtilisateurId(long idUtilisateur) {
-        return List.of();
+    public Adresse selectAllByUtilisateurId(long idUtilisateur) {
+        String sql = "SELECT * FROM Adresse WHERE idUtilisateur = ?";
+        List <Adresse> adresses = jdbcTemplate.query(sql,adresseRowMapper,idUtilisateur);
+        return adresses.isEmpty() ? null : adresses.get(0);
     }
 
     // RowMapper pour convertir un ResultSet en objet Adresse
