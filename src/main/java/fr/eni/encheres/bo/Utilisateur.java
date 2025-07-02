@@ -8,9 +8,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class Utilisateur {
 
-	private long idUtilisateur;
+public class Utilisateur  {
+  
+  private long idUtilisateur;
 
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Le pseudo doit être alphanumérique")
@@ -25,14 +26,14 @@ public class Utilisateur {
     @NotBlank
     @Email(message = "Email invalide")
     private String email;
-    
+
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Numéro de téléphone invalide")
     private String telephone;
 
     @NotBlank
     @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
     private String motDePasse;
-    
+
     private int credit = 100;
     private List<Role> roles = new ArrayList<>();
     private Adresse adresse = new Adresse();
@@ -59,7 +60,8 @@ public class Utilisateur {
         this.encheres = encheres;
     }
 
-   
+    // Getters & Setters
+
     public long getIdUtilisateur() {
         return idUtilisateur;
     }
@@ -156,6 +158,36 @@ public class Utilisateur {
         this.encheres = encheres;
     }
 
-	
     
+    @Override
+    public String toString() {
+        return String.format(
+            "Utilisateur [idUtilisateur=%s, pseudo=%s, nom=%s, prenom=%s, email=%s, telephone=%s, credit=%s, roles=%s, adresse=%s, articles=%s, encheres=%s]",
+            idUtilisateur, pseudo, nom, prenom, email, telephone, credit, roles, adresse, articles, encheres);
+    
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(adresse, articles, credit, email, encheres, idUtilisateur, nom, prenom, pseudo,
+                roles, telephone);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Utilisateur other = (Utilisateur) obj;
+        return Objects.equals(adresse, other.adresse) && Objects.equals(articles, other.articles)
+                && credit == other.credit && Objects.equals(email, other.email)
+                && Objects.equals(encheres, other.encheres) && idUtilisateur == other.idUtilisateur
+                && Objects.equals(nom, other.nom)
+                && Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo)
+                && Objects.equals(roles, other.roles) && Objects.equals(telephone, other.telephone);
+    }
+
 }
