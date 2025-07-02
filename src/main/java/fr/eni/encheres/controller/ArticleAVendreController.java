@@ -45,10 +45,10 @@ public class ArticleAVendreController {
 	}
 	return "index";
 }
-	@PostMapping("/")
+/*	@PostMapping("/")
 	public String afficherArticleAVendre(String nomRecherche, int categorieRecherche, int casUtilisationFiltres, Model model, Principal principal) {
 		
-	}
+	}*/
 	
 }
 
