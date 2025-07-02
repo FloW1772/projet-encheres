@@ -10,19 +10,20 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
+
 @Repository
-public class AdresseDAO {
+public class AdresseDAOImpl implements AdresseDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public AdresseDAO(JdbcTemplate jdbcTemplate) {
+    public AdresseDAOImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     // CREATE
+    @Override
     public void save(Adresse adresse) {
         String sql = "INSERT INTO Adresse (rue, codePostal, ville, pays,idUtilisateur) VALUES (?, ?, ?, ?, ?)";
 
@@ -45,20 +46,28 @@ public class AdresseDAO {
     }
 
     // READ (by ID)
+    @Override
     public Adresse findById(long id) {
         String sql = "SELECT * FROM Adresse WHERE idAdresse = ?";
 
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, adresseRowMapper);
     }
 
-    // READ (all)
+    @Override
     public List<Adresse> findAll() {
-        String sql = "SELECT * FROM Adresse";
-
-        return jdbcTemplate.query(sql, adresseRowMapper);
+        return List.of();
     }
 
+    // READ (all)
+   // @Override
+   // public List<Adresse> findAll() {
+   //     String sql = "SELECT * FROM Adresse";
+
+   //     return jdbcTemplate.query(sql, adresseRowMapper);
+    //}
+
     // UPDATE
+    @Override
     public void update(Adresse adresse) {
         String sql = "UPDATE Adresse SET rue = ?, codePostal = ?, ville = ?, pays = ? WHERE idAdresse = ?";
 
@@ -71,10 +80,23 @@ public class AdresseDAO {
     }
 
     // DELETE
+    @Override
     public void delete(long id) {
         String sql = "DELETE FROM Adresse WHERE idUtilisateur = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Adresse selectById(long idAdresse) {
+        String sql = "SELECT idAdresse, rue, codePostal, ville, pays, idUtilisateur FROM Adresse WHERE idAdresse = ?";
+
+        return null;
+    }
+
+    @Override
+    public List<Adresse> selectAllByUtilisateurId(long idUtilisateur) {
+        return List.of();
     }
 
     // RowMapper pour convertir un ResultSet en objet Adresse
@@ -84,7 +106,8 @@ public class AdresseDAO {
                 rs.getString("rue"),
                 rs.getString("codePostal"),
                 rs.getString("ville"),
-                rs.getString("pays")
+                rs.getString("pays"),
+                rs.getLong("idUtilisateur")
         );
     };
 }
