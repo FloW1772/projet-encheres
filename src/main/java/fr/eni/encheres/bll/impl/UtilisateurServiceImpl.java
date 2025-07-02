@@ -56,9 +56,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 			// utilisateur.setMotDePasse(encodedPwd);
 			utilisateurDAO.insert(utilisateur);
 			adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
-			long idAdresse = adresseDAO.insert(adresse);
-			adresse.setIdAdresse(idAdresse);
-
+			adresseDAO.save(adresse);
+			utilisateur.setAdresse(adresse);
 			utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
 
 			utilisateur.getRoles().add(role);
@@ -91,8 +90,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 			if (adresse != null) {
 				adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
 				if (adresse.getIdAdresse() == 0) {
-					long idAdresse = adresseDAO.insert(adresse);
-					adresse.setIdAdresse(idAdresse);
+					adresseDAO.save(adresse);
 				} else {
 					adresseDAO.update(adresse);
 				}
@@ -107,7 +105,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	public void supprimerCompte(long idUtilisateur) throws BusinessException {
 		try {
 			utilisateurRoleDAO.deleteByUserId(idUtilisateur);
-			adresseDAO.deleteByUtilisateurId(idUtilisateur);
+			adresseDAO.delete(idUtilisateur);
 			utilisateurDAO.delete(idUtilisateur);
 		} catch (DataAccessException e) {
 			throw new BusinessException("Erreur lors de la suppression du compte utilisateur");
@@ -116,7 +114,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
 	private void chargerAdresse(Utilisateur utilisateur) {
 		if (utilisateur != null) {
-			Adresse adresse = adresseDAO.selectByUtilisateurId(utilisateur.getIdUtilisateur());
+			Adresse adresse = adresseDAO.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
 			utilisateur.setAdresse(adresse);
 		}
 	}
@@ -151,5 +149,33 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	public List<Utilisateur> selectAll() {
 		return utilisateurDAO.selectAll(); // déjà avec adresse chargée car prevu dans UtilisateurDAOImpl Result
 	}
+
+	@Override
+	@Transactional
+	 public void debiterPoints(long idUtilisateur, int montant) throws BusinessException {
+        try {
+            utilisateurDAO.debiterPoints(idUtilisateur, montant);
+        } catch (RuntimeException e) {
+            BusinessException be = new BusinessException("Impossible de débiter les points");
+            be.add(e.getMessage());
+            throw be;
+        }
+    }
+	
+	@Override
+	@Transactional
+	public void crediterPoints(long idUtilisateur, int montant) throws BusinessException {
+        try {
+            utilisateurDAO.crediterPoints(idUtilisateur, montant);
+        } catch (RuntimeException e) {
+            BusinessException be = new BusinessException("Impossible de créditer les points");
+            be.add(e.getMessage());
+            throw be;
+        }
+    }
+	
+	
+	
+	
 
 }

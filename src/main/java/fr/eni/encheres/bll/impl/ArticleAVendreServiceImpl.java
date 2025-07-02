@@ -1,10 +1,11 @@
-package fr.eni.encheres.bll;
+package fr.eni.encheres.bll.impl;
 
 import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import fr.eni.encheres.bll.ArticleAVendreService;
 import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
 import fr.eni.encheres.bo.Categorie;

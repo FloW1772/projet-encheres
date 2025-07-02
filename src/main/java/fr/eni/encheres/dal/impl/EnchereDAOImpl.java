@@ -1,4 +1,4 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dal.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import fr.eni.encheres.bo.ArticleAVendre;
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
+import fr.eni.encheres.dal.EnchereDAO;
 
 @Repository
 public class EnchereDAOImpl implements EnchereDAO {

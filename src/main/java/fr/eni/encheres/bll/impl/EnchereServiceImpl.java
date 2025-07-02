@@ -1,9 +1,10 @@
-package fr.eni.encheres.bll;
+package fr.eni.encheres.bll.impl;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import fr.eni.encheres.bll.EnchereService;
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.dal.EnchereDAO;
 

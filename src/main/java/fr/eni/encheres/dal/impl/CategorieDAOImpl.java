@@ -1,4 +1,4 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dal.impl;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.encheres.bo.Categorie;
+import fr.eni.encheres.dal.CategorieDAO;
 
 @Repository
 public class CategorieDAOImpl implements CategorieDAO {

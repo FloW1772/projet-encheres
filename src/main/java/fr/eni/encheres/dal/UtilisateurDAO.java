@@ -14,6 +14,8 @@ public interface UtilisateurDAO {
 	void delete(long idUtilisateur);
 	boolean hasEmail(String email);
 	Utilisateur selectByLogin(String login);
+	void debiterPoints(long idUtilisateur, int montant);
+	void crediterPoints(long idUtilisateur, int montant);
 
 
 }
