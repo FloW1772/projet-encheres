@@ -1,4 +1,4 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dal.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
+import fr.eni.encheres.dal.ArticleAVendreDAO;
 
 @Repository
 public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {

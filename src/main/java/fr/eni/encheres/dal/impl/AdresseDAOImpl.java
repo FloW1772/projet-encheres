@@ -1,6 +1,8 @@
-package fr.eni.encheres.dal;
+package fr.eni.encheres.dal.impl;
 
 import fr.eni.encheres.bo.Adresse;
+import fr.eni.encheres.dal.AdresseDAO;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
