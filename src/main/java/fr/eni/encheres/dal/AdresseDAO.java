@@ -1,4 +1,26 @@
 package fr.eni.encheres.dal;
 
-public class AdresseDAO {
+import fr.eni.encheres.bo.Adresse;
+
+import java.util.List;
+
+public interface AdresseDAO {
+    // CREATE
+    void save(Adresse adresse);
+
+    // READ (by ID)
+    Adresse findById(long id);
+
+    // READ (all)
+    List<Adresse> findAll();
+
+    // UPDATE
+    void update(Adresse adresse);
+
+    // DELETE
+    void delete(long id);
+
+    Adresse selectById(long idAdresse);
+
+    List<Adresse> selectAllByUtilisateurId(long idUtilisateur);
 }

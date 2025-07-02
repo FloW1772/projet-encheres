@@ -3,10 +3,10 @@ package fr.eni.encheres.bll;
 import java.security.Principal;
 import java.util.List;
 
+import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
-import fr.eni.projet.encheres.bo.Adresse;
-import fr.eni.projet.encheres.bo.Categorie;
-import fr.eni.projet.encheres.bo.Utilisateur;
+import fr.eni.encheres.bo.Categorie;
+import fr.eni.encheres.bo.Utilisateur;
 
 public interface ArticleAVendreService {
 

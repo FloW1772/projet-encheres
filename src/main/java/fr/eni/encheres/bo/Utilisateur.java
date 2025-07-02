@@ -2,16 +2,16 @@ package fr.eni.encheres.bo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class Utilisateur  {
 
-    private long idUtilisateur;
+public class Utilisateur  {
+  
+  private long idUtilisateur;
 
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Le pseudo doit être alphanumérique")

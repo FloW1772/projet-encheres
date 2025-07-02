@@ -1,11 +1,13 @@
 package fr.eni.encheres.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import fr.eni.enchere.bll.UtilisateurService;
 import fr.eni.encheres.bll.ArticleAVendreService;
-import fr.eni.projet.enchere.bll.UtilisateurService;
 
 @Controller
+@RequestMapping("/")
 public class ArticleAVendreController {
 
 	ArticleAVendreService articleAVendreService;
@@ -19,10 +21,7 @@ public class ArticleAVendreController {
 	}
 
 	
-	
-	
-	
-	
+
 	
 	
 }
