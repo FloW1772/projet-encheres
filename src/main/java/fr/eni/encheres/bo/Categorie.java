@@ -4,7 +4,11 @@ import java.util.Objects;
 
 public class Categorie {
 
+	
+	
+	
 	private int idCategorie;
+	
 	private String libelle;
 	
 
