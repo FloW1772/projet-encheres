@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
 
 @Repository
@@ -93,7 +92,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
         namedParameters.addValue("miseAPrix", articleAVendre.getMiseAPrix());
         namedParameters.addValue("idUtilisateur", articleAVendre.getVendeur().getIdUtilisateur());
         namedParameters.addValue("idCategorie", articleAVendre.getCategorie().getIdCategorie());
-        namedParameters.addValue("idAdresseRetrait", articleAVendre.getAdresseRetrait().getIdAdresse);
+        namedParameters.addValue("idAdresseRetrait", articleAVendre.getAdresseRetrait().getIdAdresse());
         
         // Crée un keyHolder pour récupérer l'ID généré
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -114,7 +113,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
         namedParameters.addValue("dateFinEncheres", articleAVendre.getDateFinEncheres());
         namedParameters.addValue("miseAPrix", articleAVendre.getMiseAPrix());
         namedParameters.addValue("idCategorie", articleAVendre.getCategorie().getIdCategorie());
-        namedParameters.addValue("idAdresseRetrait", articleAVendre.getAdresseRetrait().getIdAdresse);
+        namedParameters.addValue("idAdresseRetrait", articleAVendre.getAdresseRetrait().getIdAdresse());
         namedParameters.addValue("idArticle", articleAVendre.getIdArticle()); // Ajout de l'ID pour la mise à jour
         
         int rows = namedParameterJdbcTemplate.update(UPDATE_ARTICLE, namedParameters);
