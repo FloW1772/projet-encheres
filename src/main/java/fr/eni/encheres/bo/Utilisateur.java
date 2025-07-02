@@ -2,6 +2,7 @@ package fr.eni.encheres.bo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

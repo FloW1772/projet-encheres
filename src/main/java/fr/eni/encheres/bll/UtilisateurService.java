@@ -16,5 +16,6 @@ public interface UtilisateurService {
 	Utilisateur selectByLogin(String login) ;
 	Utilisateur getUtilisateurByEmail(String email) throws BusinessException;
 	List<Utilisateur> selectAll() ;
-
+	void crediterPoints(long idUtilisateur, int montant) throws BusinessException;
+	void debiterPoints(long idUtilisateur, int montant) throws BusinessException;
 }

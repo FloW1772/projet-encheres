@@ -37,7 +37,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			+ "telephone = :telephone, motDePasse = :motDePasse, credit = :credit " + "WHERE email = :email";
 	private static final String DELETE = "DELETE FROM UTILISATEUR WHERE idUtilisateur = :idUtilisateur";
 	private static final String COUNT_BY_EMAIL = "SELECT COUNT(*) FROM UTILISATEUR WHERE email = :email";
-
+	private static final String  SET_DEBITER = "UPDATE Utilisateur SET creditPoints = creditPoints - :montant WHERE idUtilisateur = :idUtilisateur AND creditPoints >= :montant";
+	private static final String  SET_CREDITER = "UPDATE Utilisateur SET creditPoints = creditPoints + :montant WHERE idUtilisateur = :idUtilisateur";
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -170,6 +171,28 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 			return utilisateur;
 		}
+	}
+
+
+	@Override
+	public void debiterPoints(long idUtilisateur, int montant) {
+		 MapSqlParameterSource params = new MapSqlParameterSource();
+		    params.addValue("montant", montant);
+		    params.addValue("idUtilisateur", idUtilisateur);
+		    int rowsAffected = namedParameterJdbcTemplate.update(SET_DEBITER, params);
+		    if(rowsAffected == 0) {
+		        throw new RuntimeException("Crédit insuffisant ou utilisateur non trouvé");
+		    }
+		
+	}
+
+	@Override
+	public void crediterPoints(long idUtilisateur, int montant) {
+		    MapSqlParameterSource params = new MapSqlParameterSource();
+		    params.addValue("montant", montant);
+		    params.addValue("idUtilisateur", idUtilisateur);
+		    namedParameterJdbcTemplate.update(SET_CREDITER, params);
+		
 	}
 
 
