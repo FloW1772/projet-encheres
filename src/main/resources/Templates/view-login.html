@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="/login" method="post">
+  <input name="username" placeholder="Login" required />
+  <input name="password" type="password" placeholder="Mot de passe" required />
+  
+  <div>
+    <input type="checkbox" id="remember-me" name="remember-me" />
+    <label for="remember-me">Se souvenir de moi</label>
+  </div>
+  
+  <button type="submit">Connexion</button>
+  
+  <div style="margin-top:10px;">
+    <a href="/mot-de-passe-oublie">Mot de passe oublié ?</a>
+  </div>
+  
+  <div style="margin-top:20px;">
+    <a href="/inscription">
+      <button type="button">Créer un compte</button>
+    </a>
+  </div>
+  
+  <div>
+    <p th:if="${param.error}" style="color:red;">
+      Login ou mot de passe incorrect
+    </p>
+  </div>
+</form>
+
+</body>
+</html>

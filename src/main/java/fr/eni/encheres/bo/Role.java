@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class Role {
 	
-	 private long idRole;
+	 private int idRole;
 	 private String libelle;
 	 
 	public Role() {
 	}
 
-	public Role(long idRole, String libelle) {
+	public Role(int idRole, String libelle) {
 		super();
 		this.idRole = idRole;
 		this.libelle = libelle;
 	}
 
 
-	public long getIdRole() {
+	public int getIdRole() {
 		return idRole;
 	}
 
@@ -59,6 +59,6 @@ public class Role {
 		Role other = (Role) obj;
 		return idRole == other.idRole && Objects.equals(libelle, other.libelle);
 	}
-	 
+
 
 }
