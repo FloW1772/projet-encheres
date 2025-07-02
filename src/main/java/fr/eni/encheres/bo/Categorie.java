@@ -7,6 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 
 public class Categorie {
 
+	
+	
+	
 	private int idCategorie;
 	
 	@NotBlank(message="Le libellé est obligatoire")
