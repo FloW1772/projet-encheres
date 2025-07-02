@@ -3,12 +3,23 @@ package fr.eni.encheres.bo;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 public class Enchere {
 
 	private long idEnchere;
+	
+	@NotNull(message = "La date de l'enchère est obligatoire")
 	private LocalDateTime dateEnchere;
+	
+	@Min(value = 1, message = "Le montant doit être supérieur à 0")
 	private int montant;
+	
+	@NotNull(message = "L'utilisateur est obligatoire")
 	private Utilisateur encherisseur;
+	
+	@NotNull(message = "L'article est obligatoire")
 	private ArticleAVendre article;
 	
 	public Enchere() {
