@@ -114,4 +114,25 @@ public class AdresseDAOImpl implements AdresseDAO {
                 rs.getLong("idUtilisateur")
         );
     };
+
+	@Override
+	public void saveSansUtilisateur(Adresse adresse) {
+	    String sql = "INSERT INTO Adresse (rue, codePostal, ville, pays) VALUES (?, ?, ?, ?)";
+
+	    KeyHolder keyHolder = new GeneratedKeyHolder();
+
+	    jdbcTemplate.update(connection -> {
+	        PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	        ps.setString(1, adresse.getRue());
+	        ps.setString(2, adresse.getCodePostal());
+	        ps.setString(3, adresse.getVille());
+	        ps.setString(4, adresse.getPays());
+	        return ps;
+	    }, keyHolder);
+
+	    Number key = keyHolder.getKey();
+	    if (key != null) {
+	        adresse.setIdAdresse(key.longValue());
+	    }
+	}
 }

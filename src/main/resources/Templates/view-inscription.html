@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<main>
+		<h1>Mon profil</h1>
+
+		<div th:if="${errors != null}">
+			<ul style="color: red;">
+				<li th:each="err : ${errors}" th:text="${err}"></li>
+			</ul>
+		</div>
+
+		<form th:action="@{/utilisateur/creer}" method="post"
+			th:object="${utilisateur}">
+			<ul class="flex-outer">
+
+				<li><label for="inputPseudo">Pseudo</label> <input type="text"
+					id="inputPseudo" th:field="*{pseudo}" required />
+					<p class="error-message" th:if="${#fields.hasErrors('pseudo')}"
+						th:errors="*{pseudo}"></p></li>
+
+				<li><label for="inputNom">Nom</label> <input type="text"
+					id="inputNom" th:field="*{nom}" required />
+					<p class="error-message" th:if="${#fields.hasErrors('nom')}"
+						th:errors="*{nom}"></p></li>
+
+				<li><label for="inputPrenom">Prénom</label> <input type="text"
+					id="inputPrenom" th:field="*{prenom}" required />
+					<p class="error-message" th:if="${#fields.hasErrors('prenom')}"
+						th:errors="*{prenom}"></p></li>
+
+				<li><label for="inputTelephone">Téléphone</label> <input
+					type="text" id="inputTelephone" th:field="*{telephone}" required />
+					<p class="error-message" th:if="${#fields.hasErrors('telephone')}"
+						th:errors="*{telephone}"></p></li>
+
+				<li><label for="inputEmail">Email</label> <input type="email"
+					id="inputEmail" th:field="*{email}" required />
+					<p class="error-message" th:if="${#fields.hasErrors('email')}"
+						th:errors="*{email}"></p></li>
+
+				<li><label for="inputMotDePasse">Mot de passe</label> <input
+					type="password" id="inputMotDePasse" th:field="*{motDePasse}"
+					required />
+					<p class="error-message" th:if="${#fields.hasErrors('motDePasse')}"
+						th:errors="*{motDePasse}"></p></li>
+
+				<li><label for="inputConfirmationMdp">Confirmer mot de
+						passe</label> <input type="password" id="inputConfirmationMdp"
+					name="confirmationMotDePasse" required />
+					<p class="error-message" th:if="${confirmationMotDePasseErreur}"
+						th:text="${confirmationMotDePasseErreur}"></p></li>
+
+				<li><label for="inputRue">Rue</label> <input type="text"
+					id="inputRue" th:field="*{adresse.rue}" required />
+					<p class="error-message"
+						th:if="${#fields.hasErrors('adresse.rue')}"
+						th:errors="*{adresse.rue}"></p></li>
+
+				<li><label for="inputCodePostal">Code Postal</label> <input
+					type="text" id="inputCodePostal" th:field="*{adresse.codePostal}"
+					required />
+					<p class="error-message"
+						th:if="${#fields.hasErrors('adresse.codePostal')}"
+						th:errors="*{adresse.codePostal}"></p></li>
+
+				<li><label for="inputVille">Ville</label> <input type="text"
+					id="inputVille" th:field="*{adresse.ville}" required />
+					<p class="error-message"
+						th:if="${#fields.hasErrors('adresse.ville')}"
+						th:errors="*{adresse.ville}"></p></li>
+
+				<li><label for="inputPays">Pays</label> <input type="text"
+					id="inputPays" th:field="*{adresse.pays}" required />
+					<p class="error-message"
+						th:if="${#fields.hasErrors('adresse.pays')}"
+						th:errors="*{adresse.pays}"></p></li>
+
+				<li><label>Rôle :</label> <select th:field="*{role.idRole}"
+					required>
+						<option th:each="role : ${roles}" th:value="${role.idRole}"
+							th:text="${role.libelle}"></option>
+				</select>
+					<p class="error-message"
+						th:if="${#fields.hasErrors('role.idRole')}"
+						th:errors="*{role.idRole}"></p>
+					<button type="submit">Créer</button></li>
+
+				<li>
+					<button type="reset">Annuler</button>
+				</li>
+   <!-- <a th:href="@{/utilisateur/profil(pseudo=mariana22)}">Voir le profil</a> -->   
+   
+			</ul>
+		</form>
+
+	</main>
+</body>
+</html>

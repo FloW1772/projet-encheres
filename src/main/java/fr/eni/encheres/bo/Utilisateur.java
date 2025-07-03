@@ -36,7 +36,7 @@ public class Utilisateur  {
     private String motDePasse;
 
     private int credit = 100;
-    private List<Role> roles = new ArrayList<>();
+    private Role role ;
     private Adresse adresse = new Adresse();
     private List<ArticleAVendre> articles = new ArrayList<>();
     private List<Enchere> encheres = new ArrayList<>();
@@ -45,7 +45,7 @@ public class Utilisateur  {
     }
 
     public Utilisateur(long idUtilisateur, String pseudo, String nom, String prenom, String email, String telephone,
-                       String motDePasse, int credit, List<Role> roles, Adresse adresse,
+                       String motDePasse, int credit, Role role, Adresse adresse,
                        List<ArticleAVendre> articles, List<Enchere> encheres) {
         this.idUtilisateur = idUtilisateur;
         this.pseudo = pseudo;
@@ -55,7 +55,7 @@ public class Utilisateur  {
         this.telephone = telephone;
         this.motDePasse = motDePasse;
         this.credit = credit;
-        this.roles = roles;
+        this.role = role;
         this.adresse = adresse;
         this.articles = articles;
         this.encheres = encheres;
@@ -127,15 +127,16 @@ public class Utilisateur  {
         this.credit = credit;
     }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
+    public Role getRole() {
+		return role;
+	}
 
-    public Adresse getAdresse() {
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public Adresse getAdresse() {
         return adresse;
     }
 
@@ -159,36 +160,38 @@ public class Utilisateur  {
         this.encheres = encheres;
     }
 
-    
-    @Override
-    public String toString() {
-        return String.format(
-            "Utilisateur [idUtilisateur=%s, pseudo=%s, nom=%s, prenom=%s, email=%s, telephone=%s, credit=%s, roles=%s, adresse=%s, articles=%s, encheres=%s]",
-            idUtilisateur, pseudo, nom, prenom, email, telephone, credit, roles, adresse, articles, encheres);
-    
-    }
+	@Override
+	public String toString() {
+		return String.format(
+				"Utilisateur [idUtilisateur=%s, pseudo=%s, nom=%s, prenom=%s, email=%s, telephone=%s, motDePasse=%s, credit=%s, role=%s, adresse=%s, articles=%s, encheres=%s]",
+				idUtilisateur, pseudo, nom, prenom, email, telephone, motDePasse, credit, role, adresse, articles,
+				encheres);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(adresse, articles, credit, email, encheres, idUtilisateur, nom, prenom, pseudo,
-                roles, telephone);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(adresse, articles, credit, email, encheres, idUtilisateur, motDePasse, nom, prenom, pseudo,
+				role, telephone);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Utilisateur other = (Utilisateur) obj;
-        return Objects.equals(adresse, other.adresse) && Objects.equals(articles, other.articles)
-                && credit == other.credit && Objects.equals(email, other.email)
-                && Objects.equals(encheres, other.encheres) && idUtilisateur == other.idUtilisateur
-                && Objects.equals(nom, other.nom)
-                && Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo)
-                && Objects.equals(roles, other.roles) && Objects.equals(telephone, other.telephone);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Utilisateur other = (Utilisateur) obj;
+		return Objects.equals(adresse, other.adresse) && Objects.equals(articles, other.articles)
+				&& credit == other.credit && Objects.equals(email, other.email)
+				&& Objects.equals(encheres, other.encheres) && idUtilisateur == other.idUtilisateur
+				&& Objects.equals(motDePasse, other.motDePasse) && Objects.equals(nom, other.nom)
+				&& Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo)
+				&& Objects.equals(role, other.role) && Objects.equals(telephone, other.telephone);
+	}
+
+    
+   
 
 }

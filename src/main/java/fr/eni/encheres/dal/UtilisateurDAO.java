@@ -16,6 +16,7 @@ public interface UtilisateurDAO {
 	Utilisateur selectByLogin(String login);
 	void debiterPoints(long idUtilisateur, int montant);
 	void crediterPoints(long idUtilisateur, int montant);
+	void updateIdAdresse(Long idUtilisateur, Long idAdresse);
 
 
 }

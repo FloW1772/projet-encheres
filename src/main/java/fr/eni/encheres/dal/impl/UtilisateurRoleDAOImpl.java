@@ -1,5 +1,6 @@
 package fr.eni.encheres.dal.impl;
 
+import fr.eni.encheres.bo.Role;
 import fr.eni.encheres.dal.UtilisateurRoleDAO;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,11 +51,11 @@ public class UtilisateurRoleDAOImpl implements UtilisateurRoleDAO {
     }
 
     @Override
-    public List<Integer> findRoleIdsByUserId(long idUtilisateur) {
+    public List<Role> findRoleIdsByUserId(long idUtilisateur) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("idUtilisateur", idUtilisateur);
 
-        return jdbcTemplate.queryForList(SELECT_ROLE_IDS_BY_USER_ID, params, Integer.class);
+        return jdbcTemplate.queryForList(SELECT_ROLE_IDS_BY_USER_ID, params, Role.class);
     }
 
     @Override
