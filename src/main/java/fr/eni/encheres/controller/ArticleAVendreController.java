@@ -3,6 +3,7 @@ package fr.eni.encheres.controller;
 import java.security.Principal;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import fr.eni.encheres.bll.ArticleAVendreService;
+import fr.eni.encheres.bll.CategorieService;
 import fr.eni.encheres.bll.UtilisateurService;
 import fr.eni.encheres.bo.ArticleAVendre;
+import fr.eni.encheres.bo.Categorie;
 
 @Controller
 //@RequestMapping("/vente")
@@ -20,11 +23,12 @@ public class ArticleAVendreController {
 	ArticleAVendreService articleAVendreService;
 
 	UtilisateurService utilisateurService;
-
+	CategorieService categorieService;
 	public ArticleAVendreController(ArticleAVendreService articleAVendreService,
-			UtilisateurService utilisateurService) {
+			UtilisateurService utilisateurService, CategorieService categorieService) {
 		this.articleAVendreService = articleAVendreService;
 		this.utilisateurService = utilisateurService;
+		this.categorieService = categorieService;
 	}
 
 	/**
@@ -34,15 +38,19 @@ public class ArticleAVendreController {
 	 * @param principal Les informations de l'utilisateur connecté.
 	 * @return La vue index.
 	 */
-	@GetMapping("/vente/creaction")
+
+	@GetMapping("/vente/creation")
 	public String afficherArticleAVendre(Model model, Principal principal) {
 	
 	ArticleAVendre articleAVendre = new ArticleAVendre();
+	articleAVendre.getCategorie();
 	model.addAttribute("articleAVendre", articleAVendre);
+	model.addAttribute("categories",categorieService.getAllCategories() );
+	
 	// Ajout au model ma variable "nomRecherche" qui contiendra la chaine de
 			// caractère a retrouver dans le nom des articles
 	
-	int categorieRecherche = 0;
+	/*int categorieRecherche = 0;
 	model.addAttribute("categorieRecherche", categorieRecherche);
 	// Ajout de la condition "est connecté"
 	if(principal != null) {
@@ -51,7 +59,7 @@ public class ArticleAVendreController {
 					// Parametre pour les input Select
 		int casUtilisationFiltres = 0;
 		model.addAttribute("casUtilisationFiltres", casUtilisationFiltres);
-	}
+	}*/
 	return "view-vente-article";
 }
 	/**

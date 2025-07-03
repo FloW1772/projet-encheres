@@ -33,9 +33,10 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
     }
 
     @Override
-    public void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur) throws BusinessException {
+    public void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur,int idCategorie) throws BusinessException {
         BusinessException be = new BusinessException();
         articleAVendre.setVendeur(utilisateur);
+        articleAVendre.setCategorie(categorieDAO.finById( idCategorie));
         if (validerArticleAVendre(articleAVendre, be)) {
             try {
                 articleAVendreDAO.addArticle(articleAVendre);

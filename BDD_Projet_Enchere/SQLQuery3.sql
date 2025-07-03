@@ -9,3 +9,8 @@ FOREIGN KEY (idAdresse) REFERENCES Adresse(idAdresse);
  
 ALTER TABLE Utilisateur DROP CONSTRAINT fk_utilisateur_adresse 
  
+ INSERT INTO Categorie (libelle) VALUES 
+('Informatique'),
+('Ameublement'),
+('Vetement'),
+('Sport&Loisirs');
