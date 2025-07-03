@@ -15,9 +15,9 @@ public class ArticleAVendre implements Serializable{
 	
 	private long idArticle;
 	@NotNull
-	private Categorie categorie;
+	private Categorie categorie = new Categorie();
 	@NotBlank
-	@Size(min = 20, max = 30)
+	@Size(min = 10, max = 30)
 	private String nomArticle;
 	@NotBlank
 	@Size(min = 20, max = 300)
@@ -31,7 +31,7 @@ public class ArticleAVendre implements Serializable{
 	@Min(value = 1)
 	private int miseAPrix;
 	private int prixVente;
-	private int etatVente;
+	private EtatVente etatVente;
 	
 	private Utilisateur vendeur;
 	@NotNull
@@ -44,10 +44,10 @@ public class ArticleAVendre implements Serializable{
 	}
 
 	public ArticleAVendre(long idArticle, @NotNull Categorie categorie,
-			@NotBlank @Size(min = 20, max = 30) String nomArticle,
+			@NotBlank @Size(min = 10, max = 30) String nomArticle,
 			@NotBlank @Size(min = 20, max = 300) String description, @NotNull @NotNull LocalDateTime dateDebutEncheres,
 			@NotNull @NotNull LocalDateTime dateFinEncheres, int status, @NotNull @Min(1) int miseAPrix, int prixVente,
-			int etatVente, Utilisateur vendeur, @NotNull Adresse adresseRetrait, String photo) {
+			EtatVente etatVente, Utilisateur vendeur, @NotNull Adresse adresseRetrait, String photo) {
 		super();
 		this.idArticle = idArticle;
 		this.categorie = categorie;
@@ -64,6 +64,7 @@ public class ArticleAVendre implements Serializable{
 		this.photo = photo;
 	}
 
+	
 	public Categorie getCategorie() {
 		return categorie;
 	}
@@ -132,11 +133,11 @@ public class ArticleAVendre implements Serializable{
 		this.prixVente = prixVente;
 	}
 
-	public int getEtatVente() {
+	public EtatVente getEtatVente() {
 		return etatVente;
 	}
 
-	public void setEtatVente(int etatVente) {
+	public void setEtatVente(EtatVente etatVente) {
 		this.etatVente = etatVente;
 	}
 
