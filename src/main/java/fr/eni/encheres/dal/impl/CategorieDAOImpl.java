@@ -38,13 +38,8 @@ private final String SELECT_BY_ID = "SELECT idCategorie, libelle where idCategor
 
         jdbcTemplate.update(INSERT, params);
     }
-
     
-    
-}
-
-
-	@Override
+    @Override
 	public Categorie findById(int idCategorie) {
 		 MapSqlParameterSource params = new MapSqlParameterSource();
 	
@@ -55,8 +50,15 @@ private final String SELECT_BY_ID = "SELECT idCategorie, libelle where idCategor
 	            )
 	        );
 }
-	
+
+
+    
 }
+
+
+	
+	
+
 	
 	
 	
