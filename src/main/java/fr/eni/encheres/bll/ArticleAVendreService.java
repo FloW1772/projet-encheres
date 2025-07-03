@@ -13,19 +13,12 @@ public interface ArticleAVendreService {
 
 	List<ArticleAVendre> getArticlesAVendreEnCours();
 
-	ArticleAVendre getById(int idArticle);
+	ArticleAVendre getById(long idArticle);
 
 	void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur,int idCategorie)throws BusinessException;
 	
 	void modifierArticleEnVente(ArticleAVendre articleAVendre, String pseudo)throws BusinessException;
 	
-	Categorie getCategorieById (long id);
-	
-	List<Categorie> getAllCategories();
-	
-	Adresse getAdresseById (long id);
-
-	List<Adresse> getAllAdressesRetrait();
 
 	void annulerVente(ArticleAVendre article)throws BusinessException;
 
@@ -35,7 +28,7 @@ public interface ArticleAVendreService {
 	void activerVente();
 
 	void cloturerVente();
-
+	List<ArticleAVendre> rechercherArticlesEnCours(String nomRecherche, int categorieRecherche);
 	
 	
 	

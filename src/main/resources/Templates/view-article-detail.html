@@ -8,19 +8,19 @@
 
     <h1>Détail vente</h1>
 
-    <!--  Nom de l’article -->
+
     <h2 th:text="${article.nomArticle}">Nom de l'article</h2>
 
-    <!--  Description -->
+
     <p><strong>Description :</strong></p>
     <p th:text="${article.description}">Description de l'article</p>
 
-    <!--  Catégorie -->
+    
     <p><strong>Catégorie :</strong>
         <span th:text="${article.categorie.libelle}">Informatique</span>
     </p>
 
-    <!--  Meilleure offre -->
+ 
     <p><strong>Meilleure offre :</strong>
         <span th:if="${meilleureEnchere != null}"
               th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}">
@@ -29,38 +29,40 @@
         <span th:if="${meilleureEnchere == null}">Aucune offre pour l’instant</span>
     </p>
 
-    <!--  Mise à prix -->
+  
     <p><strong>Mise à prix :</strong>
         <span th:text="${article.miseAPrix}">185</span> points
     </p>
 
-    <!--  Fin de l'enchère -->
+   
     <p><strong>Fin de l'enchère :</strong>
         <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}">09/10/2018</span>
     </p>
 
-    <!--  Lieu de retrait -->
-    <p><strong>Retrait :</strong><br>
+ <p><strong>Retrait :</strong><br>
+    <span th:if="${article.adresseRetrait != null}">
         <span th:text="${article.adresseRetrait.rue}">10 allée des Alouettes</span><br>
         <span th:text="${article.adresseRetrait.codePostal}">44800</span>
-        <span th:text="${article.retrait.ville}">Saint Herblain</span>
-    </p>
-
-    <!-- 🧑‍💼 Vendeur -->
+        <span th:text="${article.adresseRetrait.ville}">Saint Herblain</span>
+    </span>
+    <span th:unless="${article.adresseRetrait != null}">Adresse de retrait non renseignée</span>
+</p>
+   
     <p><strong>Vendeur :</strong>
-        <span th:text="${article.vendeur.pseudo}">jojo44</span>
+        <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}" 
+           th:text="${article.vendeur.pseudo}">jojo44</a>
     </p>
 
     <hr>
 
-    <!--  Affichage des erreurs d’enchère -->
+
     <div th:if="${messagesErreur != null}">
         <ul>
             <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
         </ul>
     </div>
 
-    <!--  Formulaire d’enchère -->
+   
     <form th:action="@{/encherir}" method="post">
         <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
         <input type="hidden" name="idUtilisateur" th:value="${#authentication.principal.idUtilisateur}" />

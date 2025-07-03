@@ -76,7 +76,42 @@
                 </div>
             </div>
         </div>
+		<div id="adresseRetraitBloc">
+    <h2>Adresse de Retrait</h2>
 
+    <div id="tag">
+        <label for="inputRue">Rue</label>
+        <input type="text" id="inputRue" th:field="*{adresseRetrait.rue}" required />
+        <ul th:if="${#fields.hasErrors('adresseRetrait.rue')}" class="listErrors">
+            <li th:each="err : ${#fields.errors('adresseRetrait.rue')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <div id="tag">
+        <label for="inputCodePostal">Code Postal</label>
+        <input type="text" id="inputCodePostal" th:field="*{adresseRetrait.codePostal}" required />
+        <ul th:if="${#fields.hasErrors('adresseRetrait.codePostal')}" class="listErrors">
+            <li th:each="err : ${#fields.errors('adresseRetrait.codePostal')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <div id="tag">
+        <label for="inputVille">Ville</label>
+        <input type="text" id="inputVille" th:field="*{adresseRetrait.ville}" required />
+        <ul th:if="${#fields.hasErrors('adresseRetrait.ville')}" class="listErrors">
+            <li th:each="err : ${#fields.errors('adresseRetrait.ville')}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <div id="tag">
+        <label for="inputPays">Pays</label>
+        <input type="text" id="inputPays" th:field="*{adresseRetrait.pays}" required />
+        <ul th:if="${#fields.hasErrors('adresseRetrait.pays')}" class="listErrors">
+            <li th:each="err : ${#fields.errors('adresseRetrait.pays')}" th:text="${err}"></li>
+        </ul>
+    </div>
+</div>
+		
         <!-- Boutons -->
         <div id="set">
             <button type="submit">Valider</button>

@@ -14,7 +14,7 @@ public class CategorieDAOImpl implements CategorieDAO {
 
     private final String SELECT_ALL = "SELECT idCategorie, libelle FROM CATEGORIE";
     private final String INSERT = "INSERT INTO CATEGORIE(libelle) VALUES (:libelle)";
-private final String SELECT_BY_ID = "SELECT idCategorie, libelle where idCategorie = :idCategorie";
+    private final String SELECT_BY_ID = "SELECT idCategorie, libelle FROM CATEGORIE WHERE idCategorie = :idCategorie";
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public CategorieDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -40,17 +40,17 @@ private final String SELECT_BY_ID = "SELECT idCategorie, libelle where idCategor
     }
     
     @Override
-	public Categorie findById(int idCategorie) {
-		 MapSqlParameterSource params = new MapSqlParameterSource();
-	
-		return jdbcTemplate.queryForObject(SELECT_BY_ID, params, 
-	            (rs, rowNum) -> new Categorie(
-	                rs.getInt("idCategorie"),
-	                rs.getString("libelle")
-	            )
-	        );
-}
+    public Categorie findById(int idCategorie) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("idCategorie", idCategorie);  // 
 
+        return jdbcTemplate.queryForObject(SELECT_BY_ID, params, 
+            (rs, rowNum) -> new Categorie(
+                rs.getInt("idCategorie"),
+                rs.getString("libelle")
+            )
+        );
+    }
 
     
 }

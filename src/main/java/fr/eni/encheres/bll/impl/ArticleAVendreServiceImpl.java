@@ -32,17 +32,31 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
         this.adresseDAO = adresseDAO;
         this.categorieDAO = categorieDAO;
     }
-
     @Override
-    public void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur,int idCategorie) throws BusinessException {
+    public void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur, int idCategorie) throws BusinessException {
         BusinessException be = new BusinessException();
+
         articleAVendre.setVendeur(utilisateur);
-        articleAVendre.setCategorie(categorieDAO.findById( idCategorie));
+        articleAVendre.setCategorie(categorieDAO.findById(idCategorie));
+
+        Adresse adresseRetrait = articleAVendre.getAdresseRetrait();
+
+        if (adresseRetrait != null) {
+            if (adresseRetrait.getIdAdresse() <= 0) {
+                // Nouvelle adresse : sauvegarde sans utilisateur
+                adresseDAO.saveSansUtilisateur(adresseRetrait);
+            } else {
+                // Adresse existante : on récupère les données complètes sans modifier idUtilisateur
+                Adresse adresseComplete = adresseDAO.findById(adresseRetrait.getIdAdresse());
+                articleAVendre.setAdresseRetrait(adresseComplete);
+            }
+        }
+
         if (validerArticleAVendre(articleAVendre, be)) {
             try {
                 articleAVendreDAO.addArticle(articleAVendre);
             } catch (DataAccessException e) {
-            	e.printStackTrace();
+                e.printStackTrace();
                 be.add("Erreur lors de l'ajout de l'article à la vente : " + e.getMessage());
                 throw be;
             }
@@ -55,6 +69,16 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
     public void modifierArticleEnVente(ArticleAVendre articleAVendre, String pseudo) throws BusinessException {
         BusinessException be = new BusinessException();
         if (validerArticleAVendre(articleAVendre, be)) {
+            Adresse adresseRetrait = articleAVendre.getAdresseRetrait();
+            if (adresseRetrait != null) {
+                if (adresseRetrait.getIdAdresse() > 0) {
+                    adresseDAO.update(adresseRetrait);
+                } else {
+                    adresseDAO.saveSansUtilisateur(adresseRetrait);
+                    articleAVendre.setAdresseRetrait(adresseRetrait);
+                }
+            }
+
             Utilisateur utilisateur = new Utilisateur();
             utilisateur.setPseudo(pseudo);
             articleAVendre.setVendeur(utilisateur);
@@ -64,6 +88,7 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
         }
     }
 
+    
     private boolean validerArticleAVendre(ArticleAVendre articleAVendre, BusinessException be) {
         if (articleAVendre == null) {
             be.add("Article inexistant");
@@ -171,20 +196,8 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
         return true;
     }
 
-    @Override
-    public List<Categorie> getAllCategories() {
-        return categorieDAO.findAll();
-    }
-
-    @Override
-    public Adresse getAdresseById(long id) {
-        return adresseDAO.findById(id);
-    }
-
-    @Override
-    public List<Adresse> getAllAdressesRetrait() {
-        return adresseDAO.findAll();
-    }
+   
+ 
 
     @Override
     public void annulerVente(ArticleAVendre article) throws BusinessException {
@@ -241,16 +254,13 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
         }
         return true;
     }
-
+///--------- Voir si pas de conflit bigint int bdd---
     @Override
-    public ArticleAVendre getById(int idArticle) {
-        // Implémentation manquante à compléter
-        return null;
+    public ArticleAVendre getById(long idArticle) {
+    	return this.articleAVendreDAO.getByID(idArticle);
     }
-
     @Override
-    public Categorie getCategorieById(long id) {
-        // Implémentation manquante à compléter
-        return null;
+    public List<ArticleAVendre> rechercherArticlesEnCours(String nomRecherche, int categorieRecherche) {
+        return articleAVendreDAO.rechercherArticlesEnCours(nomRecherche, categorieRecherche);
     }
 }
