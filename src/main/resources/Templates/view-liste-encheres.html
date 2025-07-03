@@ -17,9 +17,9 @@
         <select id="categorie" name="categorie">
             <option value="0">Toutes</option>
             <option th:each="cat : ${categories}"
-                    th:value="${cat.id}"
-                    th:text="${cat.libelle}"
-                    th:selected="${cat.id == categorieRecherche}">
+       				th:value="${cat.idCategorie}"
+      			    th:text="${cat.libelle}"
+       			    th:selected="${cat.idCategorie == categorieRecherche}">
             </option>
         </select>
 
@@ -30,7 +30,7 @@
 
     <!-- Liste des articles sous forme de cartes -->
     <div th:if="${encheres != null}">
-        <div th:each="enchere : ${encheres}" style="border:1px solid black; padding:10px; margin:10px; width:300px;">
+        <div th:each="enchere : ${encheres}">
             
             <p th:text="${enchere.article.nomArticle}">Nom article</p>
 

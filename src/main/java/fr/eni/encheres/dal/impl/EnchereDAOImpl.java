@@ -17,15 +17,15 @@ import fr.eni.encheres.dal.EnchereDAO;
 @Repository
 public class EnchereDAOImpl implements EnchereDAO {
 
-    private final String INSERT = "INSERT INTO ENCHERE(dateEnchere, montant, idUtilisateur, idArticle) VALUES (:dateEnchere, :montant, :idUtilisateur, :idArticle)";
-    private final String SELECT_BY_ID = "SELECT * FROM ENCHERE WHERE idEnchere = :idEnchere";
-    private final String SELECT_ALL = "SELECT * FROM ENCHERE";
-    private final String UPDATE = "UPDATE ENCHERE SET dateEnchere = :dateEnchere, montant = :montant, idUtilisateur = :idUtilisateur, idArticle = :idArticle WHERE idEnchere = :idEnchere";
-    private final String DELETE = "DELETE FROM ENCHERE WHERE idEnchere = :idEnchere";
-    private final String SELECT_BEST_BY_ARTICLE = "SELECT TOP 1 * FROM ENCHERE WHERE idArticle = :idArticle ORDER BY montant DESC";
-    private final String SELECT_BY_UTILISATEUR = "SELECT * FROM ENCHERE WHERE idUtilisateur = :idUtilisateur";
-    private final String SELECT_BY_ARTICLE = "SELECT * FROM ENCHERE WHERE idArticle = :idArticle";
-    private final String DELETE_BY_ARTICLE = "DELETE FROM ENCHERE WHERE idArticle = :idArticle";
+    private final String INSERT = "INSERT INTO Enchere(dateEnchere, montant, idUtilisateur, idArticle) VALUES (:dateEnchere, :montant, :idUtilisateur, :idArticle)";
+    private final String SELECT_BY_ID = "SELECT * FROM Enchere WHERE idEnchere = :idEnchere";
+    private final String SELECT_ALL = "SELECT * FROM Enchere";
+    private final String UPDATE = "UPDATE Enchere SET dateEnchere = :dateEnchere, montant = :montant, idUtilisateur = :idUtilisateur, idArticle = :idArticle WHERE idEnchere = :idEnchere";
+    private final String DELETE = "DELETE FROM Enchere WHERE idEnchere = :idEnchere";
+    private final String SELECT_BEST_BY_ARTICLE = "SELECT TOP 1 * FROM Enchere WHERE idArticle = :idArticle ORDER BY montant DESC";
+    private final String SELECT_BY_UTILISATEUR = "SELECT * FROM Enchere WHERE idUtilisateur = :idUtilisateur";
+    private final String SELECT_BY_ARTICLE = "SELECT * FROM Enchere WHERE idArticle = :idArticle";
+    private final String DELETE_BY_ARTICLE = "DELETE FROM Enchere WHERE idArticle = :idArticle";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -105,28 +105,26 @@ public class EnchereDAOImpl implements EnchereDAO {
 
     @Override
     public List<Enchere> rechercherEncheres(String nomArticle, int idCategorie) {
-        String sql = """
-            SELECT 
-                e.idEnchere, e.dateEnchere, e.montant,
-                a.id_article, a.nom AS articleNom, a.dateFinEncheres,
-                u.id_utilisateur AS encherisseurId, u.pseudo AS encherisseurPseudo,
-                v.id_utilisateur AS vendeurId, v.pseudo AS vendeurPseudo
-            FROM ENCHERE e
-            JOIN ARTICLE a ON e.id_article = a.id_article
-            JOIN UTILISATEUR u ON e.id_utilisateur = u.id_utilisateur
-            JOIN UTILISATEUR v ON a.id_utilisateur = v.id_utilisateur
-            WHERE 1=1
-        """;
+        String sql = "SELECT " +
+            "e.idEnchere, e.dateEnchere, e.montant, " +
+            "a.idArticle, a.nomArticle, a.dateFinEncheres, " +
+            "u.idUtilisateur, u.pseudo, " +
+            "v.idUtilisateur AS vendeurId, v.pseudo AS vendeurPseudo " +
+            "FROM Enchere e " +
+            "JOIN ArticleAVendre a ON e.idArticle = a.idArticle " +
+            "JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur " +
+            "JOIN Utilisateur v ON a.idUtilisateur = v.idUtilisateur " +
+            "WHERE 1=1 ";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         if (nomArticle != null && !nomArticle.isBlank()) {
-            sql += " AND a.nom LIKE :nomArticle ";
+            sql += " AND a.nomArticle LIKE :nomArticle ";
             params.addValue("nomArticle", "%" + nomArticle + "%");
         }
 
         if (idCategorie > 0) {
-            sql += " AND a.id_categorie = :idCategorie ";
+            sql += " AND a.idCategorie = :idCategorie ";
             params.addValue("idCategorie", idCategorie);
         }
 
@@ -144,13 +142,13 @@ public class EnchereDAOImpl implements EnchereDAO {
             enchere.setMontant(rs.getInt("montant"));
 
             Utilisateur encherisseur = new Utilisateur();
-            encherisseur.setIdUtilisateur(rs.getInt("encherisseurId"));
-            encherisseur.setPseudo(rs.getString("encherisseurPseudo"));
+            encherisseur.setIdUtilisateur(rs.getInt("idUtilisateur"));
+            encherisseur.setPseudo(rs.getString("pseudo"));
             enchere.setEncherisseur(encherisseur);
 
             ArticleAVendre article = new ArticleAVendre();
-            article.setIdArticle(rs.getInt("id_article"));
-            article.setNomArticle(rs.getString("articleNom"));
+            article.setIdArticle(rs.getInt("idArticle"));
+            article.setNomArticle(rs.getString("nomArticle"));
             article.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
 
             Utilisateur vendeur = new Utilisateur();
