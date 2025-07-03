@@ -10,4 +10,5 @@ public interface CategorieDAO {
 	
 	void insert(Categorie categorie);
 
+	Categorie finById (int idCategorie);
 }

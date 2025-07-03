@@ -10,6 +10,8 @@ public interface CategorieService {
 	 
 	 void ajouterCategorie(Categorie categorie);
 	 
+	 
+	 
 	}
 
 	

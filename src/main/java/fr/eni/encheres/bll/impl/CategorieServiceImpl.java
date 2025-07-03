@@ -17,7 +17,7 @@ public class CategorieServiceImpl implements CategorieService {
 		this.categorieDAO = categorieDAO;
 	}
 
-
+ 
 	@Override
 	public List<Categorie> getAllCategories(){
 		return categorieDAO.findAll();
