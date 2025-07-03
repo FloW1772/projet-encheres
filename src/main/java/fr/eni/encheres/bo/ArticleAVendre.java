@@ -98,7 +98,7 @@ public class ArticleAVendre implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+ 
 	
 	public LocalDateTime getDateDebutEncheres() {
 		return dateDebutEncheres;
