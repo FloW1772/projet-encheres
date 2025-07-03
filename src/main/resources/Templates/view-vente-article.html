@@ -11,35 +11,35 @@
 <body>
 	<main>
 	
-		<th:block data-th-if="${!modeModif}"><h1>Nouvelle Vente</h1></th:block>
-		<th:block data-th-if="${modeModif}"><h1>Modification de la  Vente</h1></th:block>
+		<h1>Nouvelle Vente</h1>
+		<h1>Modification de la  Vente</h1>s
 		
-		<form id="creer-vente-form" class="form" th:object="${articleAVendre}" data-th-action="@{${vente/creaction}}" method="post">
+		<form id="creer-vente-form" class="form" th:object="${articleAVendre}" th:action="@{${vente/creation}}" method="post">
 		
-		<input type="hidden" data-th-field="*{id}">
+		<input type="hidden" th:field="*{id}">
 
 			<div id="bloc">
 				<div id="bloc1">
 					<div id="tag">
-						<label for="inputNomArticle" data-th-text="#{view-vente-article.label.article}"></label>
-						<input type="text" id="inputNomArticle" data-th-field="*{nomArticle}" required />
-						<ul data-th-if="${#fields.hasErrors('nomArticle')}" class="listErrors">
+						<label for="inputNomArticle" >nom</label>
+						<input type="text" id="inputNomArticle" th:field="*{nomArticle}" required />
+						<ul th:if="${#fields.hasErrors('nomArticle')}" class="listErrors">
 							<li th:each="err : ${#fields.errors('nomArticle')}" th:text="${err}"></li>
 						</ul>
 					</div>
 			<div>
 				<li>
 					<label>Rôle :</label> 
-					<select data-th-field="*{categorie.idCategorie}"required>
-						<option th:each="categorie : ${categorie}" th:value="${categorie.idCategorie}"th:text="${categorie.libelle}"></option>
+					<select th:field="*{categorie.idCategorie}"required>
+						<option th:each="categorie : ${categories}" th:value="${categorie.idCategorie}"th:text="${categorie.libelle}"></option>
 					</select>
 						<p class="error-message"th:if="${#fields.hasErrors('categorie.idCategorie')}"th:errors="*{categorie.idCategorie}"></p>
  				</li>
  			</div>
 					<div id="tag">
-						<label for="inputDescription" data-th-text="#{view-vente-article.label.description}"></label>
+						<label for="inputDescription" >description</label>
 						<textarea id="inputDescription" th:field="*{description}" required></textarea>
-						<ul data-th-if="${#fields.hasErrors('description')}" class="listErrors">
+						<ul th:if="${#fields.hasErrors('description')}" class="listErrors">
 							<li th:each="err : ${#fields.errors('description')}" th:text="${err}"></li>
 						</ul>
 					</div>
@@ -47,34 +47,34 @@
 
 				<div id="bloc2">
 					<div id="tag">
-						<label for="inputMiseAPrix" data-th-text="#{view-vente-article.label.miseAPrix}"></label>
+						<label for="inputMiseAPrix" >mise a prix</label>
 						<input type="number" id="inputMiseAPrix" data-th-field="*{miseAPrix}" required />
-						<ul data-th-if="${#fields.hasErrors('miseAPrix')}" class="listErrors">
+						<ul th:if="${#fields.hasErrors('miseAPrix')}" class="listErrors">
 							<li th:each="err : ${#fields.errors('miseAPrix')}" th:text="${err}"></li>
 						</ul>
 					</div>
 
 					<div id="tag">
-						<label for="inputDateDebutEncheres" data-th-text="#{view-vente-article.label.dateDebutEncheres}"></label>
+						<label for="inputDateDebutEncheres" >date debut encheres</label>
 						<input type="date" id="inputDateDebutEncheres" name="dateDebutEncheres"
 							th:value="${articleAVendre.dateDebutEncheres}" required/>
-							<ul data-th-if="${#fields.hasErrors('dateDebutEncheres')}" class="listErrors">
+							<ul th:if="${#fields.hasErrors('dateDebutEncheres')}" class="listErrors">
 								<li th:each="err : ${#fields.errors('dateDebutEncheres')}" th:text="${err}"></li>
 							</ul>
 					</div>
 
 					<div id="tag">
-						<label for="inputDateFinEncheres" data-th-text="#{view-vente-article.label.dateFinEncheres}"></label> <input
+						<label for="inputDateFinEncheres" >date fin encheres</label> <input
 							type="date" id="inputDateFinEncheres" name="dateFinEncheres"
 							th:value="${articleAVendre.dateFinEncheres}" required/>
-							<ul data-th-if="${#fields.hasErrors('dateFinEncheres')}" class="listErrors">
+							<ul th:if="${#fields.hasErrors('dateFinEncheres')}" class="listErrors">
 								<li th:each="err : ${#fields.errors('dateFinEncheres')}" th:text="${err}"></li>
 							</ul>
 					</div>
 				</div>
 			</div>
 
-			<div>
+		<!--	<div>
 				<label for="inputRetrait" data-th-text="#{view-vente-article.label.adresse}"></label>
 				<select id="inputRetrait" data-th-field="*{adresseRetrait}" required>
 						<option data-th-each="adresseRetrait : ${adressesRetrait}" data-th-selected="${!adresseRetrait.isAdresseEni}" th:value="${adresseRetrait.id}" th:text="${adresseRetrait.rue + ' ' + adresseRetrait.codePostal + ' ' + adresseRetrait.ville}"></option>
@@ -83,16 +83,16 @@
 				<ul data-th-if="${#fields.hasErrors('adresseRetrait')}" class="listErrors">
 					<li th:each="err : ${#fields.errors('adresseRetrait')}" th:text="${err}"></li>
 				</ul>
-			</div>
+			</div> -->
 
 			<div id="set">
                 <button type="submit">Suivant</button>
-                <a data-th-if="${modeModif}" data-th-href="@{/vente/annuler(id=*{id})}" class="btnPrimaire btnAnnuler">Annuler la vente</a>
+                <a th:if="${modeModif}" thhref="@{/vente/annuler(id=*{id})}" class="btnPrimaire btnAnnuler">Annuler la vente</a>
                 <button type="button">Annuler</button>
             </div>
 
-             <ul data-th-if="${#fields.hasErrors('*')}" class="listErrors">
-				<li data-th-text="#{view-vente-article.erreur_globale}"></li>
+             <ul th:if="${#fields.hasErrors('*')}" class="listErrors">
+				<li th:text="#{view-vente-article.erreur_globale}"></li>
 			</ul>
 			
 		</form>

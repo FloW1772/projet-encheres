@@ -15,7 +15,7 @@ public interface ArticleAVendreService {
 
 	ArticleAVendre getById(int idArticle);
 
-	void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur)throws BusinessException;
+	void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur,int idCategorie)throws BusinessException;
 	
 	void modifierArticleEnVente(ArticleAVendre articleAVendre, String pseudo)throws BusinessException;
 	
