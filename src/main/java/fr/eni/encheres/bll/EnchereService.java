@@ -22,6 +22,8 @@ public interface EnchereService {
     List<Enchere> selectEncheresByUtilisateur(long idUtilisateur);
 
     List<Enchere> selectEncheresByArticle(long idArticle);
+    
+    List<Enchere> rechercherEncheres(String nomArticle, int idCategorie);
 
     void deleteByArticleId(long idArticle);
     

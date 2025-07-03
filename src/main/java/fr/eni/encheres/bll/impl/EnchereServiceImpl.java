@@ -68,6 +68,11 @@ public class EnchereServiceImpl implements EnchereService {
 	}
 
 	@Override
+	public List<Enchere> rechercherEncheres(String nomArticle, int idCategorie) {
+	    return enchereDAO.rechercherEncheres(nomArticle, idCategorie);
+	}
+	
+	@Override
 	public void deleteByArticleId(long idArticle) {
 		enchereDAO.deleteByArticleId(idArticle);
 	}
