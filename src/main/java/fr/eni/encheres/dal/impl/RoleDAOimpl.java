@@ -16,7 +16,7 @@ import fr.eni.encheres.dal.RoleDAO;
 @Repository
 public class RoleDAOimpl implements RoleDAO {
 
-    private static final String FIND_ALL = "SELECT idRole, libelle FROM Role";
+    private static final String FIND_ALL = "SELECT * FROM Role WHERE libelle IN ('Vendeur', 'Utilisateur')";
     private static final String FIND_BY_ID = "SELECT idRole, libelle FROM Role WHERE idRole = :idRole";
     private static final String FIND_BY_LIBELLE = "SELECT idRole, libelle FROM Role WHERE libelle = :libelle";
     private static final String INSERT_ROLE = "INSERT INTO Role (libelle) VALUES (:libelle)";

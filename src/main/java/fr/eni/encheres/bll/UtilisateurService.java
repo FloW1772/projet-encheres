@@ -18,4 +18,5 @@ public interface UtilisateurService {
 	List<Utilisateur> selectAll() ;
 	void crediterPoints(long idUtilisateur, int montant) throws BusinessException;
 	void debiterPoints(long idUtilisateur, int montant) throws BusinessException;
+	void devenirVendeur(long idUtilisateur) throws BusinessException;
 }

@@ -37,8 +37,8 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			+ "telephone = :telephone, motDePasse = :motDePasse, credit = :credit " + "WHERE email = :email";
 	private static final String DELETE = "DELETE FROM UTILISATEUR WHERE idUtilisateur = :idUtilisateur";
 	private static final String COUNT_BY_EMAIL = "SELECT COUNT(*) FROM UTILISATEUR WHERE email = :email";
-	private static final String  SET_DEBITER = "UPDATE Utilisateur SET creditPoints = creditPoints - :montant WHERE idUtilisateur = :idUtilisateur AND creditPoints >= :montant";
-	private static final String  SET_CREDITER = "UPDATE Utilisateur SET creditPoints = creditPoints + :montant WHERE idUtilisateur = :idUtilisateur";
+	private static final String  SET_DEBITER = "UPDATE Utilisateur SET credit = credit - :montant WHERE idUtilisateur = :idUtilisateur AND credit >= :montant";
+	private static final String  SET_CREDITER = "UPDATE Utilisateur SET credit = credit + :montant WHERE idUtilisateur = :idUtilisateur";
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -194,6 +194,16 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 		    namedParameterJdbcTemplate.update(SET_CREDITER, params);
 		
 	}
+
+	@Override
+	public void updateIdAdresse(Long idUtilisateur, Long idAdresse) {
+	    String sql = "UPDATE Utilisateur SET idAdresse = :idAdresse WHERE idUtilisateur = :idUtilisateur";
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("idAdresse", idAdresse);
+	    params.addValue("idUtilisateur", idUtilisateur);
+	    namedParameterJdbcTemplate.update(sql, params);
+	}
+
 
 
 }

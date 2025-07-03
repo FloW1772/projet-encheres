@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Profil Utilisateur</title>
+</head>
+<body>
+
+<h1>Profil de <span th:text="${utilisateur.pseudo}">Pseudo</span></h1>
+
+<ul class="flex-outer">
+    <li><strong>Nom :</strong> <span th:text="${utilisateur.nom}">Nom</span></li>
+    <li><strong>Prénom :</strong> <span th:text="${utilisateur.prenom}">Prénom</span></li>
+    <li><strong>Téléphone :</strong> <span th:text="${utilisateur.telephone}">Téléphone</span></li>
+    <li><strong>Email :</strong> <span th:text="${utilisateur.email}">Email</span></li>
+    <li><strong>Rue :</strong> <span th:text="${utilisateur.adresse.rue}">Rue</span></li>
+    <li><strong>Code Postal :</strong> <span th:text="${utilisateur.adresse.codePostal}">Code Postal</span></li>
+    <li><strong>Ville :</strong> <span th:text="${utilisateur.adresse.ville}">Ville</span></li>
+    <li><strong>Pays :</strong> <span th:text="${utilisateur.adresse.pays}">Pays</span></li>
+</ul>
+
+</body>
+</html>
