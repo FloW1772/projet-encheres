@@ -6,128 +6,95 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import fr.eni.encheres.bll.ArticleAVendreService;
 import fr.eni.encheres.bll.CategorieService;
 import fr.eni.encheres.bll.UtilisateurService;
 import fr.eni.encheres.bo.ArticleAVendre;
-import fr.eni.encheres.bo.Categorie;
+import fr.eni.encheres.bo.Utilisateur;
+import fr.eni.encheres.exception.BusinessException;
+import jakarta.validation.Valid;
 
 @Controller
-//@RequestMapping("/vente")
+@RequestMapping("/vente")
 public class ArticleAVendreController {
 
-	ArticleAVendreService articleAVendreService;
+    private final ArticleAVendreService articleAVendreService;
+    private final UtilisateurService utilisateurService;
+    private final CategorieService categorieService;
 
-	UtilisateurService utilisateurService;
-	CategorieService categorieService;
-	public ArticleAVendreController(ArticleAVendreService articleAVendreService,
-			UtilisateurService utilisateurService, CategorieService categorieService) {
-		this.articleAVendreService = articleAVendreService;
-		this.utilisateurService = utilisateurService;
-		this.categorieService = categorieService;
-	}
+    @Autowired
+    public ArticleAVendreController(ArticleAVendreService articleAVendreService,
+                                    UtilisateurService utilisateurService,
+                                    CategorieService categorieService) {
+        this.articleAVendreService = articleAVendreService;
+        this.utilisateurService = utilisateurService;
+        this.categorieService = categorieService;
+    }
 
-	/**
-	 * Affiche les articles à vendre en cours.
-	 *
-	 * @param model     Le modèle pour la vue.
-	 * @param principal Les informations de l'utilisateur connecté.
-	 * @return La vue index.
-	 */
+    @GetMapping("/creation")
+    public String afficherFormulaireVente(Model model, Principal principal) {
+        model.addAttribute("articleAVendre", new ArticleAVendre());
+        model.addAttribute("categories", categorieService.getAllCategories());
+        model.addAttribute("modeModif", false);
+        return "view-vente-article";
+    }
 
-	@GetMapping("/vente/creation")
-	public String afficherArticleAVendre(Model model, Principal principal) {
-	
-	ArticleAVendre articleAVendre = new ArticleAVendre();
-	articleAVendre.getCategorie();
-	model.addAttribute("articleAVendre", articleAVendre);
-	model.addAttribute("categories",categorieService.getAllCategories() );
-	
-	// Ajout au model ma variable "nomRecherche" qui contiendra la chaine de
-			// caractère a retrouver dans le nom des articles
-	
-	/*int categorieRecherche = 0;
-	model.addAttribute("categorieRecherche", categorieRecherche);
-	// Ajout de la condition "est connecté"
-	if(principal != null) {
-		// Ajout des parametres utiles aux filtres si l'utilisateurs est connecté et non
-					// Admin.
-					// Parametre pour les input Select
-		int casUtilisationFiltres = 0;
-		model.addAttribute("casUtilisationFiltres", casUtilisationFiltres);
-	}*/
-	return "view-vente-article";
+    @PostMapping("/creation")
+    public String traiterVente(@Valid @ModelAttribute("articleAVendre") ArticleAVendre articleAVendre,
+                               BindingResult bindingResult,
+                               Principal principal,
+                               Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categorieService.getAllCategories());
+            model.addAttribute("modeModif", false);
+            return "view-vente-article";
+        }
+
+        try {
+            Utilisateur utilisateur = utilisateurService.selectByLogin(principal.getName());
+            articleAVendreService.mettreArticleEnVente(articleAVendre, utilisateur, articleAVendre.getCategorie().getIdCategorie());
+        } catch (BusinessException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "view-vente-article";
+        }
+ 
+        return "redirect:/";
+    }
+
+    @GetMapping("/vente/annuler")
+    public String annulerVente(@RequestParam("id") int id) {
+        try {
+            ArticleAVendre article = articleAVendreService.getById(id);
+            articleAVendreService.annulerVente(article);
+        } catch (BusinessException e) {
+            // Tu peux logger ou afficher un message d’erreur si nécessaire
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/rechercher")
+    public String afficherArticlesFiltres(@RequestParam("nomRecherche") String nomRecherche,
+                                          @RequestParam("categorieRecherche") int categorieRecherche,
+                                          @RequestParam("casUtilisationFiltres") int casUtilisationFiltres,
+                                          Model model,
+                                          Principal principal) {
+
+        List<ArticleAVendre> articlesAVendre = articleAVendreService.getArticlesAVendreAvecParamètres(
+                nomRecherche, categorieRecherche, casUtilisationFiltres, principal);
+
+        model.addAttribute("articlesAVendre", articlesAVendre);
+        model.addAttribute("nomRecherche", nomRecherche);
+        model.addAttribute("categorieRecherche", categorieRecherche);
+        model.addAttribute("casUtilisationFiltres", casUtilisationFiltres);
+
+        return "index";
+    }
 }
-	/**
-	 * Affiche les articles à vendre en fonction des paramètres de recherche.
-	 *
-	 * @param nomRecherche          Le nom de l'article recherché.
-	 * @param categorieRecherche    L'identifiant de la catégorie recherchée.
-	 * @param casUtilisationFiltres Les filtres d'utilisation.
-	 * @param model                 Le modèle pour la vue.
-	 * @param principal             Les informations de l'utilisateur connecté.
-	 * @return La vue index.
-	 */
-	@PostMapping("/rechercher")
-	public String afficherArticleAVendre(@RequestParam(value = "nomRecherche") String nomRecherche,
-			@RequestParam(value = "categorieRecherche") int categorieRecherche,
-			@RequestParam(value = "casUtilisationFiltres") int casUtilisationFiltres, Model model,
-			Principal principal) {
-		List<ArticleAVendre> articlesAVendre = articleAVendreService.getArticlesAVendreAvecParamètres(nomRecherche,
-				categorieRecherche, casUtilisationFiltres, principal);
-		model.addAttribute("articlesAVendre", articlesAVendre);
-		model.addAttribute("nomRecherche", nomRecherche);
-		model.addAttribute("categorieRecherche", categorieRecherche);
-
-		if (principal != null) {
-			// Ajout des parametres utiles aux filtres si l'utilisateurs est connecté et non
-			// Admin.
-			// Parametre pour les input select
-			model.addAttribute("casUtilisationFiltres", casUtilisationFiltres);
-		}
-		return "index";
-
-	}
-	/**
-	 * Affiche le formulaire pour mettre en vente un nouvel article.
-	 *
-	 * @param model     Le modèle pour la vue.
-	 * @param principal Les informations de l'utilisateur connecté.
-	 * @return La vue du formulaire de vente d'article.
-	 */
 
 
-
-
-
-	/**
-	 * Traite la mise en vente d'un nouvel article.
-	 *
-	 * @param articleAVendre L'article à vendre.
-	 * @param bindingResult  Les résultats de la validation.
-	 * @param principal      Les informations de l'utilisateur connecté.
-	 * @param model          Le modèle pour la vue.
-	 * @return La vue à afficher.
-	 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
 
 
 

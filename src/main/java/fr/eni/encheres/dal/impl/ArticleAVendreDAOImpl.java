@@ -162,8 +162,8 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
             articleAVendre.setIdArticle(rs.getInt("idArticle"));
             articleAVendre.setNomArticle(rs.getString("nomArticle")); // Utilisation de nomArticle
             articleAVendre.setDescription(rs.getString("description"));
-            articleAVendre.setDateDebutEncheres(rs.getObject("dateDebutEncheres", LocalDateTime.class));
-            articleAVendre.setDateFinEncheres(rs.getObject("dateFinEncheres", LocalDateTime.class));
+            articleAVendre.setDateDebutEncheres(rs.getTimestamp("dateEnchere").toLocalDateTime());
+            articleAVendre.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
             articleAVendre.setStatus(rs.getInt("etatVente"));
             articleAVendre.setMiseAPrix(rs.getInt("miseAPrix"));
             articleAVendre.setPrixVente(rs.getInt("prixVente"));

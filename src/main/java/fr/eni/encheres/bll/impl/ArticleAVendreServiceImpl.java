@@ -41,6 +41,7 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
             try {
                 articleAVendreDAO.addArticle(articleAVendre);
             } catch (DataAccessException e) {
+            	e.printStackTrace();
                 be.add("Erreur lors de l'ajout de l'article à la vente : " + e.getMessage());
                 throw be;
             }

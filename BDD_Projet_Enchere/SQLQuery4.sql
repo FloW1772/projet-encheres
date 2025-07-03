@@ -1,5 +1,3 @@
-
-
 DROP TABLE IF EXISTS Enchere;
 
 DROP TABLE IF EXISTS ArticleAVendre;
@@ -51,7 +49,7 @@ CREATE TABLE Utilisateur (
 
     pseudo NVARCHAR(50) NOT NULL UNIQUE,
 
-    nomArticle NVARCHAR(100) NOT NULL,
+    nom NVARCHAR(100) NOT NULL,
 
     prenom NVARCHAR(100) NOT NULL,
 
@@ -63,7 +61,7 @@ CREATE TABLE Utilisateur (
 
     credit INT NOT NULL DEFAULT 100,
 
-    idAdresse BIGINT NOT NULL,
+    idAdresse BIGINT NULL,
 
     CONSTRAINT fk_utilisateur_adresse FOREIGN KEY (idAdresse) REFERENCES Adresse(idAdresse) ON DELETE NO ACTION
 
@@ -104,7 +102,7 @@ CREATE TABLE ArticleAVendre (
 
     idArticle INT IDENTITY(1,1) PRIMARY KEY,
 
-    nom NVARCHAR(100) NOT NULL,
+    nomArticle NVARCHAR(100) NOT NULL,
 
     description NVARCHAR(400) NOT NULL,
 
