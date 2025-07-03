@@ -8,26 +8,51 @@
 
     <h1>Liste des enchères</h1>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Date</th>
-                <th>Montant</th>
-                <th>Utilisateur</th>
-                <th>Article</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="enchere : ${encheres}">
-                <td th:text="${enchere.idEnchere}">ID</td>
-                <td th:text="${enchere.dateEnchere}">Date</td>
-                <td th:text="${enchere.montant}">Montant</td>
-                <td th:text="${enchere.encherisseur.idUtilisateur}">Utilisateur</td>
-                <td th:text="${enchere.article.idArticle}">Article</td>
-            </tr>
-        </tbody>
-    </table>
+    <!--  Barre de filtres -->
+    <form method="get" th:action="@{/encheres}">
+        <label for="nomArticle">Le nom de l'article contient :</label>
+        <input type="text" id="nomArticle" name="nomArticle" th:value="${nomRecherche}" />
+
+        <label for="categorie">Catégorie :</label>
+        <select id="categorie" name="categorie">
+            <option value="0">Toutes</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.libelle}"
+                    th:selected="${cat.id == categorieRecherche}">
+            </option>
+        </select>
+
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <br>
+
+    <!-- Liste des articles sous forme de cartes -->
+    <div th:if="${encheres != null}">
+        <div th:each="enchere : ${encheres}" style="border:1px solid black; padding:10px; margin:10px; width:300px;">
+            
+            <p th:text="${enchere.article.nomArticle}">Nom article</p>
+
+            <p>
+                Prix :
+                <span th:text="${enchere.montant}">0</span> points
+            </p>
+
+            <p>
+                Fin de l'enchère :
+                <span th:text="${#temporals.format(enchere.article.dateFinEncheres, 'dd/MM/yyyy')}">10/08/2018</span>
+            </p>
+
+            <p>
+                Vendeur :
+                <span th:text="${enchere.article.vendeur.pseudo}">jojo44</span>
+            </p>
+
+            <!-- Lien vers la fiche détail -->
+            <a th:href="@{'/article/' + ${enchere.article.idArticle}}">Voir détail</a>
+        </div>
+    </div>
 
 </body>
 </html>
