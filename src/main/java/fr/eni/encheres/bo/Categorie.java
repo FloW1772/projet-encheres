@@ -2,7 +2,6 @@ package fr.eni.encheres.bo;
 
 import java.util.Objects;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public class Categorie {
@@ -10,10 +9,10 @@ public class Categorie {
 	
 	
 	
-	private int idCategorie;
+	private Integer idCategorie;
 	
 	@NotBlank(message="Le libellé est obligatoire")
-	@Min(30)
+	//@Min(30)
 	private String libelle;
 	
 
@@ -29,11 +28,11 @@ public class Categorie {
 		this.libelle = libelle;
 	}
 
-	public int getIdCategorie() {
+	public Integer getIdCategorie() {
 		return idCategorie;
 	}
 
-	public void setIdCategorie(int idCategorie) {
+	public void setIdCategorie(Integer idCategorie) {
 		this.idCategorie = idCategorie;
 	}
 
