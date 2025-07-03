@@ -12,6 +12,7 @@ import fr.eni.encheres.bll.ArticleAVendreService;
 import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
 import fr.eni.encheres.bo.Categorie;
+import fr.eni.encheres.bo.EtatVente;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.AdresseDAO;
 import fr.eni.encheres.dal.ArticleAVendreDAO;
@@ -36,7 +37,7 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
     public void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur,int idCategorie) throws BusinessException {
         BusinessException be = new BusinessException();
         articleAVendre.setVendeur(utilisateur);
-        articleAVendre.setCategorie(categorieDAO.finById( idCategorie));
+        articleAVendre.setCategorie(categorieDAO.findById( idCategorie));
         if (validerArticleAVendre(articleAVendre, be)) {
             try {
                 articleAVendreDAO.addArticle(articleAVendre);
@@ -191,7 +192,7 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 
         boolean isValid = true;
         isValid &= validerAnnulationDateDebutEnchere(article.getDateDebutEncheres(), be);
-        isValid &= validerStatutVente(article.getStatus(), be);
+        isValid &= validerStatutVente(article.getEtatVente(), be);
 
         if (isValid) {
             int count = this.articleAVendreDAO.annulerVente(article.getIdArticle());
@@ -214,8 +215,8 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
         return true;
     }
 
-    private boolean validerStatutVente(int statut, BusinessException be) {
-        if (statut > 0) {
+    private boolean validerStatutVente( EtatVente etatVente, BusinessException be) {
+        if (etatVente.equals("EN_COURS")) {
             be.add("La vente ne peut être annulée car elle est déjà en cours");
             return false;
         }

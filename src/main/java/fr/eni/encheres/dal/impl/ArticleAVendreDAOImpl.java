@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.encheres.bo.ArticleAVendre;
+import fr.eni.encheres.bo.EtatVente;
 import fr.eni.encheres.dal.ArticleAVendreDAO;
 
 @Repository
@@ -164,7 +165,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
             articleAVendre.setDescription(rs.getString("description"));
             articleAVendre.setDateDebutEncheres(rs.getTimestamp("dateEnchere").toLocalDateTime());
             articleAVendre.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
-            articleAVendre.setStatus(rs.getInt("etatVente"));
+            articleAVendre.setEtatVente(EtatVente.valueOf(rs.getString("etatVente")));
             articleAVendre.setMiseAPrix(rs.getInt("miseAPrix"));
             articleAVendre.setPrixVente(rs.getInt("prixVente"));
 			return articleAVendre;

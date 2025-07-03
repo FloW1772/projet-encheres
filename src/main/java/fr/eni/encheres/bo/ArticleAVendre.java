@@ -9,10 +9,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class ArticleAVendre implements Serializable{
+public class ArticleAVendre implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private long idArticle;
 	@NotNull
 	private Categorie categorie = new Categorie();
@@ -26,27 +26,25 @@ public class ArticleAVendre implements Serializable{
 	private LocalDateTime dateDebutEncheres;
 	@NotNull
 	private LocalDateTime dateFinEncheres;
-	private int status;
 	@NotNull
 	@Min(value = 1)
 	private int miseAPrix;
 	private int prixVente;
 	private EtatVente etatVente;
-	
+
 	private Utilisateur vendeur;
 	@NotNull
 	private Adresse adresseRetrait;
 	private String photo;
-	
-	
+
 	public ArticleAVendre() {
-		super();
+	
 	}
 
 	public ArticleAVendre(long idArticle, @NotNull Categorie categorie,
 			@NotBlank @Size(min = 10, max = 30) String nomArticle,
 			@NotBlank @Size(min = 20, max = 300) String description, @NotNull @NotNull LocalDateTime dateDebutEncheres,
-			@NotNull @NotNull LocalDateTime dateFinEncheres, int status, @NotNull @Min(1) int miseAPrix, int prixVente,
+			@NotNull @NotNull LocalDateTime dateFinEncheres, @NotNull @Min(1) int miseAPrix, int prixVente,
 			EtatVente etatVente, Utilisateur vendeur, @NotNull Adresse adresseRetrait, String photo) {
 		super();
 		this.idArticle = idArticle;
@@ -55,7 +53,6 @@ public class ArticleAVendre implements Serializable{
 		this.description = description;
 		this.dateDebutEncheres = dateDebutEncheres;
 		this.dateFinEncheres = dateFinEncheres;
-		this.status = status;
 		this.miseAPrix = miseAPrix;
 		this.prixVente = prixVente;
 		this.etatVente = etatVente;
@@ -64,7 +61,6 @@ public class ArticleAVendre implements Serializable{
 		this.photo = photo;
 	}
 
-	
 	public Categorie getCategorie() {
 		return categorie;
 	}
@@ -73,7 +69,6 @@ public class ArticleAVendre implements Serializable{
 		this.categorie = categorie;
 	}
 
-
 	public long getIdArticle() {
 		return idArticle;
 	}
@@ -81,7 +76,6 @@ public class ArticleAVendre implements Serializable{
 	public void setIdArticle(long idArticle) {
 		this.idArticle = idArticle;
 	}
-
 
 	public String getNomArticle() {
 		return nomArticle;
@@ -95,16 +89,14 @@ public class ArticleAVendre implements Serializable{
 		return description;
 	}
 
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
- 
-	
+
 	public LocalDateTime getDateDebutEncheres() {
 		return dateDebutEncheres;
 	}
- 
+
 	public void setDateDebutEncheres(LocalDateTime dateDebutEncheres) {
 		this.dateDebutEncheres = dateDebutEncheres;
 	}
@@ -141,11 +133,9 @@ public class ArticleAVendre implements Serializable{
 		this.etatVente = etatVente;
 	}
 
-
 	public Utilisateur getVendeur() {
 		return vendeur;
 	}
-
 
 	public void setVendeur(Utilisateur vendeur) {
 		this.vendeur = vendeur;
@@ -155,14 +145,9 @@ public class ArticleAVendre implements Serializable{
 		return adresseRetrait;
 	}
 
-
 	public void setAdresseRetrait(Adresse adresseRetrait) {
 		this.adresseRetrait = adresseRetrait;
 	}
-
-
-
-
 
 	@Override
 	public String toString() {
@@ -179,8 +164,6 @@ public class ArticleAVendre implements Serializable{
 		builder.append(dateDebutEncheres);
 		builder.append(", dateFinEncheres=");
 		builder.append(dateFinEncheres);
-		builder.append(", status=");
-		builder.append(status);
 		builder.append(", miseAPrix=");
 		builder.append(miseAPrix);
 		builder.append(", prixVente=");
@@ -197,11 +180,10 @@ public class ArticleAVendre implements Serializable{
 		return builder.toString();
 	}
 
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(adresseRetrait, categorie, dateDebutEncheres, dateFinEncheres, description, etatVente,
-				idArticle, miseAPrix, nomArticle, photo, prixVente, status, vendeur);
+				idArticle, miseAPrix, nomArticle, photo, prixVente, vendeur);
 	}
 
 	@Override
@@ -219,15 +201,7 @@ public class ArticleAVendre implements Serializable{
 				&& Objects.equals(description, other.description) && etatVente == other.etatVente
 				&& idArticle == other.idArticle && miseAPrix == other.miseAPrix
 				&& Objects.equals(nomArticle, other.nomArticle) && Objects.equals(photo, other.photo)
-				&& prixVente == other.prixVente && status == other.status && Objects.equals(vendeur, other.vendeur);
-	}
-
-	public int getStatus() {
-		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
+				&& prixVente == other.prixVente && Objects.equals(vendeur, other.vendeur);
 	}
 
 	public String getPhoto() {
