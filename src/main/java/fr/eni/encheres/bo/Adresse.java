@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Adresse {
 
-    private long idAdresse;
+    private long idAdresse = -1;
     private String rue;
     private String codePostal;
     private String ville;

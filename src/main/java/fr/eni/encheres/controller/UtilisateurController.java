@@ -84,6 +84,10 @@ public class UtilisateurController {
 	    }
 	}
 
+    @GetMapping("/login")
+    public String login() {
+        return "view-login"; 
+    }
 
 	
 }
