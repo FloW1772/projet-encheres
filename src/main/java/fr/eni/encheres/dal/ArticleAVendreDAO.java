@@ -3,6 +3,7 @@ package fr.eni.encheres.dal;
 import java.util.List;
 
 import fr.eni.encheres.bo.ArticleAVendre;
+import fr.eni.encheres.exception.BusinessException;
 
 public interface ArticleAVendreDAO {
 
@@ -14,7 +15,7 @@ public interface ArticleAVendreDAO {
 	
 	List<ArticleAVendre> findAllStatutEnCours();
 	
-	int annulerVente(long id);
+	int annulerVente(long id)throws BusinessException;
 	
 	void updateArticle(ArticleAVendre articleAVendre);
 

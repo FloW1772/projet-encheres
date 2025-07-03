@@ -1,2 +1,3 @@
-# Ignorer les fichiers temporaires de l'IDE
+
+# Ignorer les fichiers spécifiques à Eclipse
 .properties

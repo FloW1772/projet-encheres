@@ -7,6 +7,7 @@ import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Utilisateur;
+import fr.eni.encheres.exception.BusinessException;
 
 public interface ArticleAVendreService {
 
@@ -14,9 +15,9 @@ public interface ArticleAVendreService {
 
 	ArticleAVendre getById(int idArticle);
 
-	void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur);
+	void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur)throws BusinessException;
 	
-	void modifierArticleEnVente(ArticleAVendre articleAVendre, String pseudo);
+	void modifierArticleEnVente(ArticleAVendre articleAVendre, String pseudo)throws BusinessException;
 	
 	Categorie getCategorieById (long id);
 	
@@ -26,7 +27,7 @@ public interface ArticleAVendreService {
 
 	List<Adresse> getAllAdressesRetrait();
 
-	void annulerVente(ArticleAVendre article);
+	void annulerVente(ArticleAVendre article)throws BusinessException;
 
 	List<ArticleAVendre> getArticlesAVendreAvecParamètres(String nomRecherche,
 			int categorieRecherche, int casUtilisationFiltres, Principal principal);
