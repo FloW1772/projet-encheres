@@ -2,77 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Détail vente</title>
+    <title>Liste des enchères</title>
 </head>
 <body>
 
-    <h1>Détail vente</h1>
+    <h1>Liste des enchères</h1>
 
-    <h2 th:text="${article.nomArticle}">Nom de l'article</h2>
+    <!-- Formulaire de filtre -->
+    <form th:action="@{/encheres}" method="get">
+        <label for="nomArticle">Recherche :</label>
+        <input type="text" id="nomArticle" name="nomArticle" 
+               th:value="${nomRecherche}" placeholder="Nom de l'article" />
 
-    <p><strong>Description :</strong></p>
-    <p th:text="${article.description}">Description de l'article</p>
+        <label for="categorie">Catégorie :</label>
+        <select id="categorie" name="categorie">
+            <option value="0" th:selected="${categorieRecherche == 0}">Toutes</option>
+            <option th:each="cat : ${categories}" 
+                    th:value="${cat.idCategorie}" 
+                    th:text="${cat.libelle}"
+                    th:selected="${cat.idCategorie == categorieRecherche}">
+            </option>
+        </select>
 
-    <p><strong>Catégorie :</strong>
-        <span th:text="${article.categorie.libelle}">Informatique</span>
-    </p>
-
-    <p><strong>Meilleure offre :</strong>
-        <span th:if="${meilleureEnchere != null}"
-              th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}">
-              0 pts par quelqu’un
-        </span>
-        <span th:if="${meilleureEnchere == null}">Aucune offre pour l’instant</span>
-    </p>
-
-    <p><strong>Mise à prix :</strong>
-        <span th:text="${article.miseAPrix}">185</span> points
-    </p>
-
-    <p><strong>Fin de l'enchère :</strong>
-        <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}">09/10/2018</span>
-    </p>
-
-    <p><strong>Retrait :</strong><br>
-        <span th:if="${article.adresseRetrait != null}">
-            <span th:text="${article.adresseRetrait.rue}">10 allée des Alouettes</span><br>
-            <span th:text="${article.adresseRetrait.codePostal}">44800</span>
-            <span th:text="${article.adresseRetrait.ville}">Saint Herblain</span>
-        </span>
-        <span th:unless="${article.adresseRetrait != null}">Adresse de retrait non renseignée</span>
-    </p>
-
-    <p><strong>Vendeur :</strong>
-        <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}" 
-           th:text="${article.vendeur.pseudo}">jojo44</a>
-    </p>
+        <button type="submit">Rechercher</button>
+    </form>
 
     <hr>
 
-    <div th:if="${messagesErreur != null}">
-        <ul>
-            <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
-        </ul>
+    <!-- Liste des articles -->
+    <div th:if="${#lists.isEmpty(articles)}">
+        <p>Aucune enchère en cours pour cette recherche.</p>
     </div>
 
-    <div th:if="${utilisateurConnecte != null}">
-        <form th:action="@{/encherir}" method="post">
-            <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
-            <input type="hidden" name="idUtilisateur" th:value="${utilisateurConnecte.idUtilisateur}" />
+    <div th:each="article : ${articles}">
+        <h2>
+            <a th:href="@{/article/{id}(id=${article.idArticle})}" 
+               th:text="${article.nomArticle}">Nom article</a>
+        </h2>
+        <p th:text="${article.description}">Description</p>
+        <p><strong>Catégorie :</strong> <span th:text="${article.categorie.libelle}">Informatique</span></p>
+        <p><strong>Fin :</strong> 
+            <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}">Date fin</span>
+        </p>
+        <p><strong>Mise à prix :</strong> <span th:text="${article.miseAPrix}">100</span> pts</p>
+        <form th:action="@{/article/{id}(id=${article.idArticle})}" method="get">
+       <button type="submit">Voir détail et enchérir</button>
+       </form>
+        
+       <p><strong>Vendeur :</strong> 
+    <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}" 
+       th:text="${article.vendeur.pseudo}">
+       pseudo
+    </a>
+</p>
 
-            <label for="montant"><strong>Ma proposition :</strong></label>
-            <input type="number" id="montant" name="montant" min="1" required />
-
-            <button type="submit">Enchérir</button>
-        </form>
+        <hr>
     </div>
-
-    <div th:if="${utilisateurConnecte == null}">
-        <p>Veuillez vous connecter pour enchérir.</p>
-    </div>
-
-    <br>
-    <a th:href="@{/encheres}">Retour à la liste des enchères</a>
 
 </body>
 </html>

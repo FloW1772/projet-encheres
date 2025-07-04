@@ -41,7 +41,7 @@ public class ArticleAVendreController {
 
 	@GetMapping("/creation")
 	public String afficherFormulaireVente(Model model) {
-		Utilisateur utilisateur = utilisateurService.selectById(2);
+		Utilisateur utilisateur = utilisateurService.selectById(9);
 		ArticleAVendre article = new ArticleAVendre();
 		article.setVendeur(utilisateur);
 
@@ -78,7 +78,7 @@ public class ArticleAVendreController {
 		}
 
 		try {
-			Utilisateur utilisateur = utilisateurService.selectById(2);
+			Utilisateur utilisateur = utilisateurService.selectById(9);
 			articleAVendreService.mettreArticleEnVente(articleAVendre, utilisateur,
 					articleAVendre.getCategorie().getIdCategorie());
 		} catch (BusinessException e) {

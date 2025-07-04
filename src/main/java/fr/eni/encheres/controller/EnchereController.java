@@ -24,89 +24,100 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class EnchereController {
 
-    private final EnchereService enchereService;
-    private final ArticleAVendreService articleAVendreService;
-    private final CategorieService categorieService;
+	private final EnchereService enchereService;
+	private final ArticleAVendreService articleAVendreService;
+	private final CategorieService categorieService;
 
-    public EnchereController(EnchereService enchereService, ArticleAVendreService articleAVendreService, CategorieService categorieService) {
-        this.enchereService = enchereService;
-        this.articleAVendreService = articleAVendreService;
-        this.categorieService = categorieService;
-    }
+	public EnchereController(EnchereService enchereService, ArticleAVendreService articleAVendreService,
+			CategorieService categorieService) {
+		this.enchereService = enchereService;
+		this.articleAVendreService = articleAVendreService;
+		this.categorieService = categorieService;
+	}
 
-    @GetMapping("/encheres")
-    public String afficherListeEncheres(
-        @RequestParam(name = "nomArticle", required = false) String nomRecherche,
-        @RequestParam(name = "categorie", required = false, defaultValue = "0") int categorieRecherche,
-        Model model
-    ) {
-        List<Categorie> categories = categorieService.getAllCategories();
-        List<ArticleAVendre> articlesEnCours;
+	@GetMapping("/encheres")
+	public String afficherListeEncheres(@RequestParam(name = "nomArticle", required = false) String nomRecherche,
+			@RequestParam(name = "categorie", required = false, defaultValue = "0") int categorieRecherche,
+			Model model) {
+		List<Categorie> categories = categorieService.getAllCategories();
+		List<ArticleAVendre> articlesEnCours;
 
-        if ((nomRecherche == null || nomRecherche.isEmpty()) && categorieRecherche == 0) {
-            // Sans filtre, afficher tous les articles en cours
-            articlesEnCours = articleAVendreService.getArticlesAVendreEnCours();
-        } else {
-            // Avec filtre
-            articlesEnCours = articleAVendreService.rechercherArticlesEnCours(nomRecherche, categorieRecherche);
-        }
+		if ((nomRecherche == null || nomRecherche.isEmpty()) && categorieRecherche == 0) {
+			// Sans filtre, afficher tous les articles en cours
+			articlesEnCours = articleAVendreService.getArticlesAVendreEnCours();
+		} else {
+			// Avec filtre
+			articlesEnCours = articleAVendreService.rechercherArticlesEnCours(nomRecherche, categorieRecherche);
+		}
+		
+		  for (ArticleAVendre article : articlesEnCours) {
+		        if (article.getAdresseRetrait() == null && article.getVendeur() != null) {
+		            article.setAdresseRetrait(article.getVendeur().getAdresse());
+		        }
+		    }
+		model.addAttribute("categories", categories);
+		model.addAttribute("articles", articlesEnCours);
+		model.addAttribute("nomRecherche", nomRecherche);
+		model.addAttribute("categorieRecherche", categorieRecherche);
 
-        model.addAttribute("categories", categories);
-        model.addAttribute("articles", articlesEnCours);
-        model.addAttribute("nomRecherche", nomRecherche);
-        model.addAttribute("categorieRecherche", categorieRecherche);
+		return "view-liste-encheres";
+	}
 
-        return "view-liste-encheres";
-    }
+	// Affichage de la page détail d’un article
+	/// utilisation de HttpSession temporaires ;( a voir pour spring Security
 
-    //  Affichage de la page détail d’un article
-   /// utilisation de HttpSession temporaires ;( a voir pour spring Security
+	@GetMapping("/article/{id}")
+	public String afficherDetailArticle(@PathVariable("id") long idArticle, Model model, HttpSession session) {
+		ArticleAVendre article = articleAVendreService.getById(idArticle);
+		Enchere meilleureEnchere = enchereService.selectBestEnchereByArticle(idArticle);
 
-    @GetMapping("/article/{id}")
-    public String afficherDetailArticle(
-        @PathVariable("id") long idArticle,
-        Model model,
-        HttpSession session
-    ) {
-        ArticleAVendre article = articleAVendreService.getById(idArticle);
-        Enchere meilleureEnchere = enchereService.selectBestEnchereByArticle(idArticle);
+		Utilisateur utilisateurConnecte = (Utilisateur) session.getAttribute("utilisateurConnecte");
 
-   
-        Utilisateur utilisateurConnecte = (Utilisateur) session.getAttribute("utilisateurConnecte");
+		model.addAttribute("article", article);
+		model.addAttribute("meilleureEnchere", meilleureEnchere);
+		model.addAttribute("utilisateurConnecte", utilisateurConnecte);
 
-        model.addAttribute("article", article);
-        model.addAttribute("meilleureEnchere", meilleureEnchere);
-        model.addAttribute("utilisateurConnecte", utilisateurConnecte); 
+		return "view-article-detail";
+	}
 
-        return "view-article-detail";
-    }
+	@PostMapping("/encherir")
+	public String encherir(@RequestParam("idArticle") long idArticle, @RequestParam("montant") int montant, Model model,
+			HttpSession session) {
+		Utilisateur utilisateurConnecte = (Utilisateur) session.getAttribute("utilisateurConnecte");
+		if (utilisateurConnecte == null) {
+			model.addAttribute("messageErreur", "Vous devez être connecté pour enchérir.");
+			return "view-login";
+		}
 
+		try {
+			enchereService.encherir(idArticle, utilisateurConnecte.getIdUtilisateur(), montant);
+			return "redirect:/article/" + idArticle;
+		} catch (BusinessException e) {
+			model.addAttribute("messagesErreur", e.getMessages());
 
-    @PostMapping("/encherir")
-    public String encherir(
-        @RequestParam("idArticle") long idArticle,
-        @RequestParam("idUtilisateur") long idUtilisateur,
-        @RequestParam("montant") int montant,
-        Model model,
-        HttpSession session
-    ) {
-        try {
-            enchereService.encherir(idArticle, idUtilisateur, montant);
-            return "redirect:/article/" + idArticle;
-        } catch (BusinessException e) {
-            model.addAttribute("messagesErreur", e.getMessages());
+			ArticleAVendre article = articleAVendreService.getById(idArticle);
+			Enchere meilleureEnchere = enchereService.selectBestEnchereByArticle(idArticle);
 
-            ArticleAVendre article = articleAVendreService.getById(idArticle);
-            Enchere meilleureEnchere = enchereService.selectBestEnchereByArticle(idArticle);
+			// Utilisateur utilisateurConnecte = (Utilisateur)
+			// session.getAttribute("utilisateurConnecte");
 
-            Utilisateur utilisateurConnecte = (Utilisateur) session.getAttribute("utilisateurConnecte");
+			model.addAttribute("article", article);
+			model.addAttribute("meilleureEnchere", meilleureEnchere);
+			model.addAttribute("utilisateurConnecte", utilisateurConnecte);
 
-            model.addAttribute("article", article);
-            model.addAttribute("meilleureEnchere", meilleureEnchere);
-            model.addAttribute("utilisateurConnecte", utilisateurConnecte);
+			return "view-article-detail";
+		}
+	}
 
-            return "view-article-detail";
-        }
-    }
+	// ----------- Faire test-login ça va dirriger vers le site enchere a desactiver
+	// après la MEP
+	@GetMapping("/test-login")
+	public String testLogin(HttpSession session) {
+		Utilisateur utilisateur = new Utilisateur();
+		utilisateur.setIdUtilisateur(123L);
+		utilisateur.setPseudo("testUser");
+		session.setAttribute("utilisateurConnecte", utilisateur);
+		return "redirect:/encheres";
+	}
 
 }

@@ -1,18 +1,23 @@
 package fr.eni.encheres.bo;
 	
 public enum EtatVente {
-    EN_COURS,
-    TERMINEE,
-    ANNULEE,
-    NON_DEMARREE;
+	EN_COURS("En cours"),
+    TERMINEE("Terminee"),
+    ANNULEE("Annulee"),
+    NON_DEMARREE("Non demarree");
 
-    public static EtatVente fromInt(int etatInt) {
-        switch (etatInt) {
-            case 0: return EN_COURS;
-            case 1: return TERMINEE;
-            case 2: return ANNULEE;
-            case 3: return NON_DEMARREE;
-            default: throw new IllegalArgumentException("EtatVente inconnu: " + etatInt);
+    private final String label;
+
+    EtatVente(String label) {
+        this.label = label;
+    }
+
+    public static EtatVente fromString(String etatString) {
+        for (EtatVente etat : EtatVente.values()) {
+            if (etat.label.equalsIgnoreCase(etatString)) {
+                return etat;
+            }
         }
+        throw new IllegalArgumentException("EtatVente inconnu: " + etatString);
     }
 }

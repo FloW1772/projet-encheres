@@ -39,15 +39,19 @@
         <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}">09/10/2018</span>
     </p>
 
- <p><strong>Retrait :</strong><br>
+<p><strong>Retrait :</strong><br>
     <span th:if="${article.adresseRetrait != null}">
         <span th:text="${article.adresseRetrait.rue}">10 allée des Alouettes</span><br>
         <span th:text="${article.adresseRetrait.codePostal}">44800</span>
         <span th:text="${article.adresseRetrait.ville}">Saint Herblain</span>
     </span>
-    <span th:unless="${article.adresseRetrait != null}">Adresse de retrait non renseignée</span>
+    <span th:if="${article.adresseRetrait == null}">
+        <span th:text="${article.vendeur.adresse.rue}">Rue par défaut</span><br>
+        <span th:text="${article.vendeur.adresse.codePostal}">Code postal par défaut</span>
+        <span th:text="${article.vendeur.adresse.ville}">Ville par défaut</span>
+    </span>
 </p>
-   
+
     <p><strong>Vendeur :</strong>
         <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}" 
            th:text="${article.vendeur.pseudo}">jojo44</a>
@@ -65,8 +69,8 @@
    
     <form th:action="@{/encherir}" method="post">
         <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
-        <input type="hidden" name="idUtilisateur" th:value="${#authentication.principal.idUtilisateur}" />
-
+      <!-- <input type="hidden" name="idUtilisateur" th:value="${#authentication.principal.idUtilisateur}" /> -->
+		
         <label for="montant"><strong>Ma proposition :</strong></label>
         <input type="number" id="montant" name="montant" min="1" required />
 
