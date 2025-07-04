@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.encheres.bo.ArticleAVendre;
@@ -17,12 +19,29 @@ import fr.eni.encheres.dal.EnchereDAO;
 @Repository
 public class EnchereDAOImpl implements EnchereDAO {
 
-    private final String INSERT = "INSERT INTO Enchere(dateEnchere, montant, idUtilisateur, idArticle) VALUES (:dateEnchere, :montant, :idUtilisateur, :idArticle)";
+    private final String INSERT = "INSERT INTO Enchere(dateEnchere, montant, idUtilisateur, idArticle) VALUES (GETDATE(), :montant, :idUtilisateur, :idArticle)";
     private final String SELECT_BY_ID = "SELECT * FROM Enchere WHERE idEnchere = :idEnchere";
     private final String SELECT_ALL = "SELECT * FROM Enchere";
     private final String UPDATE = "UPDATE Enchere SET dateEnchere = :dateEnchere, montant = :montant, idUtilisateur = :idUtilisateur, idArticle = :idArticle WHERE idEnchere = :idEnchere";
     private final String DELETE = "DELETE FROM Enchere WHERE idEnchere = :idEnchere";
-    private final String SELECT_BEST_BY_ARTICLE = "SELECT TOP 1 * FROM Enchere WHERE idArticle = :idArticle ORDER BY montant DESC";
+    private final String SELECT_BEST_BY_ARTICLE =
+    	    "SELECT TOP 1 " +
+    	    "    e.idEnchere, " +
+    	    "    e.dateEnchere, " +
+    	    "    e.montant, " +
+    	    "    e.idUtilisateur AS encherisseurId, " +
+    	    "    u.pseudo AS encherisseurPseudo, " +
+    	    "    a.idArticle, " +
+    	    "    a.nomArticle, " +
+    	    "    a.dateFinEncheres, " +
+    	    "    a.idUtilisateur AS vendeurId, " +
+    	    "    uv.pseudo AS vendeurPseudo " +
+    	    "FROM Enchere e " +
+    	    "JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur " +
+    	    "JOIN ArticleAVendre a ON e.idArticle = a.idArticle " +
+    	    "JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur " +
+    	    "WHERE e.idArticle = :idArticle " +
+    	    "ORDER BY e.montant DESC";
     private final String SELECT_BY_UTILISATEUR = "SELECT * FROM Enchere WHERE idUtilisateur = :idUtilisateur";
     private final String SELECT_BY_ARTICLE = "SELECT * FROM Enchere WHERE idArticle = :idArticle";
     private final String DELETE_BY_ARTICLE = "DELETE FROM Enchere WHERE idArticle = :idArticle";
@@ -41,7 +60,16 @@ public class EnchereDAOImpl implements EnchereDAO {
         params.addValue("idUtilisateur", enchere.getEncherisseur().getIdUtilisateur());
         params.addValue("idArticle", enchere.getArticle().getIdArticle());
 
-        namedParameterJdbcTemplate.update(INSERT, params);
+        KeyHolder keyholder = new GeneratedKeyHolder(); 
+       
+        namedParameterJdbcTemplate.update(INSERT, params, keyholder, new String[]{"idEnchere"});
+        
+        Number idGenere = keyholder.getKey();
+        
+		if (idGenere != null) {
+			enchere.setIdEnchere(idGenere.longValue());
+		}
+        
     }
 
     @Override
