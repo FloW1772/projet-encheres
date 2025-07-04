@@ -15,6 +15,7 @@ import fr.eni.encheres.bo.Adresse;
 
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BusinessException;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -84,10 +85,32 @@ public class UtilisateurController {
 	    }
 	}
 
-    @GetMapping("/login")
-    public String login() {
-        return "view-login"; 
-    }
+	//-------- gesition à la mano-----
+	    @GetMapping("/login")
+	    public String loginForm() {
+	        return "view-login"; 
+	    }
+
+	    @PostMapping("/login")
+	    public String login(@RequestParam(name= "pseudo") String pseudo, HttpSession session, Model model) {
+	        // Ici tu devrais valider le pseudo avec la base, je fais simple
+	        if (pseudo != null && !pseudo.isEmpty()) {
+	            Utilisateur utilisateur = new Utilisateur();
+	            utilisateur.setIdUtilisateur(1L); // id fictif
+	            utilisateur.setPseudo(pseudo);
+	            session.setAttribute("utilisateurConnecte", utilisateur);
+	            return "redirect:/encheres";
+	        }
+	        model.addAttribute("messageErreur", "Pseudo invalide");
+	        return "view-login";
+	    }
+
+	    @GetMapping("/logout")
+	    public String logout(HttpSession session) {
+	        session.invalidate();
+	        return "redirect:/login";
+	    }
+	
 
 	
 }

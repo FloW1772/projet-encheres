@@ -42,9 +42,10 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
 	// Requête pour trouver tous les articles en statut "en cours"
 	private static final String FIND_ALL_STATUT_EN_COURS = "SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur " +
-		    "FROM ArticleAVendre a " +
-		    "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur " +
-		    "WHERE a.etatVente = 0";
+            "FROM ArticleAVendre a " +
+            "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur " +
+            "WHERE a.etatVente = 'En cours'";
+
 
 	// Requête pour marquer une vente comme supprimée (statut 100)
 	private static final String DELETE_VENTE = "UPDATE ArticleAVendre SET etatVente = 100 WHERE idArticle = :idArticle";
@@ -168,7 +169,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	        articleAVendre.setDescription(rs.getString("description"));
 	        articleAVendre.setDateDebutEncheres(rs.getTimestamp("dateDebutEncheres").toLocalDateTime());
 	        articleAVendre.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
-	        articleAVendre.setEtatVente(EtatVente.fromInt(rs.getInt("etatVente")));
+	        articleAVendre.setEtatVente(EtatVente.fromString(rs.getString("etatVente")));
 	        articleAVendre.setMiseAPrix(rs.getInt("miseAPrix"));
 	        articleAVendre.setPrixVente(rs.getInt("prixVente"));
 

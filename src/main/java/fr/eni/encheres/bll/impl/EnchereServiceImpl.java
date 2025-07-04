@@ -80,8 +80,14 @@ public class EnchereServiceImpl implements EnchereService {
 	@Override
 	public void encherir(long idArticle, long idUtilisateur, int montant) throws BusinessException {
 
-		Utilisateur utilisateur = utilisateurDAO.selectById(idUtilisateur);
-		ArticleAVendre article = articleAVendreDAO.getByID(idArticle);
+		  Utilisateur utilisateur = utilisateurDAO.selectById(idUtilisateur);
+		    if (utilisateur == null) {
+		        throw new BusinessException("Utilisateur non trouvé.");
+		    }
+		    ArticleAVendre article = articleAVendreDAO.getByID(idArticle);
+		    if (article == null) {
+		        throw new BusinessException("Article non trouvé.");
+		    }
 
 		BusinessException exception = new BusinessException();
 
