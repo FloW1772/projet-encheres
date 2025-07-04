@@ -105,7 +105,7 @@ public class EnchereController {
 			model.addAttribute("meilleureEnchere", meilleureEnchere);
 			model.addAttribute("utilisateurConnecte", utilisateurConnecte);
 
-			return "view-article-detail";
+			return "view-liste-encheres";
 		}
 	}
 
@@ -119,5 +119,11 @@ public class EnchereController {
 		session.setAttribute("utilisateurConnecte", utilisateur);
 		return "redirect:/encheres";
 	}
+	
+	@GetMapping("/")
+	public String redirectRoot() {
+	    return "redirect:/encheres";
+	}
+	
 
 }
