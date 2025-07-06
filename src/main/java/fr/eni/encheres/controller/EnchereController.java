@@ -115,11 +115,6 @@ public class EnchereController {
 	        return "redirect:/encheres"; 
 	    }
 
-	    if (article.getVendeur().getIdUtilisateur() == utilisateurConnecte.getIdUtilisateur()) {
-	        redirectAttributes.addFlashAttribute("messageErreur", "Vous ne pouvez pas enchérir sur votre propre article");
-	        return "redirect:/article/" + idArticle;
-	    }
-
 	    try {
 	        enchereService.encherir(idArticle, utilisateurConnecte.getIdUtilisateur(), montant);
 	        return "redirect:/article/" + idArticle;
@@ -134,6 +129,7 @@ public class EnchereController {
 	        return "view-article-detail";
 	    }
 	}
+
 
 
 ////-------------- Activer pour la MEP -----------

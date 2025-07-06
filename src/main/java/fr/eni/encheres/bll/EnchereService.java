@@ -3,6 +3,7 @@ package fr.eni.encheres.bll;
 import java.util.List;
 
 import fr.eni.encheres.bo.Enchere;
+import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BusinessException;
 
 public interface EnchereService {
@@ -28,4 +29,6 @@ public interface EnchereService {
     void deleteByArticleId(long idArticle);
     
     void encherir(long idArticle, long idUtilisateur, int Montant) throws BusinessException;
+    Utilisateur getGagnant(long idArticle);
+   
 }

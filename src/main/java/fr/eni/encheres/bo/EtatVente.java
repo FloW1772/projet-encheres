@@ -4,8 +4,8 @@ public enum EtatVente {
     EN_COURS("En cours"),
     TERMINEE("Terminee"),
     ANNULEE("Annulee"),
-    NON_DEMARREE("Non demarree"),
-    CREE("Créé");  
+    NON_DEMARREE("Non demarree");
+ 
 
     private final String label;
 
