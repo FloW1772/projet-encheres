@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Liste des enchères</title>
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
+ <nav style="background: #007bff; padding: 10px;">
+    <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
+      <li><a th:href="@{/}" style="color: white;">Accueil</a></li>
+      <li><a th:href="@{/vente/mes-ventes}" style="color: white;">Mes ventes</a></li>
+       <li><a th:href="@{/vente/mes-encheres}" style="color: white;">Mes encheres</a></li>
+      <li><a th:href="@{/vente/creation}" style="color: white;">Créer une vente</a></li>
+      <li><a th:href="@{/utilisateur/modifier}" style="color: white;">Profil</a></li>
+      <li><a th:href="@{/logout}" style="color: white;">Se déconnecter</a></li>
+      <li><a th:href="@{/login}" style="color: white;">Connexion</a></li>
+    </ul>
+  </nav>
 
     <h1>Liste des enchères</h1>
 
-    <!-- Formulaire de filtre -->
     <form th:action="@{/encheres}" method="get">
         <label for="nomArticle">Recherche :</label>
         <input type="text" id="nomArticle" name="nomArticle" 
@@ -58,6 +69,6 @@
 
         <hr>
     </div>
-
+  
 </body>
 </html>

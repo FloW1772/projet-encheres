@@ -6,7 +6,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import fr.eni.encheres.bll.UtilisateurService;
 import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.Role;
@@ -21,7 +20,7 @@ import fr.eni.encheres.exception.BusinessException;
 public class UtilisateurServiceImpl implements UtilisateurService {
 
 	private final UtilisateurDAO utilisateurDAO;
-	//private final PasswordEncoder passwordEncoder;
+	// private final PasswordEncoder passwordEncoder;
 	private final AdresseDAO adresseDAO;
 	private final UtilisateurRoleDAO utilisateurRoleDAO;
 	private final RoleDAO roleDAO;
@@ -35,50 +34,49 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	 * adresseDAO; this.utilisateurRoleDAO = utilisateurRoleDAO;
 	 * this.passwordEncoder = passwordEncoder; }
 	 */
-	
+
 	@Override
 	@Transactional(rollbackFor = BusinessException.class)
 	public void creerUtilisateurAvecAdresseEtRole(Utilisateur utilisateur, Adresse adresse, Role role)
-	        throws BusinessException {
-	    BusinessException be = new BusinessException();
+			throws BusinessException {
+		BusinessException be = new BusinessException();
 
-	    if (!isEmailAvailable(utilisateur.getEmail(), be)) {
-	        throw be;
-	    }
+		if (!isEmailAvailable(utilisateur.getEmail(), be)) {
+			throw be;
+		}
 
-	    try {
-	        // Encodage du mot de passe avant insertion en base (si nécessaire)
-	        // String encodedPwd = passwordEncoder.encode(utilisateur.getMotDePasse());
-	        // utilisateur.setMotDePasse(encodedPwd);
+		try {
+			// Encodage du mot de passe avant insertion en base (si nécessaire)
+			// String encodedPwd = passwordEncoder.encode(utilisateur.getMotDePasse());
+			// utilisateur.setMotDePasse(encodedPwd);
 
-	        System.out.println(">>> Insertion utilisateur");
-	        utilisateurDAO.insert(utilisateur);
-	        System.out.println(">>> ID utilisateur généré : " + utilisateur.getIdUtilisateur());
+			System.out.println(">>> Insertion utilisateur");
+			utilisateurDAO.insert(utilisateur);
+			System.out.println(">>> ID utilisateur généré : " + utilisateur.getIdUtilisateur());
 
-	        if (adresse != null) {
-	            // On lie l'adresse à l'utilisateur
-	            adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
-	            System.out.println(">>> Insertion adresse");
-	            adresseDAO.save(adresse);
-	            utilisateur.setAdresse(adresse);
+			if (adresse != null) {
+				// On lie l'adresse à l'utilisateur
+				adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
+				System.out.println(">>> Insertion adresse");
+				adresseDAO.save(adresse);
+				utilisateur.setAdresse(adresse);
 
-	            // Mettre à jour l'utilisateur avec l'idAdresse
-	            System.out.println(">>> Mise à jour de l'utilisateur avec idAdresse");
-	            utilisateurDAO.updateIdAdresse(utilisateur.getIdUtilisateur(), adresse.getIdAdresse());
-	        } else {
-	            System.out.println(">>> Pas d'adresse fournie, insertion ignorée");
-	        }
+				// Mettre à jour l'utilisateur avec l'idAdresse
+				System.out.println(">>> Mise à jour de l'utilisateur avec idAdresse");
+				utilisateurDAO.updateIdAdresse(utilisateur.getIdUtilisateur(), adresse.getIdAdresse());
+			} else {
+				System.out.println(">>> Pas d'adresse fournie, insertion ignorée");
+			}
 
-	        System.out.println(">>> Insertion rôle utilisateur");
-	        utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
+			System.out.println(">>> Insertion rôle utilisateur");
+			utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
 
-	    } catch (DataAccessException e) {
-	        e.printStackTrace();
-	        be.add("Erreur d'accès à la base de données");
-	        throw be;
-	    }
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+			be.add("Erreur d'accès à la base de données");
+			throw be;
+		}
 	}
-
 
 	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, AdresseDAO adresseDAO,
 			UtilisateurRoleDAO utilisateurRoleDAO, RoleDAO roleDAO) {
@@ -152,16 +150,26 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	}
 
 	@Override
-	public Utilisateur selectById(int idUtilisateur) {
+	public Utilisateur selectById(long idUtilisateur) {
 		Utilisateur utilisateur = utilisateurDAO.selectById(idUtilisateur);
 		chargerAdresse(utilisateur);
 		return utilisateur;
 	}
 
 	@Override
-	public Utilisateur selectByLogin(String login) {
-		Utilisateur utilisateur = utilisateurDAO.selectByLogin(login);
-		chargerAdresse(utilisateur);
+	public Utilisateur selectByLogin(String pseudo) throws BusinessException {
+		Utilisateur utilisateur = null;
+		try {
+			utilisateur = utilisateurDAO.selectByLogin(pseudo);
+			if (utilisateur != null) {
+				Adresse adresse = adresseDAO.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
+				utilisateur.setAdresse(adresse);
+			}
+		} catch (DataAccessException e) {
+			BusinessException be = new BusinessException();
+			be.add("Erreur lors de la récupération de l'utilisateur");
+			throw be;
+		}
 		return utilisateur;
 	}
 
@@ -172,53 +180,49 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
 	@Override
 	@Transactional
-	 public void debiterPoints(long idUtilisateur, int montant) throws BusinessException {
-        try {
-            utilisateurDAO.debiterPoints(idUtilisateur, montant);
-        } catch (RuntimeException e) {
-            BusinessException be = new BusinessException("Impossible de débiter les points");
-            be.add(e.getMessage());
-            throw be;
-        }
-    }
-	
+	public void debiterPoints(long idUtilisateur, int montant) throws BusinessException {
+		try {
+			utilisateurDAO.debiterPoints(idUtilisateur, montant);
+		} catch (RuntimeException e) {
+			BusinessException be = new BusinessException("Impossible de débiter les points");
+			be.add(e.getMessage());
+			throw be;
+		}
+	}
+
 	@Override
 	@Transactional
 	public void crediterPoints(long idUtilisateur, int montant) throws BusinessException {
-        try {
-            utilisateurDAO.crediterPoints(idUtilisateur, montant);
-        } catch (RuntimeException e) {
-            BusinessException be = new BusinessException("Impossible de créditer les points");
-            be.add(e.getMessage());
-            throw be;
-        }
-    }
-	
-	
+		try {
+			utilisateurDAO.crediterPoints(idUtilisateur, montant);
+		} catch (RuntimeException e) {
+			BusinessException be = new BusinessException("Impossible de créditer les points");
+			be.add(e.getMessage());
+			throw be;
+		}
+	}
+
 	@Override
 	@Transactional
 	public void devenirVendeur(long idUtilisateur) throws BusinessException {
-	    try {
-	   
-	        Role roleVendeur = roleDAO.selectByLibelle("VENDEUR");
-	        if (roleVendeur == null) {
-	            throw new BusinessException("Le rôle VENDEUR n'existe pas");
-	        }
+		try {
 
-	        List<Role> rolesExistants = utilisateurRoleDAO.findRoleIdsByUserId(idUtilisateur);
-	        boolean dejaVendeur = rolesExistants.stream()
-	                .anyMatch(r -> "VENDEUR".equalsIgnoreCase(r.getLibelle()));
+			Role roleVendeur = roleDAO.selectByLibelle("VENDEUR");
+			if (roleVendeur == null) {
+				throw new BusinessException("Le rôle VENDEUR n'existe pas");
+			}
 
-	        if (dejaVendeur) {
-	            throw new BusinessException("L'utilisateur est déjà vendeur");
-	        }
-	        utilisateurRoleDAO.insert(idUtilisateur, roleVendeur.getIdRole());
+			List<Role> rolesExistants = utilisateurRoleDAO.findRoleIdsByUserId(idUtilisateur);
+			boolean dejaVendeur = rolesExistants.stream().anyMatch(r -> "VENDEUR".equalsIgnoreCase(r.getLibelle()));
 
-	    } catch (DataAccessException e) {
-	        throw new BusinessException("Erreur lors de l'attribution du rôle VENDEUR");
-	    }
+			if (dejaVendeur) {
+				throw new BusinessException("L'utilisateur est déjà vendeur");
+			}
+			utilisateurRoleDAO.insert(idUtilisateur, roleVendeur.getIdRole());
+
+		} catch (DataAccessException e) {
+			throw new BusinessException("Erreur lors de l'attribution du rôle VENDEUR");
+		}
 	}
-
-	
 
 }

@@ -27,4 +27,9 @@ public class RoleServiceImpl implements RoleService {
 		return roleDAO.selectById(idRole);
 	}
 
+	@Override
+	public Role getRoleByLibelle(String libelle) {
+	    return roleDAO.selectByLibelle(libelle);
+	}
+
 }

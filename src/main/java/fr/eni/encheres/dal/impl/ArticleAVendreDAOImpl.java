@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import fr.eni.encheres.bo.ArticleAVendre;
+import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.EtatVente;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.ArticleAVendreDAO;
@@ -21,9 +22,8 @@ import fr.eni.encheres.dal.ArticleAVendreDAO;
 @Repository
 public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
-	// Requête d'insertion d'un article
 	private static final String INSERT_ARTICLE = "INSERT INTO ArticleAVendre(nomArticle, description, dateDebutEncheres, dateFinEncheres, etatVente, miseAPrix, idUtilisateur, idCategorie, idAdresseRetrait) "
-			+ "VALUES (:nomArticle, :description, :dateDebutEncheres, :dateFinEncheres, 0, :miseAPrix, :idUtilisateur, :idCategorie, :idAdresseRetrait)";
+			+ "VALUES (:nomArticle, :description, :dateDebutEncheres, :dateFinEncheres, :etatVente, :miseAPrix, :idUtilisateur, :idCategorie, :idAdresseRetrait)";
 
 	// Requête de mise à jour d'un article
 	private static final String UPDATE_ARTICLE = "UPDATE ArticleAVendre SET nomArticle = :nomArticle, description = :description, dateDebutEncheres = :dateDebutEncheres, "
@@ -31,21 +31,19 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 			+ "WHERE idArticle = :idArticle";
 
 	// Requête pour récupérer un article par son ID
-	private static final String FIND_BY_ID = 
-		    "SELECT a.*, u.idUtilisateur, u.pseudo, u.nom, u.prenom, u.email " +
-		    	    "FROM ArticleAVendre a " +
-		    	    "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur " +
-		    	    "WHERE a.idArticle = :idArticle";
+	private static final String FIND_BY_ID = "SELECT a.*, u.idUtilisateur, u.pseudo, u.nom, u.prenom, u.email, "
+			+ "c.idCategorie, c.libelle AS categorieLibelle " + "FROM ArticleAVendre a "
+			+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
+			+ "LEFT JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.idArticle = :idArticle";
 
 	// Requête de mise à jour du prix de vente
 	private static final String UPDATE_PRIX_VENTE = "UPDATE ArticleAVendre SET prixVente = :prixVente WHERE idArticle = :idArticle";
 
 	// Requête pour trouver tous les articles en statut "en cours"
-	private static final String FIND_ALL_STATUT_EN_COURS = "SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur " +
-            "FROM ArticleAVendre a " +
-            "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur " +
-            "WHERE a.etatVente = 'En cours'";
-
+	private static final String FIND_ALL_STATUT_EN_COURS = "SELECT a.*, "
+			+ "u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur, " + "c.idCategorie, c.libelle AS categorieLibelle "
+			+ "FROM ArticleAVendre a " + "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
+			+ "JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.etatVente = 'En cours'";
 
 	// Requête pour marquer une vente comme supprimée (statut 100)
 	private static final String DELETE_VENTE = "UPDATE ArticleAVendre SET etatVente = 100 WHERE idArticle = :idArticle";
@@ -63,11 +61,18 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	private static final String TROUVER_PROPRIETAIRE_ARTICLE = "SELECT COUNT(*) FROM ArticleAVendre a "
 			+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
 			+ "WHERE a.idArticle = :idArticle AND u.pseudo = :pseudo";
-	private static final String FIND_EN_COURS_WITH_FILTERS = 
-		    "SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur " +
-		    "FROM ArticleAVendre a " +
-		    "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur " +
-		    "WHERE a.etatVente = 0";
+	private static final String FIND_EN_COURS_WITH_FILTERS = "SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur, "
+			+ "c.idCategorie, c.libelle AS categorieLibelle " + "FROM ArticleAVendre a "
+			+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
+			+ "LEFT JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.etatVente = 'EN COURS' "
+			+ "AND (:nomRecherche IS NULL OR a.nomArticle LIKE :nomRecherche) "
+			+ "AND (:categorieRecherche = 0 OR a.idCategorie = :categorieRecherche)";
+
+	private static final String FIND_ARTICLES_BY_VENDEUR_EN_COURS = "SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur, "
+			+ "c.idCategorie, c.libelle AS categorieLibelle " + "FROM ArticleAVendre a "
+			+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
+			+ "LEFT JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE u.pseudo = :pseudo "
+			+ "AND a.etatVente = :etatVente";
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -90,9 +95,10 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	 * @param article L'article à ajouter
 	 */
 	@Override
+
 	public void addArticle(ArticleAVendre articleAVendre) {
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		namedParameters.addValue("nomArticle", articleAVendre.getNomArticle()); // Nom de l'article
+		namedParameters.addValue("nomArticle", articleAVendre.getNomArticle());
 		namedParameters.addValue("description", articleAVendre.getDescription());
 		namedParameters.addValue("dateDebutEncheres", articleAVendre.getDateDebutEncheres());
 		namedParameters.addValue("dateFinEncheres", articleAVendre.getDateFinEncheres());
@@ -101,9 +107,23 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 		namedParameters.addValue("idCategorie", articleAVendre.getCategorie().getIdCategorie());
 		namedParameters.addValue("idAdresseRetrait", articleAVendre.getAdresseRetrait().getIdAdresse());
 
-		// Crée un keyHolder pour récupérer l'ID généré
+		LocalDateTime now = LocalDateTime.now();
+		if (!articleAVendre.getDateDebutEncheres().isAfter(now)) {
+			// dateDebutEncheres <= maintenant en cours
+			namedParameters.addValue("etatVente", EtatVente.EN_COURS.getLabel());
+		} else {
+			// dateDebutEncheres > maintenant cree
+			namedParameters.addValue("etatVente", EtatVente.CREE.getLabel());
+		}
+
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		namedParameterJdbcTemplate.update(INSERT_ARTICLE, namedParameters, keyHolder, new String[] { "idArticle" });
+
+		Number key = keyHolder.getKey();
+		if (key != null) {
+			articleAVendre.setIdArticle(key.longValue());
+		}
+
 	}
 
 	/**
@@ -121,7 +141,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 		namedParameters.addValue("miseAPrix", articleAVendre.getMiseAPrix());
 		namedParameters.addValue("idCategorie", articleAVendre.getCategorie().getIdCategorie());
 		namedParameters.addValue("idAdresseRetrait", articleAVendre.getAdresseRetrait().getIdAdresse());
-		namedParameters.addValue("idArticle", articleAVendre.getIdArticle()); // Ajout de l'ID pour la mise à jour
+		namedParameters.addValue("idArticle", articleAVendre.getIdArticle()); 
 
 		int rows = namedParameterJdbcTemplate.update(UPDATE_ARTICLE, namedParameters);
 		if (rows == 0) {
@@ -161,33 +181,35 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	 * RowMapper pour mapper un article à partir d'un ResultSet.
 	 */
 	public class ArticleAVendreRowMapper implements RowMapper<ArticleAVendre> {
-	    @Override
-	    public ArticleAVendre mapRow(ResultSet rs, int rowNum) throws SQLException {
-	        ArticleAVendre articleAVendre = new ArticleAVendre();
-	        articleAVendre.setIdArticle(rs.getInt("idArticle"));
-	        articleAVendre.setNomArticle(rs.getString("nomArticle"));
-	        articleAVendre.setDescription(rs.getString("description"));
-	        articleAVendre.setDateDebutEncheres(rs.getTimestamp("dateDebutEncheres").toLocalDateTime());
-	        articleAVendre.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
-	        articleAVendre.setEtatVente(EtatVente.fromString(rs.getString("etatVente")));
-	        articleAVendre.setMiseAPrix(rs.getInt("miseAPrix"));
-	        articleAVendre.setPrixVente(rs.getInt("prixVente"));
+		@Override
+		public ArticleAVendre mapRow(ResultSet rs, int rowNum) throws SQLException {
+			ArticleAVendre articleAVendre = new ArticleAVendre();
+			articleAVendre.setIdArticle(rs.getInt("idArticle"));
+			articleAVendre.setNomArticle(rs.getString("nomArticle"));
+			articleAVendre.setDescription(rs.getString("description"));
+			articleAVendre.setDateDebutEncheres(rs.getTimestamp("dateDebutEncheres").toLocalDateTime());
+			articleAVendre.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
+			articleAVendre.setEtatVente(EtatVente.fromString(rs.getString("etatVente")));
+			articleAVendre.setMiseAPrix(rs.getInt("miseAPrix"));
+			articleAVendre.setPrixVente(rs.getInt("prixVente"));
 
-	        // Création du vendeur à partir des colonnes récupérées
-	        Utilisateur vendeur = new Utilisateur();
-	        vendeur.setIdUtilisateur(rs.getInt("idUtilisateur"));
-	        vendeur.setPseudo(rs.getString("pseudo"));
-	        vendeur.setNom(rs.getString("nom"));
-	        vendeur.setPrenom(rs.getString("prenom"));
-	        vendeur.setEmail(rs.getString("email"));
+			Utilisateur vendeur = new Utilisateur();
+			vendeur.setIdUtilisateur(rs.getInt("idUtilisateur"));
+			vendeur.setPseudo(rs.getString("pseudo"));
+			vendeur.setNom(rs.getString("nom"));
+			vendeur.setPrenom(rs.getString("prenom"));
+			vendeur.setEmail(rs.getString("email"));
+			articleAVendre.setVendeur(vendeur);
 
-	        articleAVendre.setVendeur(vendeur);
+			// Récupérer la catégorie pour l'affichage dabs la liste
+			Categorie categorie = new Categorie();
+			categorie.setIdCategorie(rs.getInt("idCategorie"));
+			categorie.setLibelle(rs.getString("categorieLibelle"));
+			articleAVendre.setCategorie(categorie);
 
-	        return articleAVendre;
-	    }
+			return articleAVendre;
+		}
 	}
-
-
 
 	@Override
 	public List<ArticleAVendre> findAllStatutEnCours() {
@@ -204,43 +226,49 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	@Override
 	public List<ArticleAVendre> findAllWithParameters(String nomRecherche, int categorieRecherche, int statutRecherche,
 			int casUtilisationFiltres, String pseudoUtilisateurEnSession) {
+
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-		// Création de mon String Builder avec la requete de base
-		StringBuilder FIND_ALL_WITH_PARAMETERS = new StringBuilder("SELECT * FROM ArticleAVendre ");
 
-		// Ajout du filtre des articles sur lequelles l'utilisateur a enchérit
+		StringBuilder sql = new StringBuilder("SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur, "
+				+ "c.idCategorie, c.libelle AS categorieLibelle " + "FROM ArticleAVendre a "
+				+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
+				+ "LEFT JOIN Categorie c ON a.idCategorie = c.idCategorie ");
+
 		if (casUtilisationFiltres == 1 || casUtilisationFiltres == 2) {
-			FIND_ALL_WITH_PARAMETERS
-					.append("INNER JOIN ENCHERES ON ARTICLES_A_VENDRE.no_article = ENCHERES.no_article ");
+			sql.append("JOIN Enchere e ON a.idArticle = e.idArticle ");
 		}
 
-		// Ajout du parametre du Statut recherché
-		namedParameters.addValue("statutRecherche", statutRecherche);
-		FIND_ALL_WITH_PARAMETERS.append("WHERE statut_enchere = :statutRecherche ");
+		sql.append("WHERE 1=1 ");
 
-		// Ajout du filtres des article vendu par l'utilisateur
-		if (pseudoUtilisateurEnSession != null) {
-			namedParameters.addValue("pseudoUtilisateurEnSession", pseudoUtilisateurEnSession);
+		// Filtre sur statut via l'enum EtatVente j'ai creeé un converter Int dans enum
+		EtatVente etat = EtatVente.fromInt(statutRecherche);
+		sql.append("AND a.etatVente = :statutRecherche ");
+		namedParameters.addValue("statutRecherche", etat.getLabel());
+
+		if (pseudoUtilisateurEnSession != null && !pseudoUtilisateurEnSession.isEmpty()) {
 			if (casUtilisationFiltres == 1 || casUtilisationFiltres == 2) {
-				FIND_ALL_WITH_PARAMETERS.append(" AND ENCHERES.id_utilisateur = :pseudoUtilisateurEnSession ");
+				sql.append(
+						"AND e.idUtilisateur = (SELECT idUtilisateur FROM Utilisateur WHERE pseudo = :pseudoUtilisateurEnSession) ");
 			} else {
-				FIND_ALL_WITH_PARAMETERS.append(" AND id_utilisateur = :pseudoUtilisateurEnSession ");
+				sql.append(
+						"AND a.idUtilisateur = (SELECT idUtilisateur FROM Utilisateur WHERE pseudo = :pseudoUtilisateurEnSession) ");
 			}
-			if (nomRecherche != "") {
-				// Ajout des % a mon nom recherché pour la requete SQL
-				String SQLNomRecherche = "%" + nomRecherche + '%';
-				namedParameters.addValue("SQLNomRecherche", SQLNomRecherche);
-				FIND_ALL_WITH_PARAMETERS.append("AND nom_article LIKE :SQLNomRecherche ");
-			}
-
-			if (categorieRecherche != 0) {
-				namedParameters.addValue("categorieRecherche", categorieRecherche);
-				FIND_ALL_WITH_PARAMETERS.append("AND no_categorie = :categorieRecherche ");
-			}
-			return namedParameterJdbcTemplate.query(FIND_ALL_WITH_PARAMETERS.toString(), namedParameters,
-					new ArticleAVendreRowMapper());
+			namedParameters.addValue("pseudoUtilisateurEnSession", pseudoUtilisateurEnSession);
 		}
-		return null;
+
+		// Filtre sur nom d'article
+		if (nomRecherche != null && !nomRecherche.isBlank()) {
+			sql.append("AND a.nomArticle LIKE :nomRecherche ");
+			namedParameters.addValue("nomRecherche", "%" + nomRecherche + "%");
+		}
+
+		// Filtre sur catégorie
+		if (categorieRecherche != 0) {
+			sql.append("AND a.idCategorie = :categorieRecherche ");
+			namedParameters.addValue("categorieRecherche", categorieRecherche);
+		}
+
+		return namedParameterJdbcTemplate.query(sql.toString(), namedParameters, new ArticleAVendreRowMapper());
 	}
 
 	@Override
@@ -268,19 +296,26 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 		return namedParameterJdbcTemplate.queryForObject(TROUVER_PROPRIETAIRE_ARTICLE, params, Integer.class);
 	}
 
-	 @Override
-	    public List<ArticleAVendre> rechercherArticlesEnCours(String nomRecherche, int categorieRecherche) {
-	        MapSqlParameterSource params = new MapSqlParameterSource();
+	@Override
+	public List<ArticleAVendre> rechercherArticlesEnCours(String nomRecherche, int categorieRecherche) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		if (nomRecherche == null || nomRecherche.isBlank()) {
+			params.addValue("nomRecherche", null);
+		} else {
+			params.addValue("nomRecherche", "%" + nomRecherche + "%");
+		}
+		params.addValue("categorieRecherche", categorieRecherche);
 
-	        if (nomRecherche == null || nomRecherche.isBlank()) {
-	            params.addValue("nomRecherche", null);
-	        } else {
-	            params.addValue("nomRecherche", "%" + nomRecherche + "%");
-	        }
+		return namedParameterJdbcTemplate.query(FIND_EN_COURS_WITH_FILTERS, params, new ArticleAVendreRowMapper());
+	}
 
-	        params.addValue("categorieRecherche", categorieRecherche);
-
-	        return namedParameterJdbcTemplate.query(FIND_EN_COURS_WITH_FILTERS, params, new ArticleAVendreRowMapper());
-	    }
+	@Override
+	public List<ArticleAVendre> findArticlesEnCoursByVendeur(String pseudo) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("pseudo", pseudo);
+		params.addValue("etatVente", EtatVente.EN_COURS.getLabel()); 
+		return namedParameterJdbcTemplate.query(FIND_ARTICLES_BY_VENDEUR_EN_COURS, params,
+				new ArticleAVendreRowMapper());
+	}
 
 }

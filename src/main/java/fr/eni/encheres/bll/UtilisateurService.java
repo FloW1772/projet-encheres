@@ -12,8 +12,8 @@ public interface UtilisateurService {
 	void creerUtilisateurAvecAdresseEtRole(Utilisateur utilisateur, Adresse adresse, Role Role) throws BusinessException;
 	void modifierProfil(Utilisateur utilisateur) throws BusinessException;
 	void supprimerCompte(long idUtilisateur) throws BusinessException;
-	Utilisateur selectById(int idUtilisateur) ;
-	Utilisateur selectByLogin(String login) ;
+	Utilisateur selectById(long idUtilisateur) ;
+	Utilisateur selectByLogin(String login) throws BusinessException ;
 	Utilisateur getUtilisateurByEmail(String email) throws BusinessException;
 	List<Utilisateur> selectAll() ;
 	void crediterPoints(long idUtilisateur, int montant) throws BusinessException;

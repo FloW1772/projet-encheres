@@ -32,7 +32,7 @@ public interface ArticleAVendreService {
 	
 	
 	
-	
+	List<ArticleAVendre> findArticlesEnCoursByVendeur(String pseudo);
 	
 	
 	

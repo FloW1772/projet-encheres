@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+  <nav style="background: #007bff; padding: 10px;">
+    <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
+      <li><a th:href="@{/}" style="color: white;">Accueil</a></li>
+      <li><a th:href="@{/vente/mes-ventes}" style="color: white;">Mes ventes</a></li>
+      <li><a th:href="@{/vente/creation}" style="color: white;">Créer une vente</a></li>
+      <li><a th:href="@{/profil}" style="color: white;">Profil</a></li>
+      <li><a th:href="@{/logout}" style="color: white;">Se déconnecter</a></li>
+      <li><a th:href="@{/login}" style="color: white;">Connexion</a></li>
+    </ul>
+  </nav>
+</header>
+
+<footer th:fragment="footer" style="text-align: center; margin-top: 40px; font-size: 0.9em;">
+  &copy; 2025 ENI ENCHERE. Tous droits réservés.
+</footer>
+
+</body>
+</html>
