@@ -43,16 +43,17 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	private static final String FIND_ALL_STATUT_EN_COURS = "SELECT a.*, "
 			+ "u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur, " + "c.idCategorie, c.libelle AS categorieLibelle "
 			+ "FROM ArticleAVendre a " + "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
-			+ "JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.etatVente = 'En cours'";
+			+ "JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.etatVente = :etatVente";
 
 	// Requête pour marquer une vente comme supprimée (statut 100)
 	private static final String DELETE_VENTE = "UPDATE ArticleAVendre SET etatVente = 100 WHERE idArticle = :idArticle";
 
 	// Requête pour activer les ventes qui commencent aujourd'hui
-	private static final String ACTIVER_VENTE = "UPDATE ArticleAVendre SET etatVente = 1 WHERE etatVente = 0 AND dateDebutEncheres = CAST(GETDATE() AS DATE)";
+	private static final String ACTIVER_VENTE =  "UPDATE ArticleAVendre SET etatVente = :etatCible WHERE etatVente = :etatSource AND dateDebutEncheres = CAST(GETDATE() AS DATE)";
 
 	// Requête pour clôturer les ventes qui se terminent aujourd'hui
-	private static final String CLOTURER_VENTE = "UPDATE ArticleAVendre SET etatVente = 2 WHERE etatVente = 1 AND dateFinEncheres = CAST(GETDATE() AS DATE)";
+	private static final String CLOTURER_VENTE =  "UPDATE ArticleAVendre SET etatVente = :etatTerminee WHERE etatVente = :etatEnCours AND dateFinEncheres = CAST(GETDATE() AS DATE)";
+
 
 	// Requête pour marquer une vente comme livrée
 	private static final String LIVRER_VENTE = "UPDATE ArticleAVendre SET etatVente = 3 WHERE idArticle = :idArticle";
@@ -61,10 +62,11 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	private static final String TROUVER_PROPRIETAIRE_ARTICLE = "SELECT COUNT(*) FROM ArticleAVendre a "
 			+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
 			+ "WHERE a.idArticle = :idArticle AND u.pseudo = :pseudo";
+	
 	private static final String FIND_EN_COURS_WITH_FILTERS = "SELECT a.*, u.pseudo, u.nom, u.prenom, u.email, u.idUtilisateur, "
 			+ "c.idCategorie, c.libelle AS categorieLibelle " + "FROM ArticleAVendre a "
 			+ "JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur "
-			+ "LEFT JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.etatVente = 'EN COURS' "
+			+ "LEFT JOIN Categorie c ON a.idCategorie = c.idCategorie " + "WHERE a.etatVente = :etatVente "
 			+ "AND (:nomRecherche IS NULL OR a.nomArticle LIKE :nomRecherche) "
 			+ "AND (:categorieRecherche = 0 OR a.idCategorie = :categorieRecherche)";
 
@@ -113,7 +115,7 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 			namedParameters.addValue("etatVente", EtatVente.EN_COURS.getLabel());
 		} else {
 			// dateDebutEncheres > maintenant cree
-			namedParameters.addValue("etatVente", EtatVente.CREE.getLabel());
+			namedParameters.addValue("etatVente", EtatVente.NON_DEMARREE.getLabel());
 		}
 
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -213,7 +215,9 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
 	@Override
 	public List<ArticleAVendre> findAllStatutEnCours() {
-		return namedParameterJdbcTemplate.query(FIND_ALL_STATUT_EN_COURS, new ArticleAVendreRowMapper());
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("etatVente", EtatVente.EN_COURS.getLabel());
+		return namedParameterJdbcTemplate.query(FIND_ALL_STATUT_EN_COURS, params, new ArticleAVendreRowMapper());
 	}
 
 	@Override
@@ -280,12 +284,18 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 
 	@Override
 	public int activerVente() {
-		return namedParameterJdbcTemplate.update(ACTIVER_VENTE, new MapSqlParameterSource());
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("etatCible", EtatVente.EN_COURS.getLabel());
+	    params.addValue("etatSource", EtatVente.NON_DEMARREE.getLabel());
+	    return namedParameterJdbcTemplate.update(ACTIVER_VENTE, params);
 	}
 
 	@Override
 	public int cloturerVente() {
-		return namedParameterJdbcTemplate.update(CLOTURER_VENTE, new MapSqlParameterSource());
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("etatTerminee", EtatVente.TERMINEE.getLabel());  // "Terminee"
+	    params.addValue("etatEnCours", EtatVente.EN_COURS.getLabel());   // "En cours"
+	    return namedParameterJdbcTemplate.update(CLOTURER_VENTE, params);
 	}
 
 	@Override
@@ -295,19 +305,27 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 		params.addValue("pseudo", pseudo);
 		return namedParameterJdbcTemplate.queryForObject(TROUVER_PROPRIETAIRE_ARTICLE, params, Integer.class);
 	}
-
+ 
+	
+	//-------- Mehodes dans le controller 
 	@Override
 	public List<ArticleAVendre> rechercherArticlesEnCours(String nomRecherche, int categorieRecherche) {
-		MapSqlParameterSource params = new MapSqlParameterSource();
-		if (nomRecherche == null || nomRecherche.isBlank()) {
-			params.addValue("nomRecherche", null);
-		} else {
-			params.addValue("nomRecherche", "%" + nomRecherche + "%");
-		}
-		params.addValue("categorieRecherche", categorieRecherche);
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    
+	  
+	    params.addValue("etatVente", EtatVente.EN_COURS.getLabel());
+	    
+	    if (nomRecherche == null || nomRecherche.isBlank()) {
+	        params.addValue("nomRecherche", null);
+	    } else {
+	        params.addValue("nomRecherche", "%" + nomRecherche + "%");
+	    }
+	    
+	    params.addValue("categorieRecherche", categorieRecherche);
 
-		return namedParameterJdbcTemplate.query(FIND_EN_COURS_WITH_FILTERS, params, new ArticleAVendreRowMapper());
+	    return namedParameterJdbcTemplate.query(FIND_EN_COURS_WITH_FILTERS, params, new ArticleAVendreRowMapper());
 	}
+
 
 	@Override
 	public List<ArticleAVendre> findArticlesEnCoursByVendeur(String pseudo) {

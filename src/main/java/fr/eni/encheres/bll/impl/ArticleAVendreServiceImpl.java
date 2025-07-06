@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fr.eni.encheres.bll.ArticleAVendreService;
@@ -246,15 +247,19 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 		return true;
 	}
 
-	@Override
-	public void activerVente() {
-		this.articleAVendreDAO.activerVente();
-	}
+	 // Toutes les nuits à 1h du matin
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void activerVente() {
+        int count = articleAVendreDAO.activerVente();
+        System.out.println(count + " ventes activées.");
+    }
 
-	@Override
-	public void cloturerVente() {
-		this.articleAVendreDAO.cloturerVente();
-	}
+    // Toutes les nuits à 2h du matin
+    @Scheduled(cron = "0 0 2 * * ?")
+    public void cloturerVente() {
+        int count = articleAVendreDAO.cloturerVente();
+        System.out.println(count + " ventes clôturées.");
+    }
 
 	private boolean verifierArticleEstAutilisateur(int idArticle, String pseudo, BusinessException be) {
 		int count = this.articleAVendreDAO.trouverProprietaireArticle(idArticle, pseudo);
@@ -280,4 +285,5 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 	public List<ArticleAVendre> findArticlesEnCoursByVendeur(String pseudo) {
 		return articleAVendreDAO.findArticlesEnCoursByVendeur(pseudo);
 	}
+
 }

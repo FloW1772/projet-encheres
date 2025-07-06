@@ -2,6 +2,7 @@ package fr.eni.encheres.bll.impl;
 
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import fr.eni.encheres.bll.EnchereService;
@@ -136,4 +137,27 @@ public class EnchereServiceImpl implements EnchereService {
 		// On met à jour le prix de vente de l’article
 		articleAVendreDAO.updatePrixVente(idArticle, montant);
 	}
+
+	public Utilisateur getGagnant(long idArticle) {
+	    Enchere meilleureEnchere = enchereDAO.selectBestEnchereByArticle(idArticle);
+	    if (meilleureEnchere != null) {
+	        return meilleureEnchere.getEncherisseur();
+	    }
+	    return null;
+	}
+	
+	
+	//----- vaut mieux creer une clkasse a part  EnchereSchedulerService
+/*	  @Scheduled(fixedDelay = 60000)
+	    public void traiterEncheresTerminees() {
+	        List<ArticleAVendre> ventesTerminees = articleAVendreService.getVentesTermineesNonNotifiees();
+
+	        for (ArticleAVendre article : ventesTerminees) {
+	            Utilisateur gagnant = getGagnant(article.getIdArticle());
+	            if (gagnant != null) {
+	                notificationService.envoyerNotification(gagnant, "Votre enchère est gagnante pour l'article " + article.getNomArticle());
+	            }
+	            articleAVendreService.marquerCommeNotifie(article.getIdArticle());
+	        }
+	    }*/
 }
