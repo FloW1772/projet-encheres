@@ -8,5 +8,5 @@ public interface RoleService {
 	
     List<Role> getAllRoles();
     Role getRoleById(int idRole);
-
+    Role getRoleByLibelle(String libelle);
 }

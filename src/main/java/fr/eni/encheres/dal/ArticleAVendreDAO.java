@@ -30,6 +30,8 @@ public interface ArticleAVendreDAO {
 	int trouverProprietaireArticle(int idArticle, String pseudo);
 
 	 List<ArticleAVendre> rechercherArticlesEnCours(String nomRecherche, int categorieRecherche);
+
+	List<ArticleAVendre> findArticlesEnCoursByVendeur(String pseudo);
 	
 	
 }

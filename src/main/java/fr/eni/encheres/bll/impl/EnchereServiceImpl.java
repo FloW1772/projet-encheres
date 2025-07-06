@@ -69,9 +69,9 @@ public class EnchereServiceImpl implements EnchereService {
 
 	@Override
 	public List<Enchere> rechercherEncheres(String nomArticle, int idCategorie) {
-	    return enchereDAO.rechercherEncheres(nomArticle, idCategorie);
+		return enchereDAO.rechercherEncheres(nomArticle, idCategorie);
 	}
-	
+
 	@Override
 	public void deleteByArticleId(long idArticle) {
 		enchereDAO.deleteByArticleId(idArticle);
@@ -80,18 +80,22 @@ public class EnchereServiceImpl implements EnchereService {
 	@Override
 	public void encherir(long idArticle, long idUtilisateur, int montant) throws BusinessException {
 
-		  Utilisateur utilisateur = utilisateurDAO.selectById(idUtilisateur);
-		    if (utilisateur == null) {
-		        throw new BusinessException("Utilisateur non trouvé.");
-		    }
-		    ArticleAVendre article = articleAVendreDAO.getByID(idArticle);
-		    if (article == null) {
-		        throw new BusinessException("Article non trouvé.");
-		    }
+		Utilisateur utilisateur = utilisateurDAO.selectById(idUtilisateur);
+		System.out.println(" Ctrl Utilisateur BLL ENCHERE " + utilisateur);
+		if (utilisateur == null) {
+			throw new BusinessException("Utilisateur non trouvé.");
+		}
+		ArticleAVendre article = articleAVendreDAO.getByID(idArticle);
+		System.out.println(" Ctrl Article BLL ENCHERE " + article);
+		if (article == null) {
+			throw new BusinessException("Article non trouvé.");
+		}
 
 		BusinessException exception = new BusinessException();
 
 		Enchere bestEnchere = enchereDAO.selectBestEnchereByArticle(idArticle);
+
+		System.out.println(" Ctrl BEST Article BLL  " + bestEnchere);
 
 		// On verifie que l'enchérisseur n'est pas le vendeur
 		if (article.getVendeur().getIdUtilisateur() == utilisateur.getIdUtilisateur()) {
@@ -110,29 +114,26 @@ public class EnchereServiceImpl implements EnchereService {
 		}
 
 		// si il y a des erreurs on arrête ici
-	    if (exception.hasError()) {
-	        throw exception;
-	    }
+		if (exception.hasError()) {
+			throw exception;
+		}
 
-	    // 5. Récupère l'ancienne enchère et rembourse si nécessaire
+		// 5. Récupère l'ancienne enchère et rembourse si nécessaire
 		if (bestEnchere != null) {
-			utilisateurDAO.crediterPoints(
-				bestEnchere.getEncherisseur().getIdUtilisateur(),
-				bestEnchere.getMontant()
-			);
+			utilisateurDAO.crediterPoints(bestEnchere.getEncherisseur().getIdUtilisateur(), bestEnchere.getMontant());
 		}
 
 		// on débite le nouvel enchérisseur
 		utilisateurDAO.debiterPoints(idUtilisateur, montant);
 
 		// On crée et enregistre la nouvelle enchère
-	    Enchere nouvelleEnchere = new Enchere();
-	    nouvelleEnchere.setArticle(article);
-	    nouvelleEnchere.setEncherisseur(utilisateur);
-	    nouvelleEnchere.setMontant(montant);
-	    enchereDAO.create(nouvelleEnchere); 
+		Enchere nouvelleEnchere = new Enchere();
+		nouvelleEnchere.setArticle(article);
+		nouvelleEnchere.setEncherisseur(utilisateur);
+		nouvelleEnchere.setMontant(montant);
+		enchereDAO.create(nouvelleEnchere);
 
-	    // On met à jour le prix de vente de l’article
-	    articleAVendreDAO.updatePrixVente(idArticle, montant);
+		// On met à jour le prix de vente de l’article
+		articleAVendreDAO.updatePrixVente(idArticle, montant);
 	}
 }

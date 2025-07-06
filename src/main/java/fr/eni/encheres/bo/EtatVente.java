@@ -1,15 +1,20 @@
 package fr.eni.encheres.bo;
-	
+
 public enum EtatVente {
-	EN_COURS("En cours"),
+    EN_COURS("En cours"),
     TERMINEE("Terminee"),
     ANNULEE("Annulee"),
-    NON_DEMARREE("Non demarree");
+    NON_DEMARREE("Non demarree"),
+    CREE("Créé");  
 
     private final String label;
 
     EtatVente(String label) {
         this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
     }
 
     public static EtatVente fromString(String etatString) {
@@ -20,4 +25,14 @@ public enum EtatVente {
         }
         throw new IllegalArgumentException("EtatVente inconnu: " + etatString);
     }
+    
+    public static EtatVente fromInt(int index) {
+        EtatVente[] values = EtatVente.values();
+        if (index < 0 || index >= values.length) {
+            throw new IllegalArgumentException("Index EtatVente invalide: " + index);
+        }
+        return values[index];
+    }
+
+  
 }

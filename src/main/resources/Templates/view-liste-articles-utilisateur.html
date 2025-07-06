@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/style.css" />
+<head>
+<head>
+<meta charset="UTF-8" />
+<title>Mes Ventes</title>
+</head>
+<body>
+
+	<h1>Mes Ventes</h1>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Nom de l'article</th>
+				<th>Description</th>
+				<th>Catégorie</th>
+				<th>Date début enchères</th>
+				<th>Date fin enchères</th>
+				<th>Prix de départ</th>
+				<th>Prix de vente</th>
+				<th>État de la vente</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="article : ${articles}">
+				<td th:text="${article.nomArticle}">Nom Article</td>
+				<td th:text="${article.description}">Description</td>
+				<td th:text="${article.categorie.libelle}">Catégorie</td>
+				<td
+					th:text="${#temporals.format(article.dateDebutEncheres, 'dd/MM/yyyy HH:mm')}">Date
+					début</td>
+				<td
+					th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy HH:mm')}">Date
+					fin</td>
+				<td th:text="${article.miseAPrix}">Prix départ</td>
+				<td th:text="${article.prixVente}">Prix vente</td>
+				<td th:text="${article.etatVente.label}">État</td>
+				<td><a th:href="@{'/vente/modifier/' + ${article.idArticle}}"
+					class="btnModifier">Modifier</a> <a
+					th:href="@{'/vente/supprimer/' + ${article.idArticle}}"
+					class="btnSupprimer"
+					onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">Supprimer</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</body>
+</html>
