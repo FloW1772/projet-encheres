@@ -17,7 +17,7 @@ public class ArticleAVendre implements Serializable {
 	@NotNull
 	private Categorie categorie = new Categorie();
 	@NotBlank
-	@Size(min = 10, max = 30)
+	@Size(min = 3, max = 30)
 	private String nomArticle;
 	@NotBlank
 	@Size(min = 20, max = 300)
@@ -42,7 +42,7 @@ public class ArticleAVendre implements Serializable {
 	}
 
 	public ArticleAVendre(long idArticle, @NotNull Categorie categorie,
-			@NotBlank @Size(min = 10, max = 30) String nomArticle,
+			@NotBlank @Size(min = 3, max = 30) String nomArticle,
 			@NotBlank @Size(min = 20, max = 300) String description, @NotNull @NotNull LocalDateTime dateDebutEncheres,
 			@NotNull @NotNull LocalDateTime dateFinEncheres, @NotNull @Min(1) int miseAPrix, int prixVente,
 			EtatVente etatVente, Utilisateur vendeur, @NotNull Adresse adresseRetrait, String photo) {
