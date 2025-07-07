@@ -39,55 +39,10 @@ public class ArticleAVendreController {
 
 	// ----------Pout tester la creation passage a la mano de id utilisateur -------
 
-	@GetMapping("/creation")
-	public String afficherFormulaireVente(Model model, HttpSession session) {
-		Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateurConnecte");
-		System.out.println("Utilisateur dans session: " + utilisateur);
-
-		if (utilisateur == null) {
-			model.addAttribute("errorMessage", "Utilisateur non connecté");
-			return "redirect:/login";
-		}
-
-		ArticleAVendre article = new ArticleAVendre();
-		article.setVendeur(utilisateur);
-
-		Adresse adresseUtilisateur = adresseService.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
-		if (adresseUtilisateur != null) {
-			article.setAdresseRetrait(adresseUtilisateur);
-		} else {
-			article.setAdresseRetrait(new Adresse());
-		}
-		preparerModelVente(model, article, false);
-
-		return "view-vente-article";
-	}
-
-	@PostMapping("/creation")
-	public String creationVente(@Valid @ModelAttribute("articleAVendre") ArticleAVendre articleAVendre,
-			BindingResult bindingResult, Model model, HttpSession session) {
-
-		Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateurConnecte");
-		if (utilisateur == null) {
-			model.addAttribute("errorMessage", "Utilisateur non connecté");
-			return "redirect:/login";
-		}
-
-		if (bindingResult.hasErrors()) {
-			preparerModelVente(model, articleAVendre, false);
-			return "view-vente-article";
-		}
-		try {
-			articleAVendreService.mettreArticleEnVente(articleAVendre, utilisateur,
-					articleAVendre.getCategorie().getIdCategorie());
-
-		} catch (BusinessException e) {
-			model.addAttribute("errorMessage", e.getMessage());
-			preparerModelVente(model, articleAVendre, false);
-			return "view-vente-article";
-		}
-
-		return "redirect:/";
+	private void ajouterAttributsFormulaire(Model model, ArticleAVendre article, boolean modeModif) {
+		model.addAttribute("articleAVendre", article);
+		model.addAttribute("categories", categorieService.getAllCategories());
+		model.addAttribute("modeModif", modeModif);
 	}
 
 	private void preparerModelVente(Model model, ArticleAVendre article, boolean modeModif) {
@@ -99,51 +54,62 @@ public class ArticleAVendreController {
 		model.addAttribute("modeModif", modeModif);
 	}
 
-	/*
-	 * -------- Pour la Mep Pseudo automatique----------
-	 * 
-	 * @GetMapping("/creation") public String afficherFormulaireVente(Model model,
-	 * Principal principal) { String login = principal.getName(); Utilisateur
-	 * utilisateur = utilisateurService.selectByLogin(login);
-	 * 
-	 * ArticleAVendre article = new ArticleAVendre();
-	 * article.setVendeur(utilisateur);
-	 * 
-	 * Adresse adresseUtilisateur =
-	 * adresseService.selectAllByUtilisateurId(utilisateur.getIdUtilisateur()); if
-	 * (adresseUtilisateur != null) { article.setAdresseRetrait(adresseUtilisateur);
-	 * } else { article.setAdresseRetrait(new Adresse()); }
-	 * 
-	 * ajouterAttributsFormulaire(model, article, false); return
-	 * "view-vente-article"; }
-	 * 
-	 * @PostMapping("/creation") public String
-	 * traiterVente(@Valid @ModelAttribute("articleAVendre") ArticleAVendre
-	 * articleAVendre, BindingResult bindingResult, Principal principal, Model
-	 * model) { if (bindingResult.hasErrors()) { if
-	 * (articleAVendre.getAdresseRetrait() == null) {
-	 * articleAVendre.setAdresseRetrait(new Adresse()); }
-	 * ajouterAttributsFormulaire(model, articleAVendre, false); return
-	 * "view-vente-article"; }
-	 * 
-	 * try { Utilisateur utilisateur =
-	 * utilisateurService.selectByLogin(principal.getName());
-	 * articleAVendre.setVendeur(utilisateur);
-	 * articleAVendreService.mettreArticleEnVente(articleAVendre, utilisateur,
-	 * articleAVendre.getCategorie().getIdCategorie()); } catch (BusinessException
-	 * e) { model.addAttribute("errorMessage", e.getMessage()); if
-	 * (articleAVendre.getAdresseRetrait() == null) {
-	 * articleAVendre.setAdresseRetrait(new Adresse()); }
-	 * ajouterAttributsFormulaire(model, articleAVendre, false); return
-	 * "view-vente-article"; }
-	 * 
-	 * return "redirect:/"; }
-	 * 
-	 * private void ajouterAttributsFormulaire(Model model, ArticleAVendre article,
-	 * boolean modeModif) { model.addAttribute("articleAVendre", article);
-	 * model.addAttribute("categories", categorieService.getAllCategories());
-	 * model.addAttribute("modeModif", modeModif); }
-	 */
+	// -------- A finaliser---------
+	@GetMapping("/creation")
+	public String afficherFormulaireVente(Model model, Principal principal) {
+		String login = principal.getName();
+		Utilisateur utilisateur;
+
+		try {
+			utilisateur = utilisateurService.selectByLogin(login);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+			return "erreur";
+		}
+
+		ArticleAVendre article = new ArticleAVendre();
+		article.setVendeur(utilisateur);
+
+		Adresse adresseUtilisateur = adresseService.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
+		if (adresseUtilisateur != null) {
+			article.setAdresseRetrait(adresseUtilisateur);
+		} else {
+			article.setAdresseRetrait(new Adresse());
+		}
+
+		ajouterAttributsFormulaire(model, article, false);
+		return "view-vente-article";
+	}
+
+
+	@PostMapping("/creation")
+	public String traiterVente(@Valid @ModelAttribute("articleAVendre") ArticleAVendre articleAVendre,
+			BindingResult bindingResult, Principal principal, Model model) {
+		if (bindingResult.hasErrors()) {
+			if (articleAVendre.getAdresseRetrait() == null) {
+				articleAVendre.setAdresseRetrait(new Adresse());
+			}
+			ajouterAttributsFormulaire(model, articleAVendre, false);
+			return "view-vente-article";
+		}
+
+		try {
+			Utilisateur utilisateur = utilisateurService.selectByLogin(principal.getName());
+			articleAVendre.setVendeur(utilisateur);
+			articleAVendreService.mettreArticleEnVente(articleAVendre, utilisateur,
+					articleAVendre.getCategorie().getIdCategorie());
+		} catch (BusinessException e) {
+			model.addAttribute("errorMessage", e.getMessage());
+			if (articleAVendre.getAdresseRetrait() == null) {
+				articleAVendre.setAdresseRetrait(new Adresse());
+			}
+			ajouterAttributsFormulaire(model, articleAVendre, false);
+			return "view-vente-article";
+		}
+
+		return "redirect:/";
+	}
+
 	@GetMapping("/annuler")
 	public String annulerVente(@RequestParam("id") int id) {
 		try {

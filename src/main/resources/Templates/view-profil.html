@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html>
-<link rel="stylesheet" href="/css/style.css" />
+<html lang="fr">
 <head>
-<head>
-<meta charset="UTF-8" />
-<title>Profil Utilisateur</title>
+    <meta charset="UTF-8" />
+    <title>Profil Utilisateur</title>
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
@@ -15,7 +14,6 @@
     <li><strong>Prénom :</strong> <span th:text="${utilisateur.prenom}">Prénom</span></li>
     <li><strong>Téléphone :</strong> <span th:text="${utilisateur.telephone}">Téléphone</span></li>
     <li><strong>Email :</strong> <span th:text="${utilisateur.email}">Email</span></li>
-    
 
     <li th:if="${utilisateur.adresse != null}">
         <strong>Rue :</strong> <span th:text="${utilisateur.adresse.rue}">Rue</span>
@@ -29,7 +27,6 @@
     <li th:if="${utilisateur.adresse != null}">
         <strong>Pays :</strong> <span th:text="${utilisateur.adresse.pays}">Pays</span>
     </li>
-    
 </ul>
 
 </body>
