@@ -114,17 +114,17 @@
     </div>
 </div>
 		
-        <!-- Boutons -->
+  
         <div id="set">
             <button type="submit">Valider</button>
 
             <!-- Affiché seulement en mode modification -->
-            <a th:if="${modeModif}" th:href="@{'/vente/annuler'(id=*{id})}" class="btnPrimaire btnAnnuler">Annuler la vente</a>
+            <a th:if="${modeModif}" th:href="@{'/vente/annuler'(id=*{idArticle})}" class="btnPrimaire btnAnnuler">Annuler la vente</a>
 
             <a href="/" class="btn">Retour</a>
         </div>
 
-        <!-- Erreur globale -->
+   
         <ul th:if="${#fields.hasErrors('*')}" class="listErrors">
             <li th:text="#{Erreur inconnue}">Erreur inconnue</li>
         </ul>

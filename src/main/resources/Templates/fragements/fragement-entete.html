@@ -1,23 +1,30 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
+<nav th:fragment="mainNav" style="background: #007bff; padding: 10px;">
+  <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
+    <li><a th:href="@{/}" style="color: white;">Accueil</a></li>
 
-<header th:fragment="header">
-  <nav style="background: #007bff; padding: 10px;">
-    <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
-      <li><a th:href="@{/}" style="color: white;">Accueil</a></li>
-      <li><a th:href="@{/vente/mes-ventes}" style="color: white;">Mes ventes</a></li>
-      <li><a th:href="@{/vente/creation}" style="color: white;">Créer une vente</a></li>
-      <li><a th:href="@{/profil}" style="color: white;">Profil</a></li>
-      <li><a th:href="@{/logout}" style="color: white;">Se déconnecter</a></li>
-      <li><a th:href="@{/login}" style="color: white;">Connexion</a></li>
-    </ul>
-  </nav>
-</header>
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/vente/mes-ventes}" style="color: white;">Mes ventes</a>
+    </li>
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/vente/mes-encheres}" style="color: white;">Mes enchères</a>
+    </li>
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/vente/creation}" style="color: white;">Créer une vente</a>
+    </li>
+    <li sec:authorize="isAuthenticated()">
+      <a th:href="@{/utilisateur/modifier}" style="color: white;">Profil</a>
+    </li>
+    <li sec:authorize="isAuthenticated()">
+      <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit" 
+                style="background: none; border: none; color: white; cursor: pointer; padding: 0; font: inherit;">
+          Se déconnecter
+        </button>
+      </form>
+    </li>
 
-<footer th:fragment="footer" style="text-align: center; margin-top: 40px; font-size: 0.9em;">
-  &copy; 2025 ENI ENCHERE. Tous droits réservés.
-</footer>
-
-</body>
-</html>
+    <li sec:authorize="!isAuthenticated()">
+      <a th:href="@{/login}" style="color: white;">Se connecter</a>
+    </li>
+  </ul>
+</nav>
