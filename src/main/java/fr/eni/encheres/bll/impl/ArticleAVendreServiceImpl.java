@@ -269,7 +269,6 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 		}
 		return true;
 	}
-
 ///--------- Voir si pas de conflit bigint int bdd---
 	@Override
 	public ArticleAVendre getById(long idArticle) {
