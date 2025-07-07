@@ -21,14 +21,10 @@ import fr.eni.encheres.bo.ArticleAVendre;
 import fr.eni.encheres.bo.Categorie;
 import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Utilisateur;
-import fr.eni.encheres.dal.ArticleAVendreDAO;
-import fr.eni.encheres.dal.CategorieDAO;
 import fr.eni.encheres.exception.BusinessException;
 
-import jakarta.servlet.http.HttpSession;
 
 
-@SessionAttributes({ "utilisateurSession", "utilisateurConnecte" })
 @Controller
 public class EnchereController {
 
@@ -73,15 +69,16 @@ public class EnchereController {
 		return "view-liste-encheres";
 	}
 
-	// Affichage de la page détail d’un article
-	/// utilisation de HttpSession temporaires ;( a voir pour spring Security
+
 
 	@GetMapping("/article/{id}")
-	public String afficherDetailArticle(@PathVariable("id") long idArticle, Model model, HttpSession session) {
-	    Utilisateur utilisateurConnecte = (Utilisateur) session.getAttribute("utilisateurConnecte");
+	public String afficherDetailArticle(@PathVariable("id") long idArticle, Model model, Principal principal) throws BusinessException {
+		String login = principal.getName();
+		
+		Utilisateur utilisateurConnecte = utilisateurService.selectByLogin(login);
+		
 
 	    if (utilisateurConnecte == null) {
-	        // utilisateur non connecté, redirection vers login
 	        return "redirect:/login";
 	    }
 
@@ -101,9 +98,12 @@ public class EnchereController {
 	                      @RequestParam("montant") int montant,
 	                      RedirectAttributes redirectAttributes,
 	                      Model model,
-	                      HttpSession session) {
+	                      Principal principal) throws BusinessException {
 
-	    Utilisateur utilisateurConnecte = (Utilisateur) session.getAttribute("utilisateurConnecte");
+		String login = principal.getName();
+		
+		Utilisateur utilisateurConnecte = utilisateurService.selectByLogin(login);
+		
 	    if (utilisateurConnecte == null) {
 	        redirectAttributes.addFlashAttribute("messageErreur", "Vous devez être connecté pour enchérir.");
 	        return "redirect:/login";
@@ -130,58 +130,13 @@ public class EnchereController {
 	    }
 	}
 
-
-
-////-------------- Activer pour la MEP -----------
 	
-	/*@PostMapping("/encherir")
-	public String encherir(
-	        @RequestParam("idArticle") long idArticle,
-	        @RequestParam("montant") int montant,
-	        Principal principal,
-	        Model model) {
-
-	    String pseudo = principal.getName();
-	    Utilisateur utilisateur = utilisateurService.selectByLogin(pseudo);
-	    long idUtilisateur = utilisateur.getIdUtilisateur();
-
-	    try {
-	        enchereService.encherir(idArticle, idUtilisateur, montant);
-	        return "redirect:/article/" + idArticle;
-	    } catch (BusinessException e) {
-	        model.addAttribute("messagesErreur", e.getMessages());
-	        return "detailVente";
-	    }
-	}*/
-
-	
-	
-	//--------------
-	
-	
-	
-	
-	// ----------- Faire test-login ça va dirriger vers le site enchere a desactiver
-	// après la MEP
-	@GetMapping("/test-login")
-	public String testLogin(HttpSession session) {
-		Utilisateur utilisateur = new Utilisateur();
-		utilisateur.setIdUtilisateur(123L);
-		utilisateur.setPseudo("testUser");
-		session.setAttribute("utilisateurConnecte", utilisateur);
-		return "redirect:/encheres";
-	}
 	
 	@GetMapping("/")
 	public String redirectRoot() {
 	    return "redirect:/encheres";
 	}
-	
-	@ModelAttribute("utilisateurSession")
-	public List<Utilisateur> chargerUtilisateursEnSession() {
-		System.out.println("Appel de la méthode chargerCoursEnSession");
-		return utilisateurService.selectAll();
-	}
+
 	
 
 }

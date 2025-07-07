@@ -1,8 +1,10 @@
 package fr.eni.encheres.bll.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,6 +12,7 @@ import fr.eni.encheres.bll.UtilisateurService;
 import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.Role;
 import fr.eni.encheres.bo.Utilisateur;
+import fr.eni.encheres.configuration.PasswordEncoderConfig;
 import fr.eni.encheres.dal.AdresseDAO;
 import fr.eni.encheres.dal.RoleDAO;
 import fr.eni.encheres.dal.UtilisateurDAO;
@@ -20,72 +23,96 @@ import fr.eni.encheres.exception.BusinessException;
 public class UtilisateurServiceImpl implements UtilisateurService {
 
 	private final UtilisateurDAO utilisateurDAO;
-	// private final PasswordEncoder passwordEncoder;
+	 private final PasswordEncoder passwordEncoder;
 	private final AdresseDAO adresseDAO;
 	private final UtilisateurRoleDAO utilisateurRoleDAO;
 	private final RoleDAO roleDAO;
 
 	// -----Constructeur avec Spring Security-----
 
-	/*
-	 * public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, AdresseDAO
-	 * adresseDAO, UtilisateurRoleDAO utilisateurRoleDAO, PasswordEncoder
-	 * passwordEncoder) { this.utilisateurDAO = utilisateurDAO; this.adresseDAO =
-	 * adresseDAO; this.utilisateurRoleDAO = utilisateurRoleDAO;
-	 * this.passwordEncoder = passwordEncoder; }
-	 */
-
-	@Override
-	@Transactional(rollbackFor = BusinessException.class)
-	public void creerUtilisateurAvecAdresseEtRole(Utilisateur utilisateur, Adresse adresse, Role role)
-			throws BusinessException {
-		BusinessException be = new BusinessException();
-
-		if (!isEmailAvailable(utilisateur.getEmail(), be)) {
-			throw be;
-		}
-
-		try {
-			// Encodage du mot de passe avant insertion en base (si nécessaire)
-			// String encodedPwd = passwordEncoder.encode(utilisateur.getMotDePasse());
-			// utilisateur.setMotDePasse(encodedPwd);
-
-			System.out.println(">>> Insertion utilisateur");
-			utilisateurDAO.insert(utilisateur);
-			System.out.println(">>> ID utilisateur généré : " + utilisateur.getIdUtilisateur());
-
-			if (adresse != null) {
-				// On lie l'adresse à l'utilisateur
-				adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
-				System.out.println(">>> Insertion adresse");
-				adresseDAO.save(adresse);
-				utilisateur.setAdresse(adresse);
-
-				// Mettre à jour l'utilisateur avec l'idAdresse
-				System.out.println(">>> Mise à jour de l'utilisateur avec idAdresse");
-				utilisateurDAO.updateIdAdresse(utilisateur.getIdUtilisateur(), adresse.getIdAdresse());
-			} else {
-				System.out.println(">>> Pas d'adresse fournie, insertion ignorée");
-			}
-
-			System.out.println(">>> Insertion rôle utilisateur");
-			utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
-
-		} catch (DataAccessException e) {
-			e.printStackTrace();
-			be.add("Erreur d'accès à la base de données");
-			throw be;
-		}
-	}
-
-	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, AdresseDAO adresseDAO,
-			UtilisateurRoleDAO utilisateurRoleDAO, RoleDAO roleDAO) {
+	
+	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, PasswordEncoder passwordEncoder,
+			AdresseDAO adresseDAO, UtilisateurRoleDAO utilisateurRoleDAO, RoleDAO roleDAO) {
 		super();
 		this.utilisateurDAO = utilisateurDAO;
+		this.passwordEncoder = passwordEncoder;
 		this.adresseDAO = adresseDAO;
 		this.utilisateurRoleDAO = utilisateurRoleDAO;
 		this.roleDAO = roleDAO;
 	}
+
+
+	@Override
+	@Transactional(rollbackFor = BusinessException.class)
+	public void creerUtilisateurAvecAdresseEtRoles(Utilisateur utilisateur, Adresse adresse, List<Role> roles)
+	        throws BusinessException {
+	    BusinessException be = new BusinessException();
+
+	    if (!isEmailAvailable(utilisateur.getEmail(), be)) {
+	        throw be;
+	    }
+
+	    try {
+	        // Encode le mot de passe
+	        String rawPassword = utilisateur.getMotDePasse();
+	        String encodedPassword = passwordEncoder.encode(rawPassword);
+	        utilisateur.setMotDePasse(encodedPassword);
+
+	 
+	        System.out.println(">>> Insertion utilisateur");
+	        utilisateurDAO.insert(utilisateur);
+	        System.out.println(">>> ID utilisateur généré : " + utilisateur.getIdUtilisateur());
+
+	 
+	        if (adresse != null) {
+	            adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
+	            System.out.println(">>> Insertion adresse");
+	            adresseDAO.save(adresse);
+	            utilisateur.setAdresse(adresse);
+
+	            System.out.println(">>> Mise à jour de l'utilisateur avec idAdresse");
+	            utilisateurDAO.updateIdAdresse(utilisateur.getIdUtilisateur(), adresse.getIdAdresse());
+	        } else {
+	            System.out.println(">>> Pas d'adresse fournie, insertion ignorée");
+	        }
+
+
+	        if (roles == null) {
+	            roles = new ArrayList<>();
+	        }
+
+	
+	        Role roleUtilisateur = roleDAO.selectByLibelle("UTILISATEUR");
+	        if (roleUtilisateur == null) {
+	            throw new BusinessException("Le rôle UTILISATEUR par défaut n'existe pas");
+	        }
+
+	       
+	        boolean roleUtilisateurPresent = roles.stream()
+	                .anyMatch(r -> "UTILISATEUR".equalsIgnoreCase(r.getLibelle()));
+	        if (!roleUtilisateurPresent) {
+	            roles.add(roleUtilisateur);
+	        }
+
+	        if (!roles.isEmpty()) {
+	            System.out.println(">>> Insertion rôles utilisateur");
+	            for (Role role : roles) {
+	                utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
+	            }
+	        } else {
+	            System.out.println(">>> Aucun rôle fourni, insertion ignorée");
+	        }
+
+	    } catch (DataAccessException e) {
+	        e.printStackTrace();
+	        be.add("Erreur d'accès à la base de données");
+	        throw be;
+	    }
+	}
+
+
+	
+	
 
 	private boolean isEmailAvailable(String email, BusinessException be) {
 		boolean exists = utilisateurDAO.hasEmail(email);
@@ -99,23 +126,39 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	@Override
 	@Transactional
 	public void modifierProfil(Utilisateur utilisateur) throws BusinessException {
-		if (utilisateur == null || utilisateur.getIdUtilisateur() == 0) {
-			throw new BusinessException("Utilisateur invalide");
-		}
-		try {
-			utilisateurDAO.update(utilisateur);
-			Adresse adresse = utilisateur.getAdresse();
-			if (adresse != null) {
-				adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
-				if (adresse.getIdAdresse() == 0) {
-					adresseDAO.save(adresse);
-				} else {
-					adresseDAO.update(adresse);
-				}
-			}
-		} catch (DataAccessException e) {
-			throw new BusinessException("Erreur lors de la mise à jour du profil utilisateur");
-		}
+	    if (utilisateur == null || utilisateur.getIdUtilisateur() == 0) {
+	        throw new BusinessException("Utilisateur invalide");
+	    }
+	    try {
+	        // Met à jour l'utilisateur
+	        utilisateurDAO.update(utilisateur);
+
+	        // Met à jour ou insert l'adresse
+	        Adresse adresse = utilisateur.getAdresse();
+	        if (adresse != null) {
+	            adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
+	            if (adresse.getIdAdresse() == 0) {
+	                adresseDAO.save(adresse);
+	            } else {
+	                adresseDAO.update(adresse);
+	            }
+	        }
+
+	        // Gérer les rôles s’ils sont fournis
+	        List<Role> nouveauxRoles = utilisateur.getRoles();
+	        if (nouveauxRoles != null) {
+	            // Supprimer tous les rôles existants
+	            utilisateurRoleDAO.deleteByUserId(utilisateur.getIdUtilisateur());
+
+	            // Réinsérer les rôles mis à jour
+	            for (Role role : nouveauxRoles) {
+	                utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
+	            }
+	        }
+
+	    } catch (DataAccessException e) {
+	        throw new BusinessException("Erreur lors de la mise à jour du profil utilisateur");
+	    }
 	}
 
 	@Override
