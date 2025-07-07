@@ -26,17 +26,30 @@ public class UtilisateurController {
 
 	private UtilisateurService utilisateurService;
 	private RoleService roleService;
-	private final PasswordEncoder passwordEncoder;
 
-	public UtilisateurController(UtilisateurService utilisateurService, RoleService roleService,
-			PasswordEncoder passwordEncoder) {
+	public UtilisateurController(UtilisateurService utilisateurService, RoleService roleService) {
 		this.utilisateurService = utilisateurService;
 		this.roleService = roleService;
-		this.passwordEncoder = passwordEncoder;
+
 	}
 
+	// ------- Connexion---------------
+	@GetMapping("/login")
+	public String loginForm() {
+		return "view-login";
+	}
+//-------Error en cas de decnnexion--------
+
+	@GetMapping("/logout-error")
+	public String logoutError(Model model) {
+		model.addAttribute("errorMessage", "Vous n'êtes pas connecté.");
+		return "error";
+	}
+
+	// --------- Consultation profil si connecté alors le bouton modifier
+	// apparait-----------
 	@GetMapping("/utilisateur/profil")
-	public String profilUtilisateur(@RequestParam(name = "pseudo") String pseudo, Model model)
+	public String profilUtilisateur(@RequestParam(name = "pseudo") String pseudo, Model model, Principal principal)
 			throws BusinessException {
 		Utilisateur utilisateur = this.utilisateurService.selectByLogin(pseudo);
 		if (utilisateur == null) {
@@ -47,6 +60,13 @@ public class UtilisateurController {
 			utilisateur.setAdresse(new Adresse());
 		}
 		model.addAttribute("utilisateur", utilisateur);
+
+		// Ajouter l'utilisateur connecté au modèle
+		if (principal != null) {
+			Utilisateur utilisateurConnecte = this.utilisateurService.selectByLogin(principal.getName());
+			model.addAttribute("utilisateurConnecte", utilisateurConnecte);
+		}
+
 		return "view-profil";
 	}
 
@@ -56,16 +76,21 @@ public class UtilisateurController {
 		utilisateur.setAdresse(new Adresse());
 		Role roleUtilisateur = roleService.getRoleByLibelle("UTILISATEUR");
 		utilisateur.setRoles(new ArrayList<>(List.of(roleUtilisateur)));
-		model.addAttribute("utilisateur", utilisateur);
 		model.addAttribute("roles", roleService.getAllRoles());
+		model.addAttribute("utilisateur", utilisateur);
 		return "view-inscription";
+	}
+
+	public List<Role> getAllRoles() {
+		List<Role> roles = roleService.getAllRoles(); // qui fait la requête filtrée
+		roles.forEach(role -> System.out.println("Role dispo: " + role.getLibelle()));
+		return roles;
 	}
 
 	@PostMapping("/utilisateur/creer")
 	public String creerUtilisateur(@Valid @ModelAttribute("utilisateur") Utilisateur utilisateur,
 			BindingResult bindingResult, @RequestParam("confirmationMotDePasse") String confirmationMotDePasse,
 			Model model) {
-
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("roles", roleService.getAllRoles());
 			return "view-inscription";
@@ -77,29 +102,19 @@ public class UtilisateurController {
 			model.addAttribute("confirmationMotDePasseErreur", "Les mots de passe ne correspondent pas");
 			return "view-inscription";
 		}
-
 		try {
-			// Encodage du mot de passe avant la sauvegarde
-			utilisateur.setMotDePasse(passwordEncoder.encode(utilisateur.getMotDePasse()));
-
-			// Passe la liste des rôles ici
 			utilisateurService.creerUtilisateurAvecAdresseEtRoles(utilisateur, utilisateur.getAdresse(),
 					utilisateur.getRoles());
+
 			return "redirect:/login";
+
 		} catch (BusinessException e) {
+
 			model.addAttribute("roles", roleService.getAllRoles());
 			model.addAttribute("errors", e.getMessages());
 			return "view-inscription";
 		}
 	}
-
-	// -------- gesition à la mano-----
-	@GetMapping("/login")
-	public String loginForm() {
-		return "view-login";
-	}
-
-	/// --------changer popur la mep
 
 	@GetMapping("/utilisateur/modifier")
 	public String afficherFormulaireModification(Principal principal, Model model) throws BusinessException {

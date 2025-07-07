@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <title>Profil Utilisateur</title>
@@ -28,6 +28,11 @@
         <strong>Pays :</strong> <span th:text="${utilisateur.adresse.pays}">Pays</span>
     </li>
 </ul>
+
+
+<div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == utilisateur.pseudo}">
+    <a th:href="@{/utilisateur/modifier}" class="btn btn-primary">Modifier mon profil</a>
+</div>
 
 </body>
 </html>

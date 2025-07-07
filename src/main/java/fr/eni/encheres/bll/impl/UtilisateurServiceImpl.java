@@ -2,6 +2,8 @@ package fr.eni.encheres.bll.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,12 +60,10 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	        String encodedPassword = passwordEncoder.encode(rawPassword);
 	        utilisateur.setMotDePasse(encodedPassword);
 
-	 
 	        System.out.println(">>> Insertion utilisateur");
 	        utilisateurDAO.insert(utilisateur);
 	        System.out.println(">>> ID utilisateur généré : " + utilisateur.getIdUtilisateur());
 
-	 
 	        if (adresse != null) {
 	            adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
 	            System.out.println(">>> Insertion adresse");
@@ -76,20 +76,23 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	            System.out.println(">>> Pas d'adresse fournie, insertion ignorée");
 	        }
 
-
 	        if (roles == null) {
 	            roles = new ArrayList<>();
+	        } else {
+	            // Nettoyer la liste des rôles pour ne garder que ceux non nulls
+	            roles = roles.stream()
+	                         .filter(Objects::nonNull)
+	                         .collect(Collectors.toList());
 	        }
 
-	
 	        Role roleUtilisateur = roleDAO.selectByLibelle("UTILISATEUR");
 	        if (roleUtilisateur == null) {
 	            throw new BusinessException("Le rôle UTILISATEUR par défaut n'existe pas");
 	        }
 
-	       
 	        boolean roleUtilisateurPresent = roles.stream()
 	                .anyMatch(r -> "UTILISATEUR".equalsIgnoreCase(r.getLibelle()));
+
 	        if (!roleUtilisateurPresent) {
 	            roles.add(roleUtilisateur);
 	        }
@@ -109,6 +112,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	        throw be;
 	    }
 	}
+
 
 
 	
