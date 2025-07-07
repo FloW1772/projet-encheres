@@ -20,6 +20,8 @@ public class EnchereServiceImpl implements EnchereService {
 	private final ArticleAVendreDAO articleAVendreDAO;
 	private final EnchereDAO enchereDAO;
 	private final UtilisateurDAO utilisateurDAO;
+	
+	
 
 	public EnchereServiceImpl(EnchereDAO enchereDAO, UtilisateurDAO utilisateurDAO,
 			ArticleAVendreDAO articleAVendreDAO) {
@@ -160,4 +162,43 @@ public class EnchereServiceImpl implements EnchereService {
 	            articleAVendreService.marquerCommeNotifie(article.getIdArticle());
 	        }
 	    }*/
+	@Override
+	public List<Enchere> filtrerEncheres(
+	    String type,
+	    boolean encheresOuvertes,
+	    boolean mesEncheres,
+	    boolean mesEncheresRemportees,
+	    boolean ventesEnCours,
+	    boolean ventesNonDebutees,
+	    boolean ventesTerminees,
+	    String pseudoUtilisateur) {
+
+	    if ("achats".equals(type)) {
+	        if (encheresOuvertes) {
+	            return enchereDAO.getEncheresOuvertes();
+	        }
+	        if (mesEncheres) {
+	            return enchereDAO.selectMesEncheres(pseudoUtilisateur);
+	        }
+	        if (mesEncheresRemportees) {
+	            return enchereDAO.selectMesEncheresRemportees(pseudoUtilisateur);
+	        }
+	    } else if ("ventes".equals(type)) {
+	        if (ventesEnCours) {
+	            return enchereDAO.selectMesVentesEnCours(pseudoUtilisateur);
+	        }
+	        if (ventesNonDebutees) {
+	            return enchereDAO.selectMesVentesNonDebutees(pseudoUtilisateur);
+	        }
+	        if (ventesTerminees) {
+	            return enchereDAO.selectMesVentesTerminees(pseudoUtilisateur);
+	        }
+	    }
+
+	    return List.of(); // Si rien n'est coché
+	}
+	
+	
+	
 }
+

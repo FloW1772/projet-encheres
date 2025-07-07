@@ -40,12 +40,23 @@ public class EnchereDAOImpl implements EnchereDAO {
 	private final String SELECT_BY_UTILISATEUR = "SELECT * FROM Enchere WHERE idUtilisateur = :idUtilisateur";
 	private final String SELECT_BY_ARTICLE = "SELECT * FROM Enchere WHERE idArticle = :idArticle";
 	private final String DELETE_BY_ARTICLE = "DELETE FROM Enchere WHERE idArticle = :idArticle";
-
+	private static final String SELECT_ENCHERES_OUVERTES ="SELECT * FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle WHERE a.etatVente = 'EN_COURS'";
+	private static final String SELECT_MES_ENCHERES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur JOIN ArticleAVendre a ON e.idArticle = a.idArticle WHERE u.pseudo = :pseudo";
+	private static final String SELECT_MES_VENTES_NON_DEBUTEES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres > GETDATE()";
+	private static final String SELECT_MES_VENTES_EN_COURS = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres <= GETDATE() AND a.dateFinEncheres > GETDATE()";
+	private static final String SELECT_MES_ENCHERES_REMPORTEES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur WHERE e.montant = (SELECT MAX(montant) FROM Enchere WHERE idArticle = a.idArticle) AND e.idUtilisateur = (SELECT idUtilisateur FROM Utilisateur WHERE pseudo = :pseudo) AND a.dateFinEncheres < GETDATE()";
+	private static final String SELECT_MES_VENTES_TERMINEES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateFinEncheres < GETDATE()";
+	
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public EnchereDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
 		this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
 	}
+	
+	public List<Enchere> getEncheresOuvertes() {
+	    return namedParameterJdbcTemplate.query(SELECT_ENCHERES_OUVERTES, new EnchereRowMapper());
+	}
+	
 
 	@Override
 	public void create(Enchere enchere) {
@@ -158,7 +169,43 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 		return namedParameterJdbcTemplate.query(sql, params, new EnchereRowMapper());
 	}
+	
+	@Override
+	public List<Enchere> selectMesEncheres(String pseudo) {
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("pseudo", pseudo);
+	    return namedParameterJdbcTemplate.query(SELECT_MES_ENCHERES, params, new EnchereRowMapper());
+	}
+	
+	@Override
+	public List<Enchere> selectMesVentesNonDebutees(String pseudo) {
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("pseudo", pseudo);
 
+	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_NON_DEBUTEES, params, new EnchereRowMapper());
+	}
+
+	@Override
+	public List<Enchere> selectMesVentesEnCours(String pseudo) {
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("pseudo", pseudo);
+	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_EN_COURS, params, new EnchereRowMapper());
+	}
+	
+	@Override
+	public List<Enchere> selectMesEncheresRemportees(String pseudo) {
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("pseudo", pseudo);
+	    return namedParameterJdbcTemplate.query(SELECT_MES_ENCHERES_REMPORTEES, params, new EnchereRowMapper());
+	}
+	
+	@Override
+	public List<Enchere> selectMesVentesTerminees(String pseudo) {
+	    MapSqlParameterSource params = new MapSqlParameterSource();
+	    params.addValue("pseudo", pseudo);
+	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_TERMINEES, params, new EnchereRowMapper());
+	}
+	
 	private static class EnchereRowMapper implements RowMapper<Enchere> {
 		@Override
 		public Enchere mapRow(ResultSet rs, int rowNum) throws SQLException {

@@ -30,5 +30,7 @@ public interface EnchereService {
     
     void encherir(long idArticle, long idUtilisateur, int Montant) throws BusinessException;
     Utilisateur getGagnant(long idArticle);
+    
+    List<Enchere> filtrerEncheres(String type, boolean encheresOuvertes, boolean mesEncheres, boolean mesEncheresRemportees, boolean ventesEnCours, boolean ventesNonDebutees, boolean ventesTerminees, String pseudoUtilisateur);
    
 }
