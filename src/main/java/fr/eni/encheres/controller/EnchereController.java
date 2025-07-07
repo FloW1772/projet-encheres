@@ -42,31 +42,51 @@ public class EnchereController {
 	}
 
 	@GetMapping("/encheres")
-	public String afficherListeEncheres(@RequestParam(name = "nomArticle", required = false) String nomRecherche,
-			@RequestParam(name = "categorie", required = false, defaultValue = "0") int categorieRecherche,
-			Model model) {
-		List<Categorie> categories = categorieService.getAllCategories();
-		List<ArticleAVendre> articlesEnCours;
+	public String afficherListeEncheres(
+	    @RequestParam(name = "nomArticle", required = false) String nomRecherche,
+	    @RequestParam(name = "categorie", required = false, defaultValue = "0") int categorieRecherche,
+	    @RequestParam(name = "type", required = false) String type,
+	    @RequestParam(name = "encheresOuvertes", required = false) boolean encheresOuvertes,
+	    @RequestParam(name = "mesEncheres", required = false) boolean mesEncheres,
+	    @RequestParam(name = "mesEncheresRemportees", required = false) boolean mesEncheresRemportees,
+	    @RequestParam(name = "ventesEnCours", required = false) boolean ventesEnCours,
+	    @RequestParam(name = "ventesNonDebutees", required = false) boolean ventesNonDebutees,
+	    @RequestParam(name = "ventesTerminees", required = false) boolean ventesTerminees,
+	    Principal principal,
+	    Model model) {
 
-		if ((nomRecherche == null || nomRecherche.isEmpty()) && categorieRecherche == 0) {
-			// Sans filtre, afficher tous les articles en cours
-			articlesEnCours = articleAVendreService.getArticlesAVendreEnCours();
-		} else {
-			// Avec filtre
-			articlesEnCours = articleAVendreService.rechercherArticlesEnCours(nomRecherche, categorieRecherche);
-		}
-		
-		  for (ArticleAVendre article : articlesEnCours) {
-		        if (article.getAdresseRetrait() == null && article.getVendeur() != null) {
-		            article.setAdresseRetrait(article.getVendeur().getAdresse());
-		        }
-		    }
-		model.addAttribute("categories", categories);
-		model.addAttribute("articles", articlesEnCours);
-		model.addAttribute("nomRecherche", nomRecherche);
-		model.addAttribute("categorieRecherche", categorieRecherche);
+	    List<Categorie> categories = categorieService.getAllCategories();
+	    model.addAttribute("categories", categories);
+	    model.addAttribute("nomRecherche", nomRecherche);
+	    model.addAttribute("categorieRecherche", categorieRecherche);
 
-		return "view-liste-encheres";
+	    List<Enchere> resultats;
+
+	    // Priorité au filtre texte/catégorie
+	    if ((nomRecherche != null && !nomRecherche.isBlank()) || categorieRecherche > 0) {
+	        resultats = enchereService.rechercherEncheres(nomRecherche, categorieRecherche);
+	    } 
+	    // Sinon, on passe aux filtres checkbox/radio
+	    else if (principal != null) {
+	        String pseudo = principal.getName();
+	        resultats = enchereService.filtrerEncheres(
+	            type, encheresOuvertes, mesEncheres, mesEncheresRemportees,
+	            ventesEnCours, ventesNonDebutees, ventesTerminees, pseudo);
+	    } else {
+	        resultats = List.of(); // si aucun filtre et aucun utilisateur non connecté
+	    }
+
+	    // Gérer l'adresse de retrait manquante
+	    for (Enchere enchere : resultats) {
+	        ArticleAVendre article = enchere.getArticle();
+	        if (article != null && article.getAdresseRetrait() == null && article.getVendeur() != null) {
+	            article.setAdresseRetrait(article.getVendeur().getAdresse());
+	        }
+	    }
+
+	    model.addAttribute("encheres", resultats);
+
+	    return "view-liste-encheres";
 	}
 
 

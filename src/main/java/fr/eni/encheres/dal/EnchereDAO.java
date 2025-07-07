@@ -24,6 +24,17 @@ public interface EnchereDAO {
     List<Enchere> selectEncheresByArticle(long idArticle);
     
     List<Enchere> rechercherEncheres(String nomArticle, int idCategorie);
+    
+    List<Enchere> selectMesEncheres(String pseudo);
+    
+    List<Enchere> getEncheresOuvertes();
 
+    List<Enchere> selectMesEncheresRemportees(String pseudo);
+
+    List<Enchere> selectMesVentesEnCours(String pseudo);
+
+    List<Enchere> selectMesVentesNonDebutees(String pseudo);
+
+    List<Enchere> selectMesVentesTerminees(String pseudo);
    
 }
