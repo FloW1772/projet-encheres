@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/style.css" />
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Détail vente</title>
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-    <h1>Détail vente</h1>
+    <div th:if="${messageEnchere != null}">
+        <p><strong th:text="${messageEnchere}"></strong></p>
+    </div>
 
+    <h1>Détail vente</h1>
     <h2 th:text="${article.nomArticle}">Nom de l'article</h2>
 
     <p><strong>Description :</strong></p>
     <p th:text="${article.description}">Description de l'article</p>
 
-    <p><strong>Catégorie :</strong>
-        <span th:text="${article.categorie.libelle}">Informatique</span>
-    </p>
+    <p><strong>Catégorie :</strong> <span th:text="${article.categorie.libelle}">Informatique</span></p>
 
     <p><strong>Meilleure offre :</strong>
-        <span th:if="${meilleureEnchere != null}"
-              th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}">
-              0 pts par quelqu’un
-        </span>
+        <span th:if="${meilleureEnchere != null}" 
+              th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}">0 pts par quelqu’un</span>
         <span th:if="${meilleureEnchere == null}">Aucune offre pour l’instant</span>
     </p>
 
-    <p><strong>Mise à prix :</strong>
-        <span th:text="${article.miseAPrix}">185</span> points
-    </p>
+    <p><strong>Mise à prix :</strong> <span th:text="${article.miseAPrix}">185</span> points</p>
 
-    <p><strong>Fin de l'enchère :</strong>
+    <p><strong>Fin de l'enchère :</strong> 
         <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}">09/10/2018</span>
     </p>
 
-    <p><strong>Retrait :</strong><br>
+    <p><strong>Retrait :</strong><br/>
         <span th:if="${article.adresseRetrait != null}">
-            <span th:text="${article.adresseRetrait.rue}">10 allée des Alouettes</span><br>
+            <span th:text="${article.adresseRetrait.rue}">10 allée des Alouettes</span><br/>
             <span th:text="${article.adresseRetrait.codePostal}">44800</span>
             <span th:text="${article.adresseRetrait.ville}">Saint Herblain</span>
         </span>
         <span th:if="${article.adresseRetrait == null}">
-            <span th:text="${article.vendeur.adresse.rue}">Rue par défaut</span><br>
+            <span th:text="${article.vendeur.adresse.rue}">Rue par défaut</span><br/>
             <span th:text="${article.vendeur.adresse.codePostal}">Code postal par défaut</span>
             <span th:text="${article.vendeur.adresse.ville}">Ville par défaut</span>
         </span>
@@ -52,14 +49,19 @@
            th:text="${article.vendeur.pseudo}">jojo44</a>
     </p>
 
-    <hr>
+    <div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == article.vendeur.pseudo}">
+        <a th:href="@{/vente/modifier/{id}(id=${article.idArticle})}" class="btn btn-primary">
+            Modifier la vente
+        </a>
+    </div>
+
+    <hr/>
 
     <div th:if="${messagesErreur != null}">
         <ul>
             <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
         </ul>
     </div>
-
 
     <div th:if="${utilisateurConnecte != null}">
         <form th:action="@{/encherir}" method="post">
@@ -70,12 +72,11 @@
         </form>
     </div>
 
-
     <div th:if="${utilisateurConnecte == null}">
         <p><a th:href="@{/login}">Connectez-vous</a> pour pouvoir enchérir.</p>
     </div>
 
-    <br>
+    <br/>
     <a th:href="@{/encheres}">Retour à la liste des enchères</a>
 
 </body>
