@@ -1,89 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8" />
-<title>Modifier Profil</title>
-<link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8" />
+    <title>Modifier Profil</title>
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-<form th:action="@{/utilisateur/modifier}" method="post" th:object="${utilisateur}">
+<nav style="background: #007bff; padding: 10px;">
+  <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
+    <li><a th:href="@{/}" style="color: white;">Accueil</a></li>
+    <li><a th:href="@{/vente/mes-ventes}" style="color: white;">Mes ventes</a></li>
+    <li><a th:href="@{/vente/mes-encheres}" style="color: white;">Mes enchères</a></li>
+    <li><a th:href="@{/vente/creation}" style="color: white;">Créer une vente</a></li>
+    <li><a th:href="@{/utilisateur/modifier}" style="color: white;">Profil</a></li>
+    <li>
+      <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit" 
+                style="background: none; border: none; color: white; cursor: pointer; padding: 0; font: inherit;">
+          Se déconnecter
+        </button>
+      </form>
+    </li>
+  </ul>
+</nav>
 
-    <ul class="flex-outer">
+<main>
+    <h1>Modifier mon profil</h1>
 
-        <li>
-            <label for="inputPseudo">Pseudo</label>
-            <input type="text" id="inputPseudo" th:field="*{pseudo}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('pseudo')}" th:errors="*{pseudo}"></p>
-        </li>
+    <div th:if="${errors != null}">
+        <ul style="color: red;">
+            <li th:each="err : ${errors}" th:text="${err}"></li>
+        </ul>
+    </div>
 
-        <li>
-            <label for="inputNom">Nom</label>
-            <input type="text" id="inputNom" th:field="*{nom}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></p>
-        </li>
+    <form th:action="@{/utilisateur/modifier}" method="post" th:object="${utilisateur}">
+        <ul class="flex-outer">
 
-        <li>
-            <label for="inputPrenom">Prénom</label>
-            <input type="text" id="inputPrenom" th:field="*{prenom}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></p>
-        </li>
+            <li>
+                <label for="inputPseudo">Pseudo</label>
+                <input type="text" id="inputPseudo" th:field="*{pseudo}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('pseudo')}" th:errors="*{pseudo}"></p>
+            </li>
 
-        <li>
-            <label for="inputTelephone">Téléphone</label>
-            <input type="text" id="inputTelephone" th:field="*{telephone}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></p>
-        </li>
+            <li>
+                <label for="inputNom">Nom</label>
+                <input type="text" id="inputNom" th:field="*{nom}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></p>
+            </li>
 
-        <li>
-            <label for="inputEmail">Email</label>
-            <input type="email" id="inputEmail" th:field="*{email}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
-        </li>
+            <li>
+                <label for="inputPrenom">Prénom</label>
+                <input type="text" id="inputPrenom" th:field="*{prenom}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></p>
+            </li>
 
-        <!-- Adresse -->
-        <li>
-            <label for="inputRue">Rue</label>
-            <input type="text" id="inputRue" th:field="*{adresse.rue}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('adresse.rue')}" th:errors="*{adresse.rue}"></p>
-        </li>
+            <li>
+                <label for="inputTelephone">Téléphone</label>
+                <input type="text" id="inputTelephone" th:field="*{telephone}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></p>
+            </li>
 
-        <li>
-            <label for="inputCodePostal">Code Postal</label>
-            <input type="text" id="inputCodePostal" th:field="*{adresse.codePostal}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('adresse.codePostal')}" th:errors="*{adresse.codePostal}"></p>
-        </li>
+            <li>
+                <label for="inputEmail">Email</label>
+                <input type="email" id="inputEmail" th:field="*{email}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </li>
 
-        <li>
-            <label for="inputVille">Ville</label>
-            <input type="text" id="inputVille" th:field="*{adresse.ville}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('adresse.ville')}" th:errors="*{adresse.ville}"></p>
-        </li>
+            <!-- Adresse -->
+            <li>
+                <label for="inputRue">Rue</label>
+                <input type="text" id="inputRue" th:field="*{adresse.rue}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('adresse.rue')}" th:errors="*{adresse.rue}"></p>
+            </li>
 
-        <li>
-            <label for="inputPays">Pays</label>
-            <input type="text" id="inputPays" th:field="*{adresse.pays}" required />
-            <p class="error-message" th:if="${#fields.hasErrors('adresse.pays')}" th:errors="*{adresse.pays}"></p>
-        </li>
+            <li>
+                <label for="inputCodePostal">Code Postal</label>
+                <input type="text" id="inputCodePostal" th:field="*{adresse.codePostal}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('adresse.codePostal')}" th:errors="*{adresse.codePostal}"></p>
+            </li>
 
-        <li th:if="${estSimpleUtilisateur}">
-            <p>Vous êtes un simple utilisateur.</p>
-            <button type="submit" name="action" value="devenirVendeur">Devenir vendeur</button>
-        </li>
+            <li>
+                <label for="inputVille">Ville</label>
+                <input type="text" id="inputVille" th:field="*{adresse.ville}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('adresse.ville')}" th:errors="*{adresse.ville}"></p>
+            </li>
 
-        <li th:unless="${estSimpleUtilisateur}">
-            <label>Rôle :</label>
-            <input type="text" th:value="${utilisateur.role.libelle}" readonly />
-        </li>
+            <li>
+                <label for="inputPays">Pays</label>
+                <input type="text" id="inputPays" th:field="*{adresse.pays}" required />
+                <p class="error-message" th:if="${#fields.hasErrors('adresse.pays')}" th:errors="*{adresse.pays}"></p>
+            </li>
 
-        <li>
-            <button type="submit" name="action" value="enregistrer">Enregistrer</button>
-            <button type="reset">Annuler</button>
-        </li>
+            <!-- Affichage conditionnel des rôles / bouton devenir vendeur -->
+            <li th:if="${estSimpleUtilisateur}">
+                <p>Vous êtes un simple utilisateur.</p>
+                <button type="submit" name="action" value="devenirVendeur">Devenir vendeur</button>
+            </li>
 
-    </ul>
+            <li th:unless="${estSimpleUtilisateur}">
+                <label>Rôle :</label>
+                <input type="text" th:value="${utilisateur.roles[0].libelle}" readonly />
+            </li>
 
-</form>
+            <li>
+                <button type="submit" name="action" value="enregistrer">Enregistrer</button>
+                <button type="reset">Annuler</button>
+            </li>
+
+        </ul>
+    </form>
+</main>
 
 </body>
 </html>
