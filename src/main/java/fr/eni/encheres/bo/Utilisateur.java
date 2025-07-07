@@ -6,13 +6,13 @@ import java.util.Objects;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+public class Utilisateur {
 
-public class Utilisateur  {
-  
-  private long idUtilisateur;
+    private long idUtilisateur;
 
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Le pseudo doit être alphanumérique")
@@ -36,16 +36,21 @@ public class Utilisateur  {
     private String motDePasse;
 
     private int credit = 100;
-    private Role role ;
+
+    @NotNull
+    private List<Role> roles = new ArrayList<>();
+
     private Adresse adresse = new Adresse();
+
     private List<ArticleAVendre> articles = new ArrayList<>();
+
     private List<Enchere> encheres = new ArrayList<>();
 
     public Utilisateur() {
     }
 
     public Utilisateur(long idUtilisateur, String pseudo, String nom, String prenom, String email, String telephone,
-                       String motDePasse, int credit, Role role, Adresse adresse,
+                       String motDePasse, int credit, List<Role> roles, Adresse adresse,
                        List<ArticleAVendre> articles, List<Enchere> encheres) {
         this.idUtilisateur = idUtilisateur;
         this.pseudo = pseudo;
@@ -55,10 +60,10 @@ public class Utilisateur  {
         this.telephone = telephone;
         this.motDePasse = motDePasse;
         this.credit = credit;
-        this.role = role;
-        this.adresse = adresse;
-        this.articles = articles;
-        this.encheres = encheres;
+        this.roles = roles != null ? new ArrayList<>(roles) : new ArrayList<>();
+        this.adresse = adresse != null ? adresse : new Adresse();
+        this.articles = articles != null ? new ArrayList<>(articles) : new ArrayList<>();
+        this.encheres = encheres != null ? new ArrayList<>(encheres) : new ArrayList<>();
     }
 
     // Getters & Setters
@@ -127,16 +132,15 @@ public class Utilisateur  {
         this.credit = credit;
     }
 
+    public List<Role> getRoles() {
+        return new ArrayList<>(roles);
+    }
 
-    public Role getRole() {
-		return role;
-	}
+    public void setRoles(List<Role> roles) {
+        this.roles = roles != null ? new ArrayList<>(roles) : new ArrayList<>();
+    }
 
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public Adresse getAdresse() {
+    public Adresse getAdresse() {
         return adresse;
     }
 
@@ -145,53 +149,49 @@ public class Utilisateur  {
     }
 
     public List<ArticleAVendre> getArticles() {
-        return articles;
+        return new ArrayList<>(articles);
     }
 
     public void setArticles(List<ArticleAVendre> articles) {
-        this.articles = articles;
+        this.articles = articles != null ? new ArrayList<>(articles) : new ArrayList<>();
     }
 
     public List<Enchere> getEncheres() {
-        return encheres;
+        return new ArrayList<>(encheres);
     }
 
     public void setEncheres(List<Enchere> encheres) {
-        this.encheres = encheres;
+        this.encheres = encheres != null ? new ArrayList<>(encheres) : new ArrayList<>();
     }
 
-	@Override
-	public String toString() {
-		return String.format(
-				"Utilisateur [idUtilisateur=%s, pseudo=%s, nom=%s, prenom=%s, email=%s, telephone=%s, motDePasse=%s, credit=%s, role=%s, adresse=%s, articles=%s, encheres=%s]",
-				idUtilisateur, pseudo, nom, prenom, email, telephone, motDePasse, credit, role, adresse, articles,
-				encheres);
-	}
+    @Override
+    public String toString() {
+        return String.format(
+                "Utilisateur [idUtilisateur=%s, pseudo=%s, nom=%s, prenom=%s, email=%s, telephone=%s, motDePasse=%s, credit=%s, roles=%s, adresse=%s, articles=%s, encheres=%s]",
+                idUtilisateur, pseudo, nom, prenom, email, telephone, motDePasse, credit, roles, adresse, articles,
+                encheres);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(adresse, articles, credit, email, encheres, idUtilisateur, motDePasse, nom, prenom, pseudo,
-				role, telephone);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(adresse, articles, credit, email, encheres, idUtilisateur, motDePasse, nom, prenom, pseudo,
+                roles, telephone);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Utilisateur other = (Utilisateur) obj;
-		return Objects.equals(adresse, other.adresse) && Objects.equals(articles, other.articles)
-				&& credit == other.credit && Objects.equals(email, other.email)
-				&& Objects.equals(encheres, other.encheres) && idUtilisateur == other.idUtilisateur
-				&& Objects.equals(motDePasse, other.motDePasse) && Objects.equals(nom, other.nom)
-				&& Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo)
-				&& Objects.equals(role, other.role) && Objects.equals(telephone, other.telephone);
-	}
-
-    
-   
-
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Utilisateur other = (Utilisateur) obj;
+        return Objects.equals(adresse, other.adresse) && Objects.equals(articles, other.articles)
+                && credit == other.credit && Objects.equals(email, other.email)
+                && Objects.equals(encheres, other.encheres) && idUtilisateur == other.idUtilisateur
+                && Objects.equals(motDePasse, other.motDePasse) && Objects.equals(nom, other.nom)
+                && Objects.equals(prenom, other.prenom) && Objects.equals(pseudo, other.pseudo)
+                && Objects.equals(roles, other.roles) && Objects.equals(telephone, other.telephone);
+    }
 }

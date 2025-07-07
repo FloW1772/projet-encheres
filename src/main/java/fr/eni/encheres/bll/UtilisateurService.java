@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UtilisateurService {
 	
-	void creerUtilisateurAvecAdresseEtRole(Utilisateur utilisateur, Adresse adresse, Role Role) throws BusinessException;
+	
 	void modifierProfil(Utilisateur utilisateur) throws BusinessException;
 	void supprimerCompte(long idUtilisateur) throws BusinessException;
 	Utilisateur selectById(long idUtilisateur) ;
@@ -19,4 +19,6 @@ public interface UtilisateurService {
 	void crediterPoints(long idUtilisateur, int montant) throws BusinessException;
 	void debiterPoints(long idUtilisateur, int montant) throws BusinessException;
 	void devenirVendeur(long idUtilisateur) throws BusinessException;
+	void creerUtilisateurAvecAdresseEtRoles(Utilisateur utilisateur, Adresse adresse, List<Role> roles)
+			throws BusinessException;
 }
