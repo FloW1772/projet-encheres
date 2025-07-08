@@ -1,21 +1,36 @@
 package fr.eni.encheres.bo;
 
-public enum EtatVente {
-    EN_COURS("En cours"),
-    TERMINEE("Terminee"),
-    ANNULEE("Annulee"),
-    NON_DEMARREE("Non demarree");
- 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+public enum EtatVente {
+    EN_COURS(0,"En cours"),
+    TERMINEE(1,"Terminee"),
+    ANNULEE(2,"Annulee"),
+    NON_DEMARREE(3,"Non demarree");
+	
+private final int code;
     private final String label;
 
-    EtatVente(String label) {
+    EtatVente(int code, String label) {
+    	this.code = code;
         this.label = label;
     }
 
-    public String getLabel() {
+    public int getCode() {
+		return code;
+	}
+
+	public String getLabel() {
         return label;
     }
+	public static EtatVente fromCode(int code) {
+		for (EtatVente e : values()) {
+			if(e.code == code) return e;
+		}
+		throw new IllegalArgumentException("Code EtatVente inconnu:" + code);
+	}
 
     public static EtatVente fromString(String etatString) {
         for (EtatVente etat : EtatVente.values()) {
@@ -33,6 +48,10 @@ public enum EtatVente {
         }
         return values[index];
     }
-
+    
+    public static Map<String, String> getEtatMap() {
+        return Arrays.stream(EtatVente.values())
+                     .collect(Collectors.toMap(Enum::name, EtatVente::getLabel));
+    }
   
 }

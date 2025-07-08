@@ -212,6 +212,7 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 
 	@Override
 	public void annulerVente(ArticleAVendre article) throws BusinessException {
+		
 		BusinessException be = new BusinessException();
 
 		boolean isValid = true;
@@ -283,6 +284,11 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 	@Override
 	public List<ArticleAVendre> findArticlesEnCoursByVendeur(String pseudo) {
 		return articleAVendreDAO.findArticlesEnCoursByVendeur(pseudo);
+	}
+
+	@Override
+	public List<ArticleAVendre> findAllByUtilisateur(String pseudo) {
+		return articleAVendreDAO.findAllByUtilisateur(pseudo);
 	}
 
 }

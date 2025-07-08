@@ -15,6 +15,8 @@ public interface ArticleAVendreDAO {
 	
 	List<ArticleAVendre> findAllStatutEnCours();
 	
+	List<ArticleAVendre> findAllByUtilisateur(String pseudo);
+	
 	int annulerVente(long id)throws BusinessException;
 	
 	void updateArticle(ArticleAVendre articleAVendre);

@@ -19,7 +19,7 @@
             <div id="bloc1">
                 <!-- Nom de l’article -->
                 <div id="tag">
-                    <label for="inputNomArticle">Nom</label>
+                    <label for="inputNomArticle">Nom Article</label>
                     <input type="text" id="inputNomArticle" th:field="*{nomArticle}" required />
                     <ul th:if="${#fields.hasErrors('nomArticle')}" class="listErrors">
                         <li th:each="err : ${#fields.errors('nomArticle')}" th:text="${err}"></li>
@@ -49,6 +49,13 @@
                     </ul>
                 </div>
             </div>
+            <div id="tag">
+    				<label for="etatVente">État de la vente</label>
+    				<select id="etatVente" th:field="*{etatVente}">
+        			<option value="">-- Sélectionner --</option>
+        			<option th:each="etat : ${etatsVente}" th:value="${etat}"  th:text="${etat.label}"></option>
+    				</select>
+			</div>
 
             <div id="bloc2">
                 <!-- Mise à prix -->
@@ -80,7 +87,7 @@
         </div>
 		<div id="adresseRetraitBloc">
     <h2>Adresse de Retrait</h2>
-
+ 
     <div id="tag">
         <label for="inputRue">Rue</label>
         <input type="text" id="inputRue" th:field="*{adresseRetrait.rue}" required />
@@ -112,15 +119,15 @@
             <li th:each="err : ${#fields.errors('adresseRetrait.pays')}" th:text="${err}"></li>
         </ul>
     </div>
-</div>
-		
-  
+    
+    
         <div id="set">
             <button type="submit">Valider</button>
 
             <!-- Affiché seulement en mode modification -->
-            <a th:if="${modeModif}" th:href="@{'/vente/annuler'(id=*{idArticle})}" class="btnPrimaire btnAnnuler">Annuler la vente</a>
-
+            <a th:if="${modeModif} and ${articleAVendre.dateDebutEncheres > T(java.time.LocalDateTime).now()}"
+   			th:href="@{'/vente/annuler'(id=*{idArticle})}" class="btnPrimaire btnAnnuler"> Annuler la vente</a>
+   			
             <a href="/" class="btn">Retour</a>
         </div>
 

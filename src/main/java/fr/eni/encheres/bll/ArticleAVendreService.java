@@ -19,6 +19,8 @@ public interface ArticleAVendreService {
 	
 	void modifierArticleEnVente(ArticleAVendre articleAVendre, String pseudo)throws BusinessException;
 	
+	List<ArticleAVendre> findAllByUtilisateur(String pseudo);
+	
 
 	void annulerVente(ArticleAVendre article)throws BusinessException;
 
