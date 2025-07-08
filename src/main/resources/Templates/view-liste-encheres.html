@@ -2,13 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <title>Liste des enchères</title>
-    <link rel="stylesheet" href="/css/style.css" />
+<meta charset="UTF-8" />
+<title>Liste des enchères</title>
+<link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-
-
 
 <nav style="background: #007bff; padding: 10px;">
     <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
@@ -38,94 +36,97 @@
         </option>
     </select>
 
-  
-    <div>
+    <div style="margin-top: 15px;">
         <label>
-            <input type="radio" name="typeFiltre" value="achat" 
-                   th:checked="${achatEncheresOuvertes or achatMesEncheres or achatMesEncheresRemportees}"/>
-            Achat
+            <input type="radio" name="typeFiltre" value="achat"
+                   th:checked="${typeFiltre == 'achat'}"/> Achats
         </label>
         <label style="margin-left: 20px;">
             <input type="radio" name="typeFiltre" value="vente"
-                   th:checked="${venteMesVentesEnCours or venteVentesNonDebutees or venteVentesTerminees}"/>
-            Ventes
+                   th:checked="${typeFiltre == 'vente'}"/> Mes ventes
         </label>
     </div>
 
-    <div th:if="${user != null}" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px;">
-
-        
-        <fieldset id="filtresAchat" style="display: none;">
+    <div th:if="${utilisateurConnecte != null}" style="margin-top: 20px; display: flex; gap: 40px;">
+        <!-- Groupe Achats -->
+        <fieldset id="filtresAchat">
             <legend>Achat</legend>
-            <label><input type="checkbox" name="achatEncheresOuvertes" th:checked="${achatEncheresOuvertes}"/> Enchères ouvertes</label><br/>
-            <label><input type="checkbox" name="achatMesEncheres" th:checked="${achatMesEncheres}"/> Mes enchères</label><br/>
-            <label><input type="checkbox" name="achatMesEncheresRemportees" th:checked="${achatMesEncheresRemportees}"/> Mes enchères remportées</label>
+            <label><input type="checkbox" name="achatEncheresOuvertes" th:checked="${achatEncheresOuvertes}"/> enchères ouvertes</label><br/>
+            <label><input type="checkbox" name="achatMesEncheres" th:checked="${achatMesEncheres}"/> mes enchères</label><br/>
+            <label><input type="checkbox" name="achatMesEncheresRemportees" th:checked="${achatMesEncheresRemportees}"/> mes enchères remportées</label>
         </fieldset>
 
-     
-        <fieldset id="filtresVente" style="display: none; margin-top: 10px;">
+        <!-- Groupe Ventes -->
+        <fieldset id="filtresVente">
             <legend>Ventes</legend>
-            <label><input type="checkbox" name="venteMesVentesEnCours" th:checked="${venteMesVentesEnCours}"/> Mes ventes en cours</label><br/>
-            <label><input type="checkbox" name="venteVentesNonDebutees" th:checked="${venteVentesNonDebutees}"/> Ventes non débutées</label><br/>
-            <label><input type="checkbox" name="venteVentesTerminees" th:checked="${venteVentesTerminees}"/> Ventes terminées</label>
+            <label><input type="checkbox" name="venteMesVentesEnCours" th:checked="${venteMesVentesEnCours}"/> mes ventes en cours</label><br/>
+            <label><input type="checkbox" name="venteVentesNonDebutees" th:checked="${venteVentesNonDebutees}"/> ventes non débutées</label><br/>
+            <label><input type="checkbox" name="venteVentesTerminees" th:checked="${venteVentesTerminees}"/> ventes terminées</label>
         </fieldset>
     </div>
 
     <button type="submit" style="margin-top: 15px;">Rechercher</button>
 </form>
 
-<hr>
-
-<!-- Liste des enchères -->
-<div th:if="${#lists.isEmpty(encheres)}">
-    <p>Aucune enchère en cours pour cette recherche.</p>
-</div>
+<hr/>
 
 <div th:each="enchere : ${encheres}">
     <h2>
         <a th:href="@{/article/{id}(id=${enchere.article.idArticle})}" 
            th:text="${enchere.article.nomArticle}">Nom article</a>
     </h2>
+
     <p th:text="${enchere.article.description}">Description</p>
-    <p><strong>Catégorie :</strong> <span th:text="${enchere.article.categorie.libelle}">Informatique</span></p>
+
+    <p><strong>Catégorie :</strong> 
+        <span th:text="${enchere.article.categorie.libelle}">Informatique</span>
+    </p>
+
     <p><strong>Fin :</strong> 
         <span th:text="${#temporals.format(enchere.article.dateFinEncheres, 'dd/MM/yyyy')}">Date fin</span>
     </p>
-    <p><strong>Mise à prix :</strong> <span th:text="${enchere.article.miseAPrix}">100</span> pts</p>
+
+    <p><strong>Mise à prix :</strong> 
+        <span th:text="${enchere.article.miseAPrix}">100</span> pts
+    </p>
+
     <a th:href="@{/articles/{id}(id=${enchere.article.idArticle})}" 
-   style="display: inline-block; padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
-    Voir détail et enchérir
-</a>
+       style="display: inline-block; padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+        Voir détail et enchérir
+    </a>
+
     <p><strong>Vendeur :</strong> 
         <a th:href="@{/utilisateur/profil(pseudo=${enchere.article.vendeur.pseudo})}" 
            th:text="${enchere.article.vendeur.pseudo}">pseudo</a>
     </p>
-    <hr>
+
+    <hr/>
 </div>
 
 <script>
-   
     function afficherFiltres() {
-        const radios = document.querySelectorAll('input[name="typeFiltre"]');
-        let typeFiltre = null;
-        radios.forEach(radio => {
-            if (radio.checked) {
-                typeFiltre = radio.value;
-            }
-        });
-        document.getElementById('filtresAchat').style.display = (typeFiltre === 'achat') ? 'block' : 'none';
-        document.getElementById('filtresVente').style.display = (typeFiltre === 'vente') ? 'block' : 'none';
-    }
+        const typeFiltre = document.querySelector('input[name="typeFiltre"]:checked').value;
 
+        
+        const achatFieldset = document.getElementById('filtresAchat');
+        const venteFieldset = document.getElementById('filtresVente');
+
+        if (typeFiltre === 'achat') {
+            achatFieldset.removeAttribute('disabled');
+            venteFieldset.setAttribute('disabled', 'disabled');
+        } else {
+            venteFieldset.removeAttribute('disabled');
+            achatFieldset.setAttribute('disabled', 'disabled');
+        }
+    }
 
     window.addEventListener('DOMContentLoaded', () => {
         afficherFiltres();
-
-      
         document.querySelectorAll('input[name="typeFiltre"]').forEach(radio => {
             radio.addEventListener('change', afficherFiltres);
         });
     });
 </script>
+
 </body>
 </html>

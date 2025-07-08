@@ -7,11 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import fr.eni.encheres.bll.ArticleAVendreService;
@@ -51,6 +49,7 @@ public class EnchereController {
 			@RequestParam(name = "venteVentesTerminees", required = false, defaultValue = "false") boolean venteVentesTerminees,
 			Principal principal, Model model) throws BusinessException {
 
+		
 
 		List<Categorie> categories = categorieService.getAllCategories();
 		model.addAttribute("categories", categories);
@@ -63,7 +62,7 @@ public class EnchereController {
 		model.addAttribute("venteVentesNonDebutees", venteVentesNonDebutees);
 		model.addAttribute("venteVentesTerminees", venteVentesTerminees);
 
-		model.addAttribute("user", principal != null ? principal.getName() : null);
+		
 
 		List<Enchere> resultats;
 
@@ -132,7 +131,16 @@ public class EnchereController {
 		}
 
 		model.addAttribute("encheres", resultats);
-
+		
+		if (principal != null) {
+		    Utilisateur utilisateurConnecte = utilisateurService.selectByLogin(principal.getName());
+		    model.addAttribute("utilisateurConnecte", utilisateurConnecte);
+		}
+		
+		
+		String typeFiltre = (achatEncheresOuvertes || achatMesEncheres || achatMesEncheresRemportees) ? "achat" : "vente";
+		model.addAttribute("typeFiltre", typeFiltre);
+		
 		return "view-liste-encheres";
 	}
 
@@ -146,7 +154,16 @@ public class EnchereController {
 	    }
 
 	    ArticleAVendre article = articleAVendreService.getById(idArticle);
+	       
+	    if (article.getAdresseRetrait() == null && article.getVendeur() != null) {
+	        Utilisateur vendeurComplet = utilisateurService.selectByLogin(article.getVendeur().getPseudo());
+	        if (vendeurComplet != null && vendeurComplet.getAdresse() != null) {
+	            article.setAdresseRetrait(vendeurComplet.getAdresse());
+	        }
+	    }
+	    
 	    model.addAttribute("article", article);
+	    
 
 	    Enchere meilleureEnchere = enchereService.selectBestEnchereByArticle(idArticle);
 	    model.addAttribute("meilleureEnchere", meilleureEnchere);
@@ -191,6 +208,13 @@ public class EnchereController {
 			return "redirect:/encheres";
 		}
 
+			// Bloque si l utilisateur est le vendeur
+		if (article.getVendeur().getIdUtilisateur() == utilisateurConnecte.getIdUtilisateur()) {
+	        redirectAttributes.addFlashAttribute("messageErreur", "Vous ne pouvez pas enchérir sur votre propre article.");
+	        return "redirect:/articles/" + idArticle;
+	    }
+		
+		
 		try {
 			enchereService.encherir(idArticle, utilisateurConnecte.getIdUtilisateur(), montant);
 			return "redirect:/article/" + idArticle;
