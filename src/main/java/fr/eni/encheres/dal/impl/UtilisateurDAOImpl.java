@@ -7,10 +7,13 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 
 import fr.eni.encheres.bo.Adresse;
+
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.dal.UtilisateurDAO;
+
+
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -20,9 +23,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 
-	private static final String SELECT_WITH_ADRESSE_BASE = "SELECT u.idUtilisateur, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.credit, "
-			+ "a.idAdresse, a.rue, a.codePostal, a.ville " + "FROM UTILISATEUR u "
-			+ "LEFT JOIN ADRESSE a ON u.idUtilisateur = a.idUtilisateur ";
+	private static final String SELECT_WITH_ADRESSE_BASE = "SELECT u.idUtilisateur, u.pseudo, u.nom, u.prenom, u.email, u.telephone, u.credit, u.motDePasse, "
+	        + "a.idAdresse, a.rue, a.codePostal, a.ville "
+	        + "FROM UTILISATEUR u "
+	        + "LEFT JOIN ADRESSE a ON u.idUtilisateur = a.idUtilisateur ";
+
 	private static final String FIND_BY_ID = SELECT_WITH_ADRESSE_BASE + " WHERE u.idUtilisateur = :id";
 	private static final String FIND_BY_EMAIL = SELECT_WITH_ADRESSE_BASE + " WHERE u.email = :email";
 	private static final String SELECT_BY_LOGIN = SELECT_WITH_ADRESSE_BASE + " WHERE u.pseudo = :pseudo";
@@ -34,11 +39,38 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			+ "VALUES (:pseudo, :nom, :prenom, :email, :telephone, :motDePasse, :credit)";
 
 	private static final String UPDATE_UTILISATEUR = "UPDATE UTILISATEUR SET pseudo = :pseudo, nom = :nom, prenom = :prenom, "
-			+ "telephone = :telephone, motDePasse = :motDePasse, credit = :credit " + "WHERE email = :email";
+		    + "email = :email, telephone = :telephone, motDePasse = :motDePasse, credit = :credit WHERE idUtilisateur = :idUtilisateur";
+
 	private static final String DELETE = "DELETE FROM UTILISATEUR WHERE idUtilisateur = :idUtilisateur";
 	private static final String COUNT_BY_EMAIL = "SELECT COUNT(*) FROM UTILISATEUR WHERE email = :email";
 	private static final String  SET_DEBITER = "UPDATE Utilisateur SET credit = credit - :montant WHERE idUtilisateur = :idUtilisateur AND credit >= :montant";
 	private static final String  SET_CREDITER = "UPDATE Utilisateur SET credit = credit + :montant WHERE idUtilisateur = :idUtilisateur";
+	
+	//---------- methode temporaire pou rmes test après faut changer dans l'enchere dao
+	private final String SELECT_BY_UTILISATEUR = 
+		    "SELECT " +
+		    "    e.idEnchere, " +
+		    "    e.dateEnchere, " +
+		    "    e.montant, " +
+		    "    u.idUtilisateur AS encherisseurId, " +
+		    "    u.pseudo AS encherisseurPseudo, " +
+		    "    a.idArticle, " +
+		    "    a.nomArticle, " +
+		    "    a.dateFinEncheres, " +
+		    "    uv.idUtilisateur AS vendeurId, " +
+		    "    uv.pseudo AS vendeurPseudo, " +
+		    "    ar.idAdresse AS adresseRetraitId, " +
+		    "    ar.rue AS adresseRetraitRue, " +
+		    "    ar.codePostal AS adresseRetraitCodePostal, " +
+		    "    ar.ville AS adresseRetraitVille " +
+		    "FROM Enchere e " +
+		    "JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur " +
+		    "JOIN ArticleAVendre a ON e.idArticle = a.idArticle " +
+		    "JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur " +
+		    "LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse " +
+		    "WHERE e.idUtilisateur = :idUtilisateur " +
+		    "ORDER BY e.dateEnchere DESC";
+
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -96,20 +128,22 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
 	@Override
 	public void update(Utilisateur utilisateur) {
-		MapSqlParameterSource map = new MapSqlParameterSource();
-		map.addValue("pseudo", utilisateur.getPseudo());
-		map.addValue("nom", utilisateur.getNom());
-		map.addValue("prenom", utilisateur.getPrenom());
-		map.addValue("telephone", utilisateur.getTelephone());
-		map.addValue("motDePasse", utilisateur.getMotDePasse());
-		map.addValue("credit", utilisateur.getCredit());
-		map.addValue("email", utilisateur.getEmail());
+	    MapSqlParameterSource map = new MapSqlParameterSource();
+	    map.addValue("pseudo", utilisateur.getPseudo());
+	    map.addValue("nom", utilisateur.getNom());
+	    map.addValue("prenom", utilisateur.getPrenom());
+	    map.addValue("email", utilisateur.getEmail());
+	    map.addValue("telephone", utilisateur.getTelephone());
+	    map.addValue("motDePasse", utilisateur.getMotDePasse());
+	    map.addValue("credit", utilisateur.getCredit());
+	    map.addValue("idUtilisateur", utilisateur.getIdUtilisateur());  
 
-		int rows = namedParameterJdbcTemplate.update(UPDATE_UTILISATEUR, map);
-		if (rows == 0) {
-			throw new RuntimeException("Aucun utilisateur trouvé avec l'email : " + utilisateur.getEmail());
-		}
+	    int rows = namedParameterJdbcTemplate.update(UPDATE_UTILISATEUR, map);
+	    if (rows == 0) {
+	        throw new RuntimeException("Aucun utilisateur trouvé avec l'id : " + utilisateur.getIdUtilisateur());
+	    }
 	}
+
 
 	@Override
 	public void delete(long idUtilisateur) {
@@ -120,6 +154,16 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			throw new RuntimeException("Suppression échouée. Aucun utilisateur trouvé pour : " + idUtilisateur);
 		}
 	}
+	
+	
+	@Override
+	public void clearAdresse(long idUtilisateur) {
+		String sql = "UPDATE Utilisateur SET idAdresse = NULL WHERE idUtilisateur = :idUtilisateur";
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("idUtilisateur", idUtilisateur);
+		namedParameterJdbcTemplate.update(sql, params);
+	}
+
 
 	@Override
 	public boolean hasEmail(String email) {
@@ -156,6 +200,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 			utilisateur.setEmail(rs.getString("email"));
 			utilisateur.setTelephone(rs.getString("telephone"));
 			utilisateur.setCredit(rs.getInt("credit"));
+			utilisateur.setMotDePasse(rs.getString("motDePasse")); 
 
 			long idAdresse = rs.getLong("idAdresse");
 			if (!rs.wasNull()) {
@@ -204,6 +249,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	    namedParameterJdbcTemplate.update(sql, params);
 	}
 
-
+	
 
 }

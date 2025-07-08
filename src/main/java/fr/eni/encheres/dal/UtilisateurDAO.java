@@ -2,6 +2,7 @@ package fr.eni.encheres.dal;
 
 import java.util.List;
 
+
 import fr.eni.encheres.bo.Utilisateur;
 
 public interface UtilisateurDAO {
@@ -17,6 +18,8 @@ public interface UtilisateurDAO {
 	void debiterPoints(long idUtilisateur, int montant);
 	void crediterPoints(long idUtilisateur, int montant);
 	void updateIdAdresse(Long idUtilisateur, Long idAdresse);
+	void clearAdresse(long idUtilisateur);
+	
 
 
 }

@@ -2,13 +2,25 @@ package fr.eni.encheres.bo;
 
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class Adresse {
 
     private long idAdresse = -1;
+    @NotBlank(message = "La rue est obligatoire")
     private String rue;
+
+    @NotBlank(message = "Le code postal est obligatoire")
+    @Size(min = 5, max = 10, message = "Le code postal doit avoir entre 5 et 10 caractères")
     private String codePostal;
+
+    @NotBlank(message = "La ville est obligatoire")
     private String ville;
+
+    @NotBlank(message = "Le pays est obligatoire")
     private String pays;
+
     private long idUtilisateur;
 
     public Adresse() {

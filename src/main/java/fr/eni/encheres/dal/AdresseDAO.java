@@ -16,7 +16,7 @@ public interface AdresseDAO {
 
 	// UPDATE
 	void update(Adresse adresse);
-
+	
 	// DELETE
 	void delete(long id);
 

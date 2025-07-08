@@ -12,7 +12,8 @@ public class TestPassword {
             "bob456:passBob",
             "charlie789:passCharlie",
             "diane321:passDiane",
-            "eric654:passEric"
+            "eric654:passEric",
+            "jdupont:passDuopont"
         };
 
         for (String user : users) {
