@@ -20,6 +20,7 @@ import fr.eni.encheres.bll.CategorieService;
 import fr.eni.encheres.bll.UtilisateurService;
 import fr.eni.encheres.bo.Adresse;
 import fr.eni.encheres.bo.ArticleAVendre;
+import fr.eni.encheres.bo.EtatVente;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.exception.BusinessException;
 import jakarta.validation.Valid;
@@ -55,7 +56,16 @@ public class ArticleAVendreController {
         article.setVendeur(utilisateur);
 
         Adresse adresseUtilisateur = adresseService.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
-        article.setAdresseRetrait(adresseUtilisateur != null ? adresseUtilisateur : new Adresse());
+        if (adresseUtilisateur != null) {
+            article.setAdresseRetrait(adresseUtilisateur);
+        } else {
+            Adresse adresseParDefaut = new Adresse();
+            adresseParDefaut.setRue("10 rue de Paris");
+            adresseParDefaut.setCodePostal("75001");
+            adresseParDefaut.setVille("Paris");
+            adresseParDefaut.setPays("France");
+            article.setAdresseRetrait(adresseParDefaut);
+        }
 
         preparerModelVente(model, article, false);
         return "view-vente-article";
@@ -80,6 +90,7 @@ public class ArticleAVendreController {
                     articleAVendre.getCategorie().getIdCategorie());
         } catch (BusinessException e) {
             model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("etatsVente", EtatVente.values());
             preparerModelVente(model, articleAVendre, false);
             return "view-vente-article";
         }
@@ -125,7 +136,7 @@ public class ArticleAVendreController {
             return "redirect:/login";
         }
 
-        List<ArticleAVendre> articles = articleAVendreService.findArticlesEnCoursByVendeur(utilisateur.getPseudo());
+        List<ArticleAVendre> articles = articleAVendreService.findAllByUtilisateur(utilisateur.getPseudo());
         model.addAttribute("articles", articles);
         return "view-liste-articles-utilisateur";
     }
@@ -144,10 +155,19 @@ public class ArticleAVendreController {
             redirectAttributes.addFlashAttribute("errorMessage", "Accès refusé à l'article.");
             return "redirect:/vente/mes-ventes";
         }
+        if (article.getAdresseRetrait() == null) {
+            Adresse adresseParDefaut = new Adresse();
+            adresseParDefaut.setRue("10 rue de Paris");
+            adresseParDefaut.setCodePostal("75001");
+            adresseParDefaut.setVille("Paris");
+            adresseParDefaut.setPays("France");
+            article.setAdresseRetrait(adresseParDefaut);
+        }
 
         model.addAttribute("articleAVendre", article);
         model.addAttribute("categories", categorieService.getAllCategories());
         model.addAttribute("modeModif", true);
+        model.addAttribute("etatsVente", EtatVente.values());
 
         return "view-vente-article";
     }

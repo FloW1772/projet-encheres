@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +24,10 @@ public class ArticleAVendre implements Serializable {
 	@NotBlank
 	@Size(min = 20, max = 300)
 	private String description;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	@NotNull
 	private LocalDateTime dateDebutEncheres;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	@NotNull
 	private LocalDateTime dateFinEncheres;
 	@NotNull
