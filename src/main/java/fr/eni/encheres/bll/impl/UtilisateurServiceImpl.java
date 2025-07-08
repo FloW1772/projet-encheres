@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.encheres.bll.UtilisateurService;
 import fr.eni.encheres.bo.Adresse;
+import fr.eni.encheres.bo.Enchere;
 import fr.eni.encheres.bo.Role;
 import fr.eni.encheres.bo.Utilisateur;
 import fr.eni.encheres.configuration.PasswordEncoderConfig;
@@ -30,7 +31,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	private final UtilisateurRoleDAO utilisateurRoleDAO;
 	private final RoleDAO roleDAO;
 
-	// -----Constructeur avec Spring Security-----
+	
 
 	
 	public UtilisateurServiceImpl(UtilisateurDAO utilisateurDAO, PasswordEncoder passwordEncoder,
@@ -79,7 +80,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	        if (roles == null) {
 	            roles = new ArrayList<>();
 	        } else {
-	            // Nettoyer la liste des rôles pour ne garder que ceux non nulls
+	            // ----Nettoyer la liste des rôles pour ne garder que ceux non nulls
 	            roles = roles.stream()
 	                         .filter(Objects::nonNull)
 	                         .collect(Collectors.toList());
@@ -113,11 +114,6 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	    }
 	}
 
-
-
-	
-	
-
 	private boolean isEmailAvailable(String email, BusinessException be) {
 		boolean exists = utilisateurDAO.hasEmail(email);
 		if (exists) {
@@ -127,55 +123,104 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 		return true;
 	}
 
-	@Override
 	@Transactional
 	public void modifierProfil(Utilisateur utilisateur) throws BusinessException {
+	    System.out.println("Entrée dans modifierProfil");
 	    if (utilisateur == null || utilisateur.getIdUtilisateur() == 0) {
 	        throw new BusinessException("Utilisateur invalide");
 	    }
-	    try {
-	        // Met à jour l'utilisateur
-	        utilisateurDAO.update(utilisateur);
 
-	        // Met à jour ou insert l'adresse
-	        Adresse adresse = utilisateur.getAdresse();
-	        if (adresse != null) {
-	            adresse.setIdUtilisateur(utilisateur.getIdUtilisateur());
-	            if (adresse.getIdAdresse() == 0) {
-	                adresseDAO.save(adresse);
+	    try {
+	        // Charger l'utilisateur complet depuis la BDD
+	        Utilisateur utilisateurEnBase = utilisateurDAO.selectById(utilisateur.getIdUtilisateur());
+	        if (utilisateurEnBase == null) {
+	            throw new BusinessException("Utilisateur non trouvé");
+	        }
+
+	        // Mettre à jour les champs simples
+	        utilisateurEnBase.setPseudo(utilisateur.getPseudo());
+	        utilisateurEnBase.setNom(utilisateur.getNom());
+	        utilisateurEnBase.setPrenom(utilisateur.getPrenom());
+	        utilisateurEnBase.setEmail(utilisateur.getEmail());
+	        utilisateurEnBase.setTelephone(utilisateur.getTelephone());
+	      //  utilisateurEnBase.setCredit(utilisateur.getCredit());
+	        
+	        
+	        if (utilisateur.getMotDePasse() != null && !utilisateur.getMotDePasse().isEmpty()) {
+	            String motDePasseHashe = passwordEncoder.encode(utilisateur.getMotDePasse());
+	            utilisateurEnBase.setMotDePasse(motDePasseHashe);
+	        }
+
+
+	        // Mettre à jour l'adresse 
+	        Adresse adresseEnBase = utilisateurEnBase.getAdresse();
+	        Adresse adresseModifiee = utilisateur.getAdresse();
+
+	        if (adresseModifiee != null) {
+	            if (adresseEnBase == null) {
+	                // Pas d'adresse en base, on crée une nouvelle
+	                adresseModifiee.setIdUtilisateur(utilisateur.getIdUtilisateur());
+	                adresseDAO.save(adresseModifiee);
+	                utilisateurEnBase.setAdresse(adresseModifiee);
 	            } else {
-	                adresseDAO.update(adresse);
+	                // Mise à jour de l'adresse existante
+	                adresseEnBase.setRue(adresseModifiee.getRue());
+	                adresseEnBase.setCodePostal(adresseModifiee.getCodePostal());
+	                adresseEnBase.setVille(adresseModifiee.getVille());
+	                adresseEnBase.setPays(adresseModifiee.getPays());
+
+	                adresseDAO.update(adresseEnBase);
 	            }
 	        }
 
-	        // Gérer les rôles s’ils sont fournis
+	        //-------- Mise à jour de l'utilisateur
+	        utilisateurDAO.update(utilisateurEnBase);
+
+	        // ------Gestion des rôles
 	        List<Role> nouveauxRoles = utilisateur.getRoles();
 	        if (nouveauxRoles != null) {
-	            // Supprimer tous les rôles existants
-	            utilisateurRoleDAO.deleteByUserId(utilisateur.getIdUtilisateur());
+	            // Récupérer les rôles actuels depuis la BDD
+	            List<Role> rolesExistants = utilisateurRoleDAO.findRoleByUserId(utilisateur.getIdUtilisateur());
+	            System.out.println(rolesExistants);
 
-	            // Réinsérer les rôles mis à jour
-	            for (Role role : nouveauxRoles) {
-	                utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), role.getIdRole());
+	            // ------Ajouter les nouveaux rôles absents dans la base
+	            for (Role roleNouveau : nouveauxRoles) {
+	                boolean present = rolesExistants.stream()
+	                        .anyMatch(r -> r.getIdRole() == roleNouveau.getIdRole());
+	                if (!present) {
+	                    utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), roleNouveau.getIdRole());
+	                }
 	            }
 	        }
 
 	    } catch (DataAccessException e) {
+	        e.printStackTrace();
 	        throw new BusinessException("Erreur lors de la mise à jour du profil utilisateur");
 	    }
 	}
 
+
 	@Override
 	@Transactional
 	public void supprimerCompte(long idUtilisateur) throws BusinessException {
-		try {
-			utilisateurRoleDAO.deleteByUserId(idUtilisateur);
-			adresseDAO.delete(idUtilisateur);
-			utilisateurDAO.delete(idUtilisateur);
-		} catch (DataAccessException e) {
-			throw new BusinessException("Erreur lors de la suppression du compte utilisateur");
-		}
+	    try {
+	        // ---Supprimer les rôles
+	        utilisateurRoleDAO.deleteByUserId(idUtilisateur);
+
+	        //--- Détacher l'adresse de l'utilisateur pour lever la contrainte FK
+	        utilisateurDAO.clearAdresse(idUtilisateur); 
+
+	        //--- Supprimer les adresses liées à l'utilisateur 
+	        adresseDAO.delete(idUtilisateur);
+
+	        // ---Supprimer l'utilisateur
+	        utilisateurDAO.delete(idUtilisateur);
+	    } catch (DataAccessException e) {
+	        e.printStackTrace();
+	        throw new BusinessException("Erreur lors de la suppression du compte utilisateur");
+	    }
 	}
+
 
 	private void chargerAdresse(Utilisateur utilisateur) {
 		if (utilisateur != null) {
@@ -192,6 +237,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 			exception.add("Aucun utilisateur trouvé avec l'email : " + email);
 			throw exception;
 		}
+		
 		chargerAdresse(utilisateur);
 		return utilisateur;
 	}
@@ -205,20 +251,25 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 
 	@Override
 	public Utilisateur selectByLogin(String pseudo) throws BusinessException {
-		Utilisateur utilisateur = null;
-		try {
-			utilisateur = utilisateurDAO.selectByLogin(pseudo);
-			if (utilisateur != null) {
-				Adresse adresse = adresseDAO.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
-				utilisateur.setAdresse(adresse);
-			}
-		} catch (DataAccessException e) {
-			BusinessException be = new BusinessException();
-			be.add("Erreur lors de la récupération de l'utilisateur");
-			throw be;
-		}
-		return utilisateur;
+	    Utilisateur utilisateur = null;
+	    try {
+	        utilisateur = utilisateurDAO.selectByLogin(pseudo);
+	        if (utilisateur != null) {
+	            Adresse adresse = adresseDAO.selectAllByUtilisateurId(utilisateur.getIdUtilisateur());
+	            utilisateur.setAdresse(adresse);
+
+	            //  ---- récupération des rôles
+	            List<Role> roles = utilisateurRoleDAO.findRoleByUserId(utilisateur.getIdUtilisateur());
+	            utilisateur.setRoles(roles);
+	        }
+	    } catch (DataAccessException e) {
+	        BusinessException be = new BusinessException();
+	        be.add("Erreur lors de la récupération de l'utilisateur");
+	        throw be;
+	    }
+	    return utilisateur;
 	}
+
 
 	@Override
 	public List<Utilisateur> selectAll() {
@@ -259,7 +310,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 				throw new BusinessException("Le rôle VENDEUR n'existe pas");
 			}
 
-			List<Role> rolesExistants = utilisateurRoleDAO.findRoleIdsByUserId(idUtilisateur);
+			List<Role> rolesExistants = utilisateurRoleDAO.findRoleByUserId(idUtilisateur);
 			boolean dejaVendeur = rolesExistants.stream().anyMatch(r -> "VENDEUR".equalsIgnoreCase(r.getLibelle()));
 
 			if (dejaVendeur) {
@@ -271,5 +322,8 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 			throw new BusinessException("Erreur lors de l'attribution du rôle VENDEUR");
 		}
 	}
+
+
+	
 
 }

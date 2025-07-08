@@ -21,4 +21,5 @@ public interface UtilisateurService {
 	void devenirVendeur(long idUtilisateur) throws BusinessException;
 	void creerUtilisateurAvecAdresseEtRoles(Utilisateur utilisateur, Adresse adresse, List<Role> roles)
 			throws BusinessException;
+
 }

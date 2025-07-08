@@ -11,74 +11,79 @@ import java.util.List;
 @Repository
 public class UtilisateurRoleDAOImpl implements UtilisateurRoleDAO {
 
-    private static final String INSERT_UTILISATEUR_ROLE =
-            "INSERT INTO utilisateur_role (idUtilisateur, idRole) VALUES (:idUtilisateur, :idRole)";
-    
-    private static final String DELETE_BY_USER_ID =
-            "DELETE FROM utilisateur_role WHERE idUtilisateur = :idUtilisateur";
-    
-    private static final String SELECT_ROLE_IDS_BY_USER_ID =
-            "SELECT idRole FROM utilisateur_role WHERE idUtilisateur = :idUtilisateur";
-    
-    private static final String SELECT_USER_IDS_BY_ROLE_ID =
-            "SELECT idUtilisateur FROM utilisateur_role WHERE idRole = :idRole";
-    
-    //--- a voir plus tard ----------
-    private static final String UPDATE_ROLE =
-            "UPDATE utilisateur_role SET idRole = :newIdRole WHERE idUtilisateur = :idUtilisateur AND idRole = :oldIdRole";
+	private static final String INSERT_UTILISATEUR_ROLE = "INSERT INTO utilisateur_role (idUtilisateur, idRole) VALUES (:idUtilisateur, :idRole)";
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
+	private static final String DELETE_BY_USER_ID = "DELETE FROM utilisateur_role WHERE idUtilisateur = :idUtilisateur";
 
-    public UtilisateurRoleDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+	private static final String SELECT_ROLE_IDS_BY_USER_ID = "SELECT r.idRole, r.libelle " + "FROM role r "
+			+ "JOIN utilisateur_role ur ON r.idRole = ur.idRole " + "WHERE ur.idUtilisateur = :idUtilisateur";
 
-    @Override
-    public void insert(long idUtilisateur, long idRole) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("idUtilisateur", idUtilisateur)
-                .addValue("idRole", idRole);
+	private static final String SELECT_USER_IDS_BY_ROLE_ID = "SELECT idUtilisateur FROM utilisateur_role WHERE idRole = :idRole";
 
-        jdbcTemplate.update(INSERT_UTILISATEUR_ROLE, params);
-    }
+	// --- a voir plus tard ----------
+	private static final String UPDATE_ROLE = "UPDATE utilisateur_role SET idRole = :newIdRole WHERE idUtilisateur = :idUtilisateur AND idRole = :oldIdRole";
+	private static final String DELETE_ROLE_FROM_USER = "DELETE FROM UTILISATEUR_ROLE WHERE idUtilisateur = :idUtilisateur AND idRole = :idRole";
 
-    @Override
-    public void deleteByUserId(long idUtilisateur) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("idUtilisateur", idUtilisateur);
+	private final NamedParameterJdbcTemplate jdbcTemplate;
 
-        jdbcTemplate.update(DELETE_BY_USER_ID, params);
-    }
+	public UtilisateurRoleDAOImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
-    @Override
-    public List<Role> findRoleIdsByUserId(long idUtilisateur) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("idUtilisateur", idUtilisateur);
+	@Override
+	public void insert(long idUtilisateur, long idRole) {
+		MapSqlParameterSource params = new MapSqlParameterSource().addValue("idUtilisateur", idUtilisateur)
+				.addValue("idRole", idRole);
 
-        return jdbcTemplate.queryForList(SELECT_ROLE_IDS_BY_USER_ID, params, Role.class);
-    }
+		jdbcTemplate.update(INSERT_UTILISATEUR_ROLE, params);
+	}
 
-    @Override
-    public List<Long> findUserIdsByRoleId(int idRole) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("idRole", idRole);
+	@Override
+	public void deleteByUserId(long idUtilisateur) {
+		MapSqlParameterSource params = new MapSqlParameterSource().addValue("idUtilisateur", idUtilisateur);
 
-        return jdbcTemplate.queryForList(SELECT_USER_IDS_BY_ROLE_ID, params, Long.class);
-    }
-    
-    
+		jdbcTemplate.update(DELETE_BY_USER_ID, params);
+	}
+
+	@Override
+	public List<Role> findRoleByUserId(long idUtilisateur) {
+		 MapSqlParameterSource params = new MapSqlParameterSource()
+		            .addValue("idUtilisateur", idUtilisateur);
+
+		    return jdbcTemplate.query(SELECT_ROLE_IDS_BY_USER_ID, params, (rs, rowNum) -> {
+		        Role role = new Role();
+		        role.setIdRole(rs.getInt("idRole"));
+		        role.setLibelle(rs.getString("libelle"));
+		        return role;
+		    });
+	}
+
+	@Override
+	public List<Long> findUserIdsByRoleId(int idRole) {
+		MapSqlParameterSource params = new MapSqlParameterSource().addValue("idRole", idRole);
+
+		return jdbcTemplate.queryForList(SELECT_USER_IDS_BY_ROLE_ID, params, Long.class);
+	}
+
 ///---------- a  voir plus tard ------
-    @Override
-    public void updateRoleForUser(long idUtilisateur, int oldIdRole, int newIdRole) {
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("idUtilisateur", idUtilisateur)
-                .addValue("oldIdRole", oldIdRole)
-                .addValue("newIdRole", newIdRole);
+	@Override
+	public void updateRoleForUser(long idUtilisateur, int oldIdRole, int newIdRole) {
+		MapSqlParameterSource params = new MapSqlParameterSource().addValue("idUtilisateur", idUtilisateur)
+				.addValue("oldIdRole", oldIdRole).addValue("newIdRole", newIdRole);
 
-        int rows = jdbcTemplate.update(UPDATE_ROLE, params);
-        if (rows == 0) {
-            throw new RuntimeException("Aucun rôle mis à jour pour l'utilisateur ID " + idUtilisateur +
-                    " (rôle actuel : " + oldIdRole + ")");
-        }
-    }
+		int rows = jdbcTemplate.update(UPDATE_ROLE, params);
+		if (rows == 0) {
+			throw new RuntimeException("Aucun rôle mis à jour pour l'utilisateur ID " + idUtilisateur
+					+ " (rôle actuel : " + oldIdRole + ")");
+		}
+	}
+
+	@Override
+	public void deleteRoleFromUser(long idUtilisateur, long idRole) {
+		MapSqlParameterSource params = new MapSqlParameterSource();
+		params.addValue("idUtilisateur", idUtilisateur);
+		params.addValue("idRole", idRole);
+		jdbcTemplate.update(DELETE_ROLE_FROM_USER, params);
+
+	}
 }
