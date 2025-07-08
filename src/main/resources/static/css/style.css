@@ -703,22 +703,7 @@ h2 {
     color: #fff;
 }
 
-/* Mobile */
-@media (max-width: 600px) {
-    .vente-form-row {
-        flex-direction: column;
-    }
-}
 
 
-/* -------------------- RESPONSIVE -------------------- */
-@media (max-width: 768px) {
-    #bloc {
-        flex-direction: column;
-    }
 
-    #set {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
+
