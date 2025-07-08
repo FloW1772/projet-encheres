@@ -6,78 +6,90 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
+<div th:replace="fragements/fragement-entete :: mainNav"></div>
+<div class="page-detail">
 
-    <div th:if="${messageEnchere != null}">
-        <p><strong th:text="${messageEnchere}"></strong></p>
-    </div>
 
-    <h1>Détail vente</h1>
-    <h2 th:text="${article.nomArticle}">Nom de l'article</h2>
+<div th:if="${messageErreur != null}">
+    <p th:text="${messageErreur}">Un message d'erreur s'affichera ici.</p>
+</div>
 
-    <p><strong>Description :</strong></p>
-    <p th:text="${article.description}">Description de l'article</p>
+<div th:if="${messageEnchere != null}">
+    <p><strong th:text="${messageEnchere}"></strong></p>
+</div>
 
-    <p><strong>Catégorie :</strong> <span th:text="${article.categorie.libelle}">Informatique</span></p>
+<h1>Détail vente</h1>
+<h2 th:text="${article.nomArticle}"></h2>
 
-    <p><strong>Meilleure offre :</strong>
-        <span th:if="${meilleureEnchere != null}" 
-              th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}">0 pts par quelqu’un</span>
-        <span th:if="${meilleureEnchere == null}">Aucune offre pour l’instant</span>
-    </p>
+<p><strong>Description :</strong></p>
+<p th:text="${article.description}"</p>
 
-    <p><strong>Mise à prix :</strong> <span th:text="${article.miseAPrix}">185</span> points</p>
+<p><strong>Catégorie :</strong> <span th:text="${article.categorie.libelle}"></span></p>
 
-    <p><strong>Fin de l'enchère :</strong> 
-        <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}">09/10/2018</span>
-    </p>
+<p><strong>Meilleure offre :</strong>
+    <span th:if="${meilleureEnchere != null}"
+          th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}"></span>
+    <span th:if="${meilleureEnchere == null}"></span>
+</p>
 
-    <p><strong>Retrait :</strong><br/>
-        <span th:if="${article.adresseRetrait != null}">
-            <span th:text="${article.adresseRetrait.rue}">10 allée des Alouettes</span><br/>
-            <span th:text="${article.adresseRetrait.codePostal}">44800</span>
-            <span th:text="${article.adresseRetrait.ville}">Saint Herblain</span>
-        </span>
-        <span th:if="${article.adresseRetrait == null}">
-            <span th:text="${article.vendeur.adresse.rue}">Rue par défaut</span><br/>
-            <span th:text="${article.vendeur.adresse.codePostal}">Code postal par défaut</span>
-            <span th:text="${article.vendeur.adresse.ville}">Ville par défaut</span>
-        </span>
-    </p>
+<p><strong>Mise à prix :</strong> <span th:text="${article.miseAPrix}"></span> points</p>
 
-    <p><strong>Vendeur :</strong>
-        <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}" 
-           th:text="${article.vendeur.pseudo}">jojo44</a>
-    </p>
+<p><strong>Fin de l'enchère :</strong>
+    <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+</p>
 
-    <div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == article.vendeur.pseudo}">
-        <a th:href="@{/vente/modifier/{id}(id=${article.idArticle})}" class="btn btn-primary">
-            Modifier la vente
-        </a>
-    </div>
+<p><strong>Retrait :</strong><br/>
+    <span th:if="${article.adresseRetrait != null}">
+        <span th:text="${article.adresseRetrait.rue}">rue</span><br/>
+        <span th:text="${article.adresseRetrait.codePostal}">code postal</span>
+        <span th:text="${article.adresseRetrait.ville}">ville</span>,
+        <span th:text="${article.adresseRetrait.pays}">pays</span>
+    </span>
+    <span th:if="${article.adresseRetrait == null}">
+        Adresse de retrait non renseignée
+    </span>
+</p>
 
-    <hr/>
+<p><strong>Vendeur :</strong>
+    <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}"
+       th:text="${article.vendeur.pseudo}"></a>
+</p>
 
-    <div th:if="${messagesErreur != null}">
-        <ul>
-            <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
-        </ul>
-    </div>
+<div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == article.vendeur.pseudo}">
+    <a th:href="@{/vente/modifier/{id}(id=${article.idArticle})}" class="blue">
+        Modifier la vente
+    </a>
+</div>
 
-    <div th:if="${utilisateurConnecte != null}">
-        <form th:action="@{/encherir}" method="post">
-            <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
-            <label for="montant"><strong>Ma proposition :</strong></label>
-            <input type="number" id="montant" name="montant" min="1" required />
-            <button type="submit">Enchérir</button>
-        </form>
-    </div>
+<hr/>
 
-    <div th:if="${utilisateurConnecte == null}">
-        <p><a th:href="@{/login}">Connectez-vous</a> pour pouvoir enchérir.</p>
-    </div>
+<div th:if="${messagesErreur != null}">
+    <ul>
+        <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
+    </ul>
+</div>
 
-    <br/>
-    <a th:href="@{/encheres}">Retour à la liste des enchères</a>
+<div th:if="${utilisateurConnecte != null and utilisateurConnecte.idUtilisateur != article.vendeur.idUtilisateur}">
+    <form th:action="@{/encherir}" method="post">
+        <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
+        <label for="montant"><strong>Ma proposition :</strong></label>
+        <input type="number" id="montant" name="montant" min="1" required />
+        <button type="submit">Enchérir</button>
+    </form>
+</div>
+
+<div th:if="${utilisateurConnecte != null and utilisateurConnecte.idUtilisateur == article.vendeur.idUtilisateur}">
+    <p><em>Vous êtes le vendeur de cet article. Vous ne pouvez pas enchérir.</em></p>
+</div>
+
+<div th:if="${utilisateurConnecte == null}">
+    <p><a th:href="@{/login}">Connectez-vous</a> pour pouvoir enchérir.</p>
+</div>
+
+<br/>
+    <a class="btn-encheres" th:href="@{/encheres}">Retour à la liste des enchères</a>
+
+</div>
 
 </body>
 </html>

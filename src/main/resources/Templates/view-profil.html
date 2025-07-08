@@ -4,8 +4,14 @@
     <meta charset="UTF-8" />
     <title>Profil Utilisateur</title>
     <link rel="stylesheet" href="/css/style.css" />
+
 </head>
 <body>
+<nav>
+    <a th:href="@{/encheres}">
+        <img th:src="@{/images/logoENI.png}" alt="Logo du site" style="cursor:pointer"/>
+    </a>
+</nav>
 
 <h1>Profil de <span th:text="${utilisateur.pseudo}">Pseudo</span></h1>
 

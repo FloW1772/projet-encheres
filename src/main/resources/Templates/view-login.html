@@ -1,44 +1,38 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/style.css" />
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-<head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Connexion</title>
+  <link rel="stylesheet" href="/css/style.css" />
+
 </head>
-<body>
+<body class="page-login">
 
-<form th:action="@{/login}" method="post">
-  
-  <input type="text" name="pseudo" placeholder="Login" required />
-  
-  <input type="password" name="password" placeholder="Mot de passe" required />
-  
-  <div>
-    <input type="checkbox" id="remember-me" name="remember-me" />
-    <label for="remember-me">Se souvenir de moi</label>
-  </div>
 
-  <button type="submit">Connexion</button>
-  
-  <div style="margin-top:10px;">
-    <a th:href="@{/mot-de-passe-oublie}">Mot de passe oublié ?</a>
-  </div>
-  
-  <div style="margin-top:20px;">
-    <a th:href="@{/utilisateur/creer}" 
-       style="padding:10px 20px; background-color:#007bff; color:white; text-decoration:none; border-radius:5px;">
+<div th:replace="fragements/fragement-entete :: mainNav"></div>
+
+<main class="login-form">
+  <form th:action="@{/login}" method="post">
+    <input type="text"   name="pseudo"         placeholder="Login"          required />
+    <input type="password" name="password"      placeholder="Mot de passe"   required />
+    <div class="checkbox-container">
+      <input type="checkbox" id="remember-me" name="remember-me" />
+      <label for="remember-me">Se souvenir de moi</label>
+    </div>
+    <button type="submit">Connexion</button>
+    <a class="forgot-password" th:href="@{/mot-de-passe-oublie}">
+      Mot de passe oublié ?
+    </a>
+    <a class="create-account" th:href="@{/utilisateur/creer}">
       Créer un compte
     </a>
-  </div>
-  
-  <div>
-    <p th:if="${param.error}" style="color:red;">
+    <p class="error-message" th:if="${param.error}">
       Login ou mot de passe incorrect
     </p>
-  </div>
-  
-</form>
+  </form>
+</main>
+
 
 </body>
 </html>

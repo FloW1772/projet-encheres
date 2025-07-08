@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+  <link rel="stylesheet" href="/css/style.css" />
+
 </head>
 <body>
+<div th:replace="fragements/fragement-entete :: mainNav"></div>
+
 <form action="/reset-password" method="post">
   <input type="hidden" name="token" value="${token}" />
   <input type="password" name="password" placeholder="Nouveau mot de passe" required />

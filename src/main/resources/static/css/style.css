@@ -1,8 +1,8 @@
 /* -------------------- RESET GLOBAL -------------------- */
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -22,7 +22,7 @@ body {
     background: #007bff;
     padding: 10px;
     width: 100%;
-    box-sizing: border-box;
+    border-radius: 15px;
 }
 
 .main-nav .nav-logo img {
@@ -34,8 +34,6 @@ body {
     list-style: none;
     display: flex;
     gap: 15px;
-    margin: 0;
-    padding: 0;
 }
 
 .main-nav .nav-link {
@@ -73,7 +71,6 @@ body {
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
     font-size: 14px;
 }
 
@@ -200,7 +197,6 @@ body {
     margin-bottom: 0.5rem;
 }
 
-/* Boutons */
 .page-enchere .btn {
     display: inline-block;
     text-decoration: none;
@@ -230,7 +226,6 @@ body {
 
 .page-enchere .auction-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
 }
 
@@ -282,16 +277,18 @@ body {
 
 .page-enchere .detail-button {
     margin: 1rem 0;
-    background-color: #28a745;
+    background-color: #007bff;
     color: #fff;
     padding: 0.5rem 0.8rem;
     align-self: flex-start;
     transition: background 0.2s;
+    border-radius: 10px;
 }
 
 .page-enchere .detail-button:hover {
     background-color: #1e7e34;
 }
+
 /* -------------------- FILTRES PERSONNALISÉS -------------------- */
 .form-filtres {
     display: flex;
@@ -344,4 +341,384 @@ fieldset {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 10px;
+}
+
+/* -------------------- AJOUT DES NOUVEAUX BLOCS -------------------- */
+main {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #222;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin: 40px 0 20px;
+    color: #222;
+}
+
+/* -------------------- PAGE DETAIL VENTE -------------------- */
+.page-detail {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fafafa;
+    color: #333;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-detail h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.3rem;
+    text-align: center;
+}
+
+.page-detail h2 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: #555;
+    text-align: center;
+}
+
+.page-detail p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.page-detail strong {
+    font-weight: 600;
+    color: #222;
+}
+
+.page-detail [th\:if="${messageErreur != null}"] p {
+    background-color: #fdecea;
+    color: #a94442;
+    padding: 0.75rem 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.page-detail [th\:if="${messageEnchere != null}"] p {
+    background-color: #e9f7ef;
+    color: #155724;
+    padding: 0.75rem 1rem;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.page-detail strong + span,
+.page-detail strong + br + span {
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.page-detail form {
+    margin: 1.5rem auto;
+    padding: 1rem;
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.page-detail label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.page-detail input[type="number"] {
+    width: 100px;
+    padding: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 0.5rem;
+}
+
+.page-detail button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.page-detail button:hover {
+    background-color: #0056b3;
+}
+
+.page-detail a {
+    text-decoration: none;
+}
+
+.page-detail a:hover {
+    text-decoration: underline;
+}
+
+.page-detail hr {
+    width: 100%;
+    margin: 2rem auto;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.btn-encheres {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* bleu */
+    color: white;              /* texte blanc */
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-encheres:hover {
+    background-color: #0056b3; /* bleu foncé au survol */
+}
+
+.blue {
+    display: inline-block;
+    background-color: #007bff; /* bleu bootstrap */
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+/* -------------------- PAGE DETAIL VENTE COMPTE -------------------- */
+
+/* Page "Mes Ventes" */
+.mes-ventes-page {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fdfdfd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.titre-page {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.table-ventes {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-ventes th,
+.table-ventes td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.table-ventes thead {
+    background-color: #3f51b5;
+    color: white;
+}
+
+.table-ventes tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Boutons d'action */
+.modifier,
+.supprimer {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    margin-right: 5px;
+    display: inline-block;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.modifier {
+    background-color: #4caf50;
+}
+
+.modifier:hover {
+    background-color: #45a045;
+}
+
+.supprimer {
+    background-color: #f44336;
+}
+
+.supprimer:hover {
+    background-color: #d32f2f;
+}
+
+/* -------------------- PAGE NOUVELLE VENTE -------------------- */
+/* Container principal du formulaire de vente */
+.vente-form-container {
+    background: #fff;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+/* Titre */
+.vente-form-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Ligne flex */
+.vente-form-row {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+/* Colonne */
+.vente-form-col {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Groupe champ */
+.vente-field-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.vente-field-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.vente-field-group input,
+.vente-field-group select,
+.vente-field-group textarea {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.vente-field-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Liste d’erreurs */
+.vente-error-list {
+    margin-top: 0.3rem;
+    font-size: 0.9rem;
+    color: #c00;
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Section adresse */
+.vente-section {
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+.vente-section-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* Boutons */
+.vente-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.vente-btn {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.vente-btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.vente-btn-cancel {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.vente-btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .vente-form-row {
+        flex-direction: column;
+    }
+}
+
+
+/* -------------------- RESPONSIVE -------------------- */
+@media (max-width: 768px) {
+    #bloc {
+        flex-direction: column;
+    }
+
+    #set {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }

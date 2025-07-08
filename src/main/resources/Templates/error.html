@@ -2,8 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Erreur</title>
+    <link rel="stylesheet" href="/css/style.css" />
+
 </head>
 <body>
+<div th:replace="fragements/fragement-entete :: mainNav"></div>
+
     <h1>Une erreur est survenue</h1>
     <p th:text="${errorMessage}">Erreur inconnue</p>
     <a href="/">Retour à l'accueil</a>
