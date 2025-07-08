@@ -42,10 +42,10 @@ public class EnchereDAOImpl implements EnchereDAO {
 	private final String DELETE_BY_ARTICLE = "DELETE FROM Enchere WHERE idArticle = :idArticle";
 	private static final String SELECT_ENCHERES_OUVERTES ="SELECT * FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle WHERE a.etatVente = 'EN_COURS'";
 	private static final String SELECT_MES_ENCHERES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur JOIN ArticleAVendre a ON e.idArticle = a.idArticle WHERE u.pseudo = :pseudo";
-	private static final String SELECT_MES_VENTES_NON_DEBUTEES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres > GETDATE()";
-	private static final String SELECT_MES_VENTES_EN_COURS = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres <= GETDATE() AND a.dateFinEncheres > GETDATE()";
+	private static final String SELECT_MES_VENTES_NON_DEBUTEES = "SELECT a.*, u.* FROM ArticleAVendre a JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres > GETDATE()";
+	private static final String SELECT_MES_VENTES_EN_COURS = "SELECT a.*, u.* FROM ArticleAVendre a JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres <= GETDATE() AND a.dateFinEncheres > GETDATE()";
 	private static final String SELECT_MES_ENCHERES_REMPORTEES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur WHERE e.montant = (SELECT MAX(montant) FROM Enchere WHERE idArticle = a.idArticle) AND e.idUtilisateur = (SELECT idUtilisateur FROM Utilisateur WHERE pseudo = :pseudo) AND a.dateFinEncheres < GETDATE()";
-	private static final String SELECT_MES_VENTES_TERMINEES = "SELECT e.*, a.*, u.* FROM Enchere e JOIN ArticleAVendre a ON e.idArticle = a.idArticle JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateFinEncheres < GETDATE()";
+	private static final String SELECT_MES_VENTES_TERMINEES = "SELECT a.*, u.* FROM ArticleAVendre a JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateFinEncheres < GETDATE()";
 	
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -182,14 +182,14 @@ public class EnchereDAOImpl implements EnchereDAO {
 	    MapSqlParameterSource params = new MapSqlParameterSource();
 	    params.addValue("pseudo", pseudo);
 
-	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_NON_DEBUTEES, params, new EnchereRowMapper());
+	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_NON_DEBUTEES, params, new ArticleVenteRowMapper());
 	}
 
 	@Override
 	public List<Enchere> selectMesVentesEnCours(String pseudo) {
 	    MapSqlParameterSource params = new MapSqlParameterSource();
 	    params.addValue("pseudo", pseudo);
-	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_EN_COURS, params, new EnchereRowMapper());
+	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_EN_COURS, params, new ArticleVenteRowMapper());
 	}
 	
 	@Override
@@ -203,7 +203,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 	public List<Enchere> selectMesVentesTerminees(String pseudo) {
 	    MapSqlParameterSource params = new MapSqlParameterSource();
 	    params.addValue("pseudo", pseudo);
-	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_TERMINEES, params, new EnchereRowMapper());
+	    return namedParameterJdbcTemplate.query(SELECT_MES_VENTES_TERMINEES, params, new ArticleVenteRowMapper());
 	}
 	
 	private static class EnchereRowMapper implements RowMapper<Enchere> {
@@ -245,4 +245,31 @@ public class EnchereDAOImpl implements EnchereDAO {
 		}
 	}
 
+	private static class ArticleVenteRowMapper implements RowMapper<Enchere> {
+	    @Override
+	    public Enchere mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        Enchere enchere = new Enchere();
+
+	        ArticleAVendre article = new ArticleAVendre();
+	        article.setIdArticle(rs.getInt("idArticle"));
+	        article.setNomArticle(rs.getString("nomArticle"));
+	        article.setDescription(rs.getString("description"));
+	        article.setDateDebutEncheres(rs.getTimestamp("dateDebutEncheres").toLocalDateTime());
+	        article.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
+	        article.setMiseAPrix(rs.getInt("miseAPrix"));
+	        article.setPrixVente(rs.getInt("prixVente"));
+
+	        Utilisateur vendeur = new Utilisateur();
+	        vendeur.setIdUtilisateur(rs.getInt("idUtilisateur"));
+	        vendeur.setPseudo(rs.getString("pseudo"));
+	        article.setVendeur(vendeur);
+
+	        enchere.setArticle(article);
+	        enchere.setEncherisseur(null); // Pas d'enchérisseur ici
+
+	        return enchere;
+	    }
+	}
+	
+	
 }
