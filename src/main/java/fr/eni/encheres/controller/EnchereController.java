@@ -1,6 +1,9 @@
 package fr.eni.encheres.controller;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -176,17 +179,20 @@ public class EnchereController {
 	    model.addAttribute("utilisateurConnecte", utilisateurConnecte);
 
 	    String messageEnchere = null;
+	    LocalDateTime now = LocalDateTime.now();
+	    if(article.getDateFinEncheres().isBefore(now)) {
 	    if (meilleureEnchere != null && utilisateurConnecte != null) {
 	        if (utilisateurConnecte.getIdUtilisateur() == meilleureEnchere.getEncherisseur().getIdUtilisateur()) {
-	            messageEnchere = utilisateurConnecte.getPseudo() + ", vous avez importé l'adresse";
+	            messageEnchere = utilisateurConnecte.getPseudo() + ", vous avez importé la vente";
 	        } else if (utilisateurConnecte.getIdUtilisateur() == article.getVendeur().getIdUtilisateur()) {
-	            messageEnchere = meilleureEnchere.getEncherisseur().getPseudo() + " a remporté l'adresse";
+	            messageEnchere = meilleureEnchere.getEncherisseur().getPseudo() + " a remporté la vente ";
 	        }
 	    }
 	    model.addAttribute("messageEnchere", messageEnchere);
-
+	    }
 	    return "view-article-detail";
 	}
+	
 
 
 	@PostMapping("/encherir")
