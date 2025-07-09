@@ -7,6 +7,10 @@
 </head>
 <body>
 
+	<div th:if="${messageSucces}" class="alert-success">
+   		 <p th:text="${messageSucces}"></p>
+	</div>
+
 	<div th:if="${messageErreur != null}" style="color: red; font-weight: bold; margin: 10px 0;">
    		 <p th:text="${messageErreur}">Un message d'erreur s'affichera ici.</p>
 	</div>

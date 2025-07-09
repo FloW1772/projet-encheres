@@ -23,26 +23,28 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	private final String INSERT = "INSERT INTO Enchere(dateEnchere, montant, idUtilisateur, idArticle) VALUES (GETDATE(), :montant, :idUtilisateur, :idArticle)";
 	private static final String ENCHERE_BASE_SELECT = """
-			    SELECT
-			        e.idEnchere,
-			        e.dateEnchere,
-			        e.montant,
-
-			        u.idUtilisateur AS encherisseurId,
-			        u.pseudo AS encherisseurPseudo,
-
-			        a.idArticle,
-			        a.nomArticle,
-			        a.dateFinEncheres,
-
-			        uv.idUtilisateur AS vendeurId,
-			        uv.pseudo AS vendeurPseudo,
-
-			        ar.idAdresse AS adresseRetraitId,
-			        ar.rue AS adresseRetraitRue,
-			        ar.codePostal AS adresseRetraitCodePostal,
-			        ar.ville AS adresseRetraitVille
-			""";
+		    SELECT
+		        e.idEnchere,
+		        e.dateEnchere,
+		        e.montant,
+		 
+		        u.idUtilisateur AS encherisseurId,
+		        u.pseudo AS encherisseurPseudo,
+		 
+		        a.idArticle,
+		        a.nomArticle,
+		        a.dateFinEncheres,
+		        a.miseAPrix,
+		        a.prixVente,
+		 
+		        uv.idUtilisateur AS vendeurId,
+		        uv.pseudo AS vendeurPseudo,
+		 
+		        ar.idAdresse AS adresseRetraitId,
+		        ar.rue AS adresseRetraitRue,
+		        ar.codePostal AS adresseRetraitCodePostal,
+		        ar.ville AS adresseRetraitVille
+		""";
 	private static final String SELECT_BY_ID = ENCHERE_BASE_SELECT + """
 			    FROM Enchere e
 			    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
@@ -64,17 +66,31 @@ public class EnchereDAOImpl implements EnchereDAO {
 
 	private final String DELETE = "DELETE FROM Enchere WHERE idEnchere = :idEnchere";
 
-	private final String SELECT_BEST_BY_ARTICLE = "SELECT TOP 1 " + "    e.idEnchere, " + "    e.dateEnchere, "
-			+ "    e.montant, " + "    e.idUtilisateur AS encherisseurId, " + "    u.pseudo AS encherisseurPseudo, "
-			+ "    a.idArticle, " + "    a.nomArticle, " + "    a.dateFinEncheres, "
-			+ "    a.idUtilisateur AS vendeurId, " + "    uv.pseudo AS vendeurPseudo, "
-			+ "    ar.idAdresse AS adresseRetraitId, " + "    ar.rue AS adresseRetraitRue, "
-			+ "    ar.codePostal AS adresseRetraitCodePostal, " + "    ar.ville AS adresseRetraitVille "
-			+ "FROM Enchere e " + "JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur "
-			+ "JOIN ArticleAVendre a ON e.idArticle = a.idArticle "
-			+ "JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur "
-			+ "LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse " + "WHERE e.idArticle = :idArticle "
-			+ "ORDER BY e.montant DESC";
+	private final String SELECT_BEST_BY_ARTICLE = 
+		    "SELECT TOP 1 " +
+		    "    e.idEnchere, " +
+		    "    e.dateEnchere, " +
+		    "    e.montant, " +
+		    "    e.idUtilisateur AS encherisseurId, " +
+		    "    u.pseudo AS encherisseurPseudo, " +
+		    "    a.idArticle, " +
+		    "    a.nomArticle, " +
+		    "    a.dateFinEncheres, " +
+		    "    a.miseAPrix, " +
+		    "    a.prixVente, " +
+		    "    a.idUtilisateur AS vendeurId, " +
+		    "    uv.pseudo AS vendeurPseudo, " +
+		    "    ar.idAdresse AS adresseRetraitId, " +
+		    "    ar.rue AS adresseRetraitRue, " +
+		    "    ar.codePostal AS adresseRetraitCodePostal, " +
+		    "    ar.ville AS adresseRetraitVille " +
+		    "FROM Enchere e " +
+		    "JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur " +
+		    "JOIN ArticleAVendre a ON e.idArticle = a.idArticle " +
+		    "JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur " +
+		    "LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse " +
+		    "WHERE e.idArticle = :idArticle " +
+		    "ORDER BY e.montant DESC";
 
 	private static final String SELECT_BY_UTILISATEUR = ENCHERE_BASE_SELECT + """
 			    FROM Enchere e
@@ -84,45 +100,46 @@ public class EnchereDAOImpl implements EnchereDAO {
 			    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
 			    WHERE e.idUtilisateur = :idUtilisateur
 			""";
-	
+
 	private static final String SELECT_BY_ARTICLE = ENCHERE_BASE_SELECT + """
-		    FROM Enchere e
-		    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
-		    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
-		    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
-		    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
-		    WHERE e.idArticle = :idArticle
-		""";
+			    FROM Enchere e
+			    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
+			    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
+			    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
+			    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
+			    WHERE e.idArticle = :idArticle
+			""";
 
 	private final String DELETE_BY_ARTICLE = "DELETE FROM Enchere WHERE idArticle = :idArticle";
-	
+
 	private static final String SELECT_ENCHERES_OUVERTES = ENCHERE_BASE_SELECT + """
-		    FROM Enchere e
-		    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
-		    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
-		    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
-		    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
-		    WHERE a.etatVente = :etatVente
-		""";
+			    FROM Enchere e
+			    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
+			    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
+			    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
+			    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
+			    WHERE a.etatVente = :etatVente
+			""";
 	private static final String SELECT_MES_ENCHERES = ENCHERE_BASE_SELECT + """
-		    FROM Enchere e
-		    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
-		    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
-		    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
-		    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
-		    WHERE u.pseudo = :pseudo
-		""";
+			    FROM Enchere e
+			    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
+			    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
+			    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
+			    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
+			    WHERE u.pseudo = :pseudo
+			""";
 	private static final String SELECT_MES_VENTES_NON_DEBUTEES = "SELECT a.*, u.* FROM ArticleAVendre a JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres > GETDATE()";
 
 	private static final String SELECT_MES_VENTES_EN_COURS = "SELECT a.*, u.* FROM ArticleAVendre a JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateDebutEncheres <= GETDATE() AND a.dateFinEncheres > GETDATE()";
-	private static final String SELECT_MES_ENCHERES_REMPORTEES = """
-		    SELECT e.*, a.*, u.*
+	private static final String SELECT_MES_ENCHERES_REMPORTEES = ENCHERE_BASE_SELECT + """
 		    FROM Enchere e
-		    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
 		    JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur
+		    JOIN ArticleAVendre a ON e.idArticle = a.idArticle
+		    JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur
+		    LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse
 		    WHERE e.montant = (SELECT MAX(montant) FROM Enchere WHERE idArticle = a.idArticle)
-		    AND e.idUtilisateur = (SELECT idUtilisateur FROM Utilisateur WHERE pseudo = :pseudo)
-		    AND a.dateFinEncheres < GETDATE()
+		      AND e.idUtilisateur = (SELECT idUtilisateur FROM Utilisateur WHERE pseudo = :pseudo)
+		      AND a.dateFinEncheres < GETDATE()
 		""";
 	private static final String SELECT_MES_VENTES_TERMINEES = "SELECT a.*, u.* FROM ArticleAVendre a JOIN Utilisateur u ON a.idUtilisateur = u.idUtilisateur WHERE u.pseudo = :pseudo AND a.dateFinEncheres < GETDATE()";
 
@@ -174,7 +191,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 	public void update(Enchere enchere) {
 		MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("idEnchere", enchere.getIdEnchere());
-		//params.addValue("dateEnchere", enchere.getDateEnchere());
+		// params.addValue("dateEnchere", enchere.getDateEnchere());
 		params.addValue("montant", enchere.getMontant());
 		params.addValue("idUtilisateur", enchere.getEncherisseur().getIdUtilisateur());
 		params.addValue("idArticle", enchere.getArticle().getIdArticle());
@@ -303,7 +320,10 @@ public class EnchereDAOImpl implements EnchereDAO {
 			article.setIdArticle(rs.getInt("idArticle"));
 			article.setNomArticle(rs.getString("nomArticle"));
 			article.setDateFinEncheres(rs.getTimestamp("dateFinEncheres").toLocalDateTime());
-
+			article.setMiseAPrix(rs.getInt("miseAPrix"));
+			article.setPrixVente(rs.getInt("prixVente"));
+			
+			
 			Utilisateur vendeur = new Utilisateur();
 			vendeur.setIdUtilisateur(rs.getInt("vendeurId"));
 			vendeur.setPseudo(rs.getString("vendeurPseudo"));
@@ -345,7 +365,7 @@ public class EnchereDAOImpl implements EnchereDAO {
 			article.setVendeur(vendeur);
 
 			enchere.setArticle(article);
-			enchere.setEncherisseur(null); // Pas d'enchérisseur ici
+			enchere.setEncherisseur(null); 
 
 			return enchere;
 		}
