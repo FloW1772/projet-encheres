@@ -6,12 +6,14 @@
     <title>Liste des enchères</title>
     <link rel="stylesheet" href="/css/style.css" />
     <script th:src="@{/js/script.js}" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
 </head>
 <body class="page-enchere">
 
 <div th:replace="~{fragements/fragement-entete :: mainNav}"></div>
 
-<h1>Liste des enchères</h1>
+<h1 class="titre-responsive">Liste des enchères</h1>
 
 <form th:action="@{/encheres}" method="get" class="form-filtres">
     <div class="filtres">
@@ -68,14 +70,15 @@
     <p class="empty-message">Aucune enchère en cours pour cette recherche.</p>
 </div>
 
-<div class="auction-list" th:each="enchere : ${encheres}">
-    <div class="auction-card">
+<div class="auction-list" >
+    <div class="auction-card" th:each="enchere : ${encheres}">
         <div class="card-content">
             <a th:href="@{/article/{id}(id=${enchere.article.idArticle})}"
                class="auction-title"
                th:text="${enchere.article.nomArticle}">Nom article</a>
             <p th:text="${enchere.article.description}">Description</p>
             <p><span class="label">Catégorie :</span> <span th:text="${enchere.article.categorie.libelle}">Informatique</span></p>
+
             <p><span class="label">Fin :</span>
                 <span th:text="${#temporals.format(enchere.article.dateFinEncheres, 'dd/MM/yyyy')}">Date fin</span>
             </p>
