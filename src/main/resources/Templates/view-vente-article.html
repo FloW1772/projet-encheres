@@ -10,7 +10,7 @@
 
     <h1 th:text="${modeModif} ? 'Modification de la Vente' : 'Nouvelle Vente'"></h1>
 
-    <form  th:action="@{/vente/creation}" method="post" th:object="${articleAVendre}">
+    <form  th:action="@{/vente/creation}" method="post" th:object="${articleAVendre}" enctype="multipart/form-data">
 
         <!-- ID caché (utile pour la modification) -->
         <input type="hidden" th:field="*{idArticle}" />
@@ -120,7 +120,10 @@
         </ul>
     </div>
     
-    
+   	 <div id="tag">
+   		 <label for="image">Image de l’article</label>
+   	 <input type="file" id="image" name="image" accept="image/*" />
+	</div>
         <div id="set">
             <button type="submit">Valider</button>
 
