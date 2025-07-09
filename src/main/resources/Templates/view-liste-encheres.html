@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+	xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8" />
 <title>Liste des enchères</title>
@@ -8,102 +8,112 @@
 </head>
 <body>
 
-<nav style="background: #007bff; padding: 10px;">
-    <ul style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
-      <li><a th:href="@{/}" style="color: white;">Accueil</a></li>
-      <li><a th:href="@{/vente/mes-ventes}" style="color: white;">Mes ventes</a></li>
-      <li><a th:href="@{/vente/creation}" style="color: white;">Créer une vente</a></li>
-      <li><a th:href="@{/utilisateur/modifier}" style="color: white;">Profil</a></li>
-      <li><a th:href="@{/logout}" style="color: white;">Se déconnecter</a></li>
-      <li><a th:href="@{/login}" style="color: white;">Connexion</a></li>
-    </ul>
-</nav>
+	<nav style="background: #007bff; padding: 10px;">
+		<ul
+			style="list-style: none; display: flex; gap: 15px; color: white; margin: 0;">
+			<li><a th:href="@{/}" style="color: white;">Accueil</a></li>
+			<li><a th:href="@{/vente/mes-ventes}" style="color: white;">Mes
+					ventes</a></li>
+			<li><a th:href="@{/vente/creation}" style="color: white;">Créer
+					une vente</a></li>
+			<li><a th:href="@{/utilisateur/modifier}" style="color: white;">Profil</a></li>
+			<li><a th:href="@{/logout}" style="color: white;">Se
+					déconnecter</a></li>
+			<li><a th:href="@{/login}" style="color: white;">Connexion</a></li>
+		</ul>
+	</nav>
 
-<h1>Liste des enchères</h1>
+	<h1>Liste des enchères</h1>
 
-<form th:action="@{/encheres}" method="get">
-    <label for="nomArticle">Recherche :</label>
-    <input type="text" id="nomArticle" name="nomArticle" 
-           th:value="${nomRecherche}" placeholder="Nom de l'article" />
+	<form th:action="@{/encheres}" method="get">
+		<label for="nomArticle">Recherche :</label> <input type="text"
+			id="nomArticle" name="nomArticle" th:value="${nomRecherche}"
+			placeholder="Nom de l'article" /> <label for="categorie">Catégorie
+			:</label> <select id="categorie" name="categorie">
+			<option value="0" th:selected="${categorieRecherche == 0}">Toutes</option>
+			<option th:each="cat : ${categories}" th:value="${cat.idCategorie}"
+				th:text="${cat.libelle}"
+				th:selected="${cat.idCategorie == categorieRecherche}"></option>
+		</select>
 
-    <label for="categorie">Catégorie :</label>
-    <select id="categorie" name="categorie">
-        <option value="0" th:selected="${categorieRecherche == 0}">Toutes</option>
-        <option th:each="cat : ${categories}" 
-                th:value="${cat.idCategorie}" 
-                th:text="${cat.libelle}"
-                th:selected="${cat.idCategorie == categorieRecherche}">
-        </option>
-    </select>
+		<div th:if="${utilisateurConnecte != null}" style="margin-top: 15px;">
+			<label> <input type="radio" name="typeFiltre" value="achat"
+				th:checked="${typeFiltre == 'achat'}" /> Achats
+			</label> <label style="margin-left: 20px;"> <input type="radio"
+				name="typeFiltre" value="vente"
+				th:checked="${typeFiltre == 'vente'}" /> Mes ventes
+			</label>
+		</div>
 
-    <div style="margin-top: 15px;">
-        <label>
-            <input type="radio" name="typeFiltre" value="achat"
-                   th:checked="${typeFiltre == 'achat'}"/> Achats
-        </label>
-        <label style="margin-left: 20px;">
-            <input type="radio" name="typeFiltre" value="vente"
-                   th:checked="${typeFiltre == 'vente'}"/> Mes ventes
-        </label>
-    </div>
+		<div th:if="${utilisateurConnecte != null}"
+			style="margin-top: 20px; display: flex; gap: 40px;">
+			<!-- Groupe Achats -->
+			<fieldset id="filtresAchat">
+				<legend>Achat</legend>
+				<label><input type="checkbox" name="achatEncheresOuvertes"
+					th:checked="${achatEncheresOuvertes}" /> enchères ouvertes</label><br /> <label><input
+					type="checkbox" name="achatMesEncheres"
+					th:checked="${achatMesEncheres}" /> mes enchères</label><br /> <label><input
+					type="checkbox" name="achatMesEncheresRemportees"
+					th:checked="${achatMesEncheresRemportees}" /> mes enchères
+					remportées</label>
+			</fieldset>
 
-    <div th:if="${utilisateurConnecte != null}" style="margin-top: 20px; display: flex; gap: 40px;">
-        <!-- Groupe Achats -->
-        <fieldset id="filtresAchat">
-            <legend>Achat</legend>
-            <label><input type="checkbox" name="achatEncheresOuvertes" th:checked="${achatEncheresOuvertes}"/> enchères ouvertes</label><br/>
-            <label><input type="checkbox" name="achatMesEncheres" th:checked="${achatMesEncheres}"/> mes enchères</label><br/>
-            <label><input type="checkbox" name="achatMesEncheresRemportees" th:checked="${achatMesEncheresRemportees}"/> mes enchères remportées</label>
-        </fieldset>
+			<!-- Groupe Ventes -->
+			<fieldset id="filtresVente">
+				<legend>Ventes</legend>
+				<label><input type="checkbox" name="venteMesVentesEnCours"
+					th:checked="${venteMesVentesEnCours}" /> mes ventes en cours</label><br />
+				<label><input type="checkbox" name="venteVentesNonDebutees"
+					th:checked="${venteVentesNonDebutees}" /> ventes non débutées</label><br />
+				<label><input type="checkbox" name="venteVentesTerminees"
+					th:checked="${venteVentesTerminees}" /> ventes terminées</label>
+			</fieldset>
+		</div>
 
-        <!-- Groupe Ventes -->
-        <fieldset id="filtresVente">
-            <legend>Ventes</legend>
-            <label><input type="checkbox" name="venteMesVentesEnCours" th:checked="${venteMesVentesEnCours}"/> mes ventes en cours</label><br/>
-            <label><input type="checkbox" name="venteVentesNonDebutees" th:checked="${venteVentesNonDebutees}"/> ventes non débutées</label><br/>
-            <label><input type="checkbox" name="venteVentesTerminees" th:checked="${venteVentesTerminees}"/> ventes terminées</label>
-        </fieldset>
-    </div>
+		<button type="submit" style="margin-top: 15px;">Rechercher</button>
+	</form>
 
-    <button type="submit" style="margin-top: 15px;">Rechercher</button>
-</form>
+	<hr />
 
-<hr/>
+	<div th:each="enchere : ${encheres}">
+		<h2>
+			<a th:href="@{/article/{id}(id=${enchere.article.idArticle})}"
+				th:text="${enchere.article.nomArticle}">Nom article</a>
+		</h2>
 
-<div th:each="enchere : ${encheres}">
-    <h2>
-        <a th:href="@{/article/{id}(id=${enchere.article.idArticle})}" 
-           th:text="${enchere.article.nomArticle}">Nom article</a>
-    </h2>
+		<p th:text="${enchere.article.description}">Description</p>
 
-    <p th:text="${enchere.article.description}">Description</p>
+		<p>
+			<strong>Catégorie :</strong> <span
+				th:text="${enchere.article.categorie.libelle}">Informatique</span>
+		</p>
 
-    <p><strong>Catégorie :</strong> 
-        <span th:text="${enchere.article.categorie.libelle}">Informatique</span>
-    </p>
+		<p>
+			<strong>Fin :</strong> <span
+				th:text="${#temporals.format(enchere.article.dateFinEncheres, 'dd/MM/yyyy')}">Date
+				fin</span>
+		</p>
 
-    <p><strong>Fin :</strong> 
-        <span th:text="${#temporals.format(enchere.article.dateFinEncheres, 'dd/MM/yyyy')}">Date fin</span>
-    </p>
+		<p>
+			<strong>Mise à prix :</strong> <span
+				th:text="${enchere.article.miseAPrix}">100</span> pts
+		</p>
 
-    <p><strong>Mise à prix :</strong> 
-        <span th:text="${enchere.article.miseAPrix}">100</span> pts
-    </p>
+		<a th:href="@{/articles/{id}(id=${enchere.article.idArticle})}"
+			style="display: inline-block; padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
+			Voir détail et enchérir </a>
 
-    <a th:href="@{/articles/{id}(id=${enchere.article.idArticle})}" 
-       style="display: inline-block; padding: 8px 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px;">
-        Voir détail et enchérir
-    </a>
+		<p>
+			<strong>Vendeur :</strong> <a
+				th:href="@{/utilisateur/profil(pseudo=${enchere.article.vendeur.pseudo})}"
+				th:text="${enchere.article.vendeur.pseudo}">pseudo</a>
+		</p>
 
-    <p><strong>Vendeur :</strong> 
-        <a th:href="@{/utilisateur/profil(pseudo=${enchere.article.vendeur.pseudo})}" 
-           th:text="${enchere.article.vendeur.pseudo}">pseudo</a>
-    </p>
+		<hr />
+	</div>
 
-    <hr/>
-</div>
-
-<script>
+	<script>
     function afficherFiltres() {
         const typeFiltre = document.querySelector('input[name="typeFiltre"]:checked').value;
 

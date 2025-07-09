@@ -2,8 +2,6 @@ package fr.eni.encheres.controller;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -223,7 +221,8 @@ public class EnchereController {
 		
 		try {
 			enchereService.encherir(idArticle, utilisateurConnecte.getIdUtilisateur(), montant);
-			return "redirect:/article/" + idArticle;
+			redirectAttributes.addFlashAttribute("messageSucces", "Votre enchère a bien été enregistrée.");
+			return "redirect:/articles/" + idArticle;
 		} catch (BusinessException e) {
 			model.addAttribute("messagesErreur", e.getMessages());
 			model.addAttribute("article", article);
