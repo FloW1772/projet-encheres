@@ -11,7 +11,7 @@
 <main class="vente-form-container">
 
     <h1 class="vente-form-title"
-        th:text="${modeModif} ? 'Modification de la Vente' : 'Nouvelle Vente'">
+        th:action="@{/vente/creation}" method="post" th:object="${articleAVendre}" enctype="multipart/form-data">
     </h1>
 
     <form th:action="@{/vente/creation}"
@@ -164,6 +164,12 @@
 
 
             <div class="vente-actions">
+                <!-- Bouton image stylisé comme les autres -->
+                <label for="image" class="vente-btn vente-btn-secondary" style="display: inline-block; cursor: pointer;">
+                    Image de l’article
+                    <input type="file" id="image" name="image" accept="image/*" style="display: none;" />
+                </label>
+
                 <button type="submit" class="vente-btn vente-btn-primary">Valider</button>
 
                 <!-- Affiché seulement en mode modification -->
@@ -175,6 +181,7 @@
 
                 <a href="/" class="vente-btn vente-btn-secondary">Retour</a>
             </div>
+
 
 
 

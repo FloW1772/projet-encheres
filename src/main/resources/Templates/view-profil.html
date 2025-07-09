@@ -4,41 +4,60 @@
     <meta charset="UTF-8" />
     <title>Profil Utilisateur</title>
     <link rel="stylesheet" href="/css/style.css" />
-
 </head>
 <body>
-<nav>
-    <a th:href="@{/encheres}">
-        <img th:src="@{/images/logoENI.png}" alt="Logo du site" style="cursor:pointer"/>
-    </a>
-</nav>
-
-<h1>Profil de <span th:text="${utilisateur.pseudo}">Pseudo</span></h1>
-
-<ul class="flex-outer">
-    <li><strong>Nom :</strong> <span th:text="${utilisateur.nom}">Nom</span></li>
-    <li><strong>Prénom :</strong> <span th:text="${utilisateur.prenom}">Prénom</span></li>
-    <li><strong>Téléphone :</strong> <span th:text="${utilisateur.telephone}">Téléphone</span></li>
-    <li><strong>Email :</strong> <span th:text="${utilisateur.email}">Email</span></li>
-
-    <li th:if="${utilisateur.adresse != null}">
-        <strong>Rue :</strong> <span th:text="${utilisateur.adresse.rue}">Rue</span>
-    </li>
-    <li th:if="${utilisateur.adresse != null}">
-        <strong>Code Postal :</strong> <span th:text="${utilisateur.adresse.codePostal}">Code Postal</span>
-    </li>
-    <li th:if="${utilisateur.adresse != null}">
-        <strong>Ville :</strong> <span th:text="${utilisateur.adresse.ville}">Ville</span>
-    </li>
-    <li th:if="${utilisateur.adresse != null}">
-        <strong>Pays :</strong> <span th:text="${utilisateur.adresse.pays}">Pays</span>
-    </li>
-</ul>
+<div th:replace="fragements/fragement-entete :: mainNav"></div>
 
 
-<div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == utilisateur.pseudo}">
-    <a th:href="@{/utilisateur/modifier}" class="btn btn-primary">Modifier mon profil</a>
+<div class="user-profile">
+    <h1 class="user-profile__title">
+        Profil de <span class="user-profile__pseudo" th:text="${utilisateur.pseudo}">Pseudo</span>
+    </h1>
+
+    <ul class="user-profile__list">
+        <li class="user-profile__item">
+            <div class="user-profile__label">Nom :</div>
+            <div class="user-profile__value" th:text="${utilisateur.nom}">Nom</div>
+        </li>
+        <li class="user-profile__item">
+            <div class="user-profile__label">Prénom :</div>
+            <div class="user-profile__value" th:text="${utilisateur.prenom}">Prénom</div>
+        </li>
+        <li class="user-profile__item">
+            <div class="user-profile__label">Téléphone :</div>
+            <div class="user-profile__value" th:text="${utilisateur.telephone}">Téléphone</div>
+        </li>
+        <li class="user-profile__item">
+            <div class="user-profile__label">Email :</div>
+            <div class="user-profile__value" th:text="${utilisateur.email}">Email</div>
+        </li>
+
+        <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
+            <div class="user-profile__label">Rue :</div>
+            <div class="user-profile__value" th:text="${utilisateur.adresse.rue}">Rue</div>
+        </li>
+        <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
+            <div class="user-profile__label">Code postal :</div>
+            <div class="user-profile__value" th:text="${utilisateur.adresse.codePostal}">CodePostal</div>
+        </li>
+        <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
+            <div class="user-profile__label">Ville :</div>
+            <div class="user-profile__value" th:text="${utilisateur.adresse.ville}">Ville</div>
+        </li>
+        <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
+            <div class="user-profile__label">Pays :</div>
+            <div class="user-profile__value" th:text="${utilisateur.adresse.pays}">Pays</div>
+        </li>
+    </ul>
+
+    <div class="user-profile__actions"
+         th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == utilisateur.pseudo}">
+        <a th:href="@{/utilisateur/modifier}" class="user-profile__btn">
+            Modifier mon profil
+        </a>
+    </div>
 </div>
+
 
 </body>
 </html>
