@@ -109,12 +109,12 @@
 				</li>
 
 				<li>
-					<label>Rôles :</label>
+				<!--  <label>Rôles :</label>
 					<select th:field="*{roles}" multiple required size="3">
 						<option th:each="role : ${roles}" th:value="${role}" th:text="${role.libelle}"></option>
 					</select>
 					<p class="error-message" th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"></p>
-				</li>
+				</li>-->	
 
 				<li>
 					<button type="submit">Créer</button>

@@ -177,7 +177,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	        utilisateurDAO.update(utilisateurEnBase);
 
 	        // ------Gestion des rôles
-	        List<Role> nouveauxRoles = utilisateur.getRoles();
+	    /*    List<Role> nouveauxRoles = utilisateur.getRoles();
 	        if (nouveauxRoles != null) {
 	            // Récupérer les rôles actuels depuis la BDD
 	            List<Role> rolesExistants = utilisateurRoleDAO.findRoleByUserId(utilisateur.getIdUtilisateur());
@@ -191,7 +191,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
 	                    utilisateurRoleDAO.insert(utilisateur.getIdUtilisateur(), roleNouveau.getIdRole());
 	                }
 	            }
-	        }
+	        }*/
 
 	    } catch (DataAccessException e) {
 	        e.printStackTrace();

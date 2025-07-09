@@ -45,32 +45,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 	private static final String COUNT_BY_EMAIL = "SELECT COUNT(*) FROM UTILISATEUR WHERE email = :email";
 	private static final String  SET_DEBITER = "UPDATE Utilisateur SET credit = credit - :montant WHERE idUtilisateur = :idUtilisateur AND credit >= :montant";
 	private static final String  SET_CREDITER = "UPDATE Utilisateur SET credit = credit + :montant WHERE idUtilisateur = :idUtilisateur";
-	
-	//---------- methode temporaire pou rmes test après faut changer dans l'enchere dao
-	private final String SELECT_BY_UTILISATEUR = 
-		    "SELECT " +
-		    "    e.idEnchere, " +
-		    "    e.dateEnchere, " +
-		    "    e.montant, " +
-		    "    u.idUtilisateur AS encherisseurId, " +
-		    "    u.pseudo AS encherisseurPseudo, " +
-		    "    a.idArticle, " +
-		    "    a.nomArticle, " +
-		    "    a.dateFinEncheres, " +
-		    "    uv.idUtilisateur AS vendeurId, " +
-		    "    uv.pseudo AS vendeurPseudo, " +
-		    "    ar.idAdresse AS adresseRetraitId, " +
-		    "    ar.rue AS adresseRetraitRue, " +
-		    "    ar.codePostal AS adresseRetraitCodePostal, " +
-		    "    ar.ville AS adresseRetraitVille " +
-		    "FROM Enchere e " +
-		    "JOIN Utilisateur u ON e.idUtilisateur = u.idUtilisateur " +
-		    "JOIN ArticleAVendre a ON e.idArticle = a.idArticle " +
-		    "JOIN Utilisateur uv ON a.idUtilisateur = uv.idUtilisateur " +
-		    "LEFT JOIN Adresse ar ON a.idAdresseRetrait = ar.idAdresse " +
-		    "WHERE e.idUtilisateur = :idUtilisateur " +
-		    "ORDER BY e.dateEnchere DESC";
-
 	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public UtilisateurDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

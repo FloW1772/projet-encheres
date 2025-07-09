@@ -56,12 +56,13 @@
     <form th:action="@{/utilisateur/modifier}" method="post" th:object="${utilisateur}">
         <input type="hidden" th:field="*{idUtilisateur}" />
         
-        <!-- Champs cachés pour les rôles -->
-        <div th:each="role, iterStat : ${utilisateur.roles}">
+        <!-- Champs cachés pour les rôles
+          
+         -->
+      <div th:each="role, iterStat : ${utilisateur.roles}">
             <input type="hidden" th:name="'roles[' + ${iterStat.index} + '].idRole'" th:value="${role.idRole}" />
             <input type="hidden" th:name="'roles[' + ${iterStat.index} + '].libelle'" th:value="${role.libelle}" />
         </div>
-
         <ul class="flex-outer">
 
             <li>
@@ -141,20 +142,20 @@
             </li>
             <input type="hidden" th:field="*{adresse.idAdresse}" />
 
-         
-            <li th:if="${estSimpleUtilisateur}">
+              <!-- <li th:if="${estSimpleUtilisateur}">
                 <p>Vous êtes un simple utilisateur.</p>
                 <button type="submit" name="action" value="devenirVendeur">Devenir vendeur</button>
-            </li>
+            </li>  -->
+            
 
-            <li th:unless="${estSimpleUtilisateur}">
+     	<!--  <li th:unless="${estSimpleUtilisateur}"> -->   
                 <label>Rôles :</label>
                 <ul>
                     <li th:each="role : ${utilisateur.roles}" th:text="${role.libelle}"></li>
                 </ul>
             </li>
-
-            <li>
+        
+       <li>
                 <button type="submit" name="action" value="enregistrer">Enregistrer</button>
                 <button type="reset">Annuler</button>
             </li>
