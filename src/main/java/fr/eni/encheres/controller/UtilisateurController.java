@@ -89,9 +89,10 @@ public class UtilisateurController {
 	public String showInscriptionForm(Model model) {
 		Utilisateur utilisateur = new Utilisateur();
 		utilisateur.setAdresse(new Adresse());
-		Role roleUtilisateur = roleService.getRoleByLibelle("UTILISATEUR");
-		utilisateur.setRoles(new ArrayList<>(List.of(roleUtilisateur)));
-		model.addAttribute("roles", roleService.getAllRoles());
+		//------- Refactor Creation compte-------
+		//Role roleUtilisateur = roleService.getRoleByLibelle("UTILISATEUR");
+		//utilisateur.setRoles(new ArrayList<>(List.of(roleUtilisateur)));
+		//model.addAttribute("roles", roleService.getAllRoles());
 		model.addAttribute("utilisateur", utilisateur);
 		return "view-inscription";
 	}
@@ -118,8 +119,13 @@ public class UtilisateurController {
 			return "view-inscription";
 		}
 		try {
-			utilisateurService.creerUtilisateurAvecAdresseEtRoles(utilisateur, utilisateur.getAdresse(),
-					utilisateur.getRoles());
+			
+			//------- Refactor Creation compte Toujours utilisateur-------
+			/*utilisateurService.creerUtilisateurAvecAdresseEtRoles(utilisateur, utilisateur.getAdresse(),
+					utilisateur.getRoles());*/
+			
+			utilisateurService.creerUtilisateurAvecAdresseEtRoles(utilisateur, utilisateur.getAdresse(), null);
+
 
 			return "redirect:/login";
 
