@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <head>
-        <title>Vendre Article</title>
-        <link rel="stylesheet" href="/css/style.css" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    </head>
+    <title th:text="#{titre.page}">Vendre Article</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 <body>
 <div th:replace="fragements/fragement-entete :: mainNav"></div>
 
 <main class="vente-form-container">
 
     <h1 class="vente-form-title"
-        th:action="@{/vente/creation}" method="post" th:object="${articleAVendre}" enctype="multipart/form-data">
+        th:action="@{/vente/creation}" method="post" th:object="${articleAVendre}" enctype="multipart/form-data"
+        th:text="#{titre.formulaire}">
     </h1>
 
     <form th:action="@{/vente/creation}"
@@ -25,7 +24,7 @@
         <div class="vente-form-row">
             <div class="vente-form-col">
                 <div class="vente-field-group">
-                    <label for="inputNomArticle">Nom Article</label>
+                    <label for="inputNomArticle" th:text="#{article.nom}">Nom Article</label>
                     <input type="text" id="inputNomArticle"
                            th:field="*{nomArticle}" required />
                     <ul th:if="${#fields.hasErrors('nomArticle')}"
@@ -36,11 +35,11 @@
                 </div>
 
                 <div class="vente-field-group">
-                    <label for="selectCategorie">Catégorie</label>
+                    <label for="selectCategorie" th:text="#{article.categorie}">Catégorie</label>
                     <select id="selectCategorie"
                             th:field="*{categorie.idCategorie}"
                             required>
-                        <option value="">-- Sélectionner --</option>
+                        <option value="" th:text="#{select.placeholder}">-- Sélectionner --</option>
                         <option th:each="categorie : ${categories}"
                                 th:value="${categorie.idCategorie}"
                                 th:text="${categorie.libelle}">
@@ -53,7 +52,7 @@
                 </div>
 
                 <div class="vente-field-group">
-                    <label for="inputDescription">Description</label>
+                    <label for="inputDescription" th:text="#{article.description}">Description</label>
                     <textarea id="inputDescription"
                               th:field="*{description}"
                               required></textarea>
@@ -66,10 +65,10 @@
             </div>
 
             <div class="vente-form-col vente-field-group">
-                <label for="etatVente">État de la vente</label>
+                <label for="etatVente" th:text="#{vente.etat}">État de la vente</label>
                 <select id="etatVente"
                         th:field="*{etatVente}">
-                    <option value="">-- Sélectionner --</option>
+                    <option value="" th:text="#{select.placeholder}">-- Sélectionner --</option>
                     <option th:each="etat : ${etatsVente}"
                             th:value="${etat}"
                             th:text="${etat.label}">
@@ -79,7 +78,7 @@
 
             <div class="vente-form-col">
                 <div class="vente-field-group">
-                    <label for="inputMiseAPrix">Mise à prix</label>
+                    <label for="inputMiseAPrix" th:text="#{vente.miseAPrix}">Mise à prix</label>
                     <input type="number" id="inputMiseAPrix"
                            th:field="*{miseAPrix}" required />
                     <ul th:if="${#fields.hasErrors('miseAPrix')}"
@@ -90,7 +89,7 @@
                 </div>
 
                 <div class="vente-field-group">
-                    <label for="inputDateDebutEncheres">Début enchères</label>
+                    <label for="inputDateDebutEncheres" th:text="#{vente.dateDebut}">Début enchères</label>
                     <input type="datetime-local"
                            id="inputDateDebutEncheres"
                            th:field="*{dateDebutEncheres}"
@@ -103,7 +102,7 @@
                 </div>
 
                 <div class="vente-field-group">
-                    <label for="inputDateFinEncheres">Fin enchères</label>
+                    <label for="inputDateFinEncheres" th:text="#{vente.dateFin}">Fin enchères</label>
                     <input type="datetime-local"
                            id="inputDateFinEncheres"
                            th:field="*{dateFinEncheres}"
@@ -118,10 +117,10 @@
         </div>
 
         <div class="vente-section">
-            <h2 class="vente-section-title">Adresse de Retrait</h2>
+            <h2 class="vente-section-title" th:text="#{adresse.titre}">Adresse de Retrait</h2>
 
             <div class="vente-field-group">
-                <label for="inputRue">Rue</label>
+                <label for="inputRue" th:text="#{adresse.rue}">Rue</label>
                 <input type="text" id="inputRue"
                        th:field="*{adresseRetrait.rue}"
                        required />
@@ -133,7 +132,7 @@
             </div>
 
             <div class="vente-field-group">
-                <label for="inputCodePostal">Code Postal</label>
+                <label for="inputCodePostal" th:text="#{adresse.codePostal}">Code Postal</label>
                 <input type="text" id="inputCodePostal"
                        th:field="*{adresseRetrait.codePostal}"
                        required />
@@ -145,7 +144,7 @@
             </div>
 
             <div class="vente-field-group">
-                <label for="inputVille">Ville</label>
+                <label for="inputVille" th:text="#{adresse.ville}">Ville</label>
                 <input type="text" id="inputVille"
                        th:field="*{adresseRetrait.ville}"
                        required />
@@ -157,45 +156,39 @@
             </div>
 
             <div class="vente-field-group">
-                <label for="inputPays">Pays</label>
+                <label for="inputPays" th:text="#{adresse.pays}">Pays</label>
                 <input type="text" id="inputPays" th:field="*{adresseRetrait.pays}" required />
                 <ul th:if="${#fields.hasErrors('adresseRetrait.pays')}" class="listErrors">
                     <li th:each="err : ${#fields.errors('adresseRetrait.pays')}" th:text="${err}"></li>
                 </ul>
             </div>
 
-
             <div class="vente-actions">
                 <!-- Bouton image stylisé comme les autres -->
-                <label for="image" class="vente-btn vente-btn-secondary" style="display: inline-block; cursor: pointer;">
-                    Image de l’article
+                <label for="image" class="vente-btn vente-btn-secondary" style="display: inline-block; cursor: pointer;"
+                       th:text="#{bouton.image}">Image de l’article
                     <input type="file" id="image" name="image" accept="image/*" style="display: none;" />
                 </label>
 
-                <button type="submit" class="vente-btn vente-btn-primary">Valider</button>
+                <button type="submit" class="vente-btn vente-btn-primary" th:text="#{bouton.valider}">Valider</button>
 
                 <!-- Affiché seulement en mode modification -->
                 <a th:if="${modeModif} and ${articleAVendre.dateDebutEncheres > T(java.time.LocalDateTime).now()}"
                    th:href="@{'/vente/annuler'(id=*{idArticle})}"
-                   class="vente-btn vente-btn-cancel">
+                   class="vente-btn vente-btn-cancel"
+                   th:text="#{bouton.annuler}">
                     Annuler la vente
                 </a>
 
-                <a href="/" class="vente-btn vente-btn-secondary">Retour</a>
+                <a href="/" class="vente-btn vente-btn-secondary" th:text="#{bouton.retour}">Retour</a>
             </div>
 
-
-
-
             <ul th:if="${#fields.hasErrors('*')}" class="listErrors">
-                <li th:text="#{Erreur inconnue}">Erreur inconnue</li>
+                <li th:text="#{erreur.inconnue}">Erreur inconnue</li>
             </ul>
 
     </form>
 
 </main>
-</body>
-</html>
-
 </body>
 </html>

@@ -2,16 +2,15 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Modifier Profil</title>
+    <title th:text="#{profile.edit.title}">Modifier Profil</title>
     <link rel="stylesheet" href="/css/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 </head>
 <body>
 <div th:replace="fragements/fragement-entete :: mainNav"></div>
 
 <main class="modifier-profil-main">
-    <h1 class="modifier-profil-titre">Modifier mon profil</h1>
+    <h1 class="modifier-profil-titre" th:text="#{profile.edit.heading}">Modifier mon profil</h1>
 
     <div th:if="${errors != null}">
         <ul>
@@ -30,75 +29,75 @@
 
         <ul class="modifier-profil-ul">
             <li class="modifier-profil-li">
-                <label for="inputPseudo" class="modifier-profil-label">Pseudo</label>
+                <label for="inputPseudo" class="modifier-profil-label" th:text="#{profile.edit.pseudo}">Pseudo</label>
                 <input type="text" id="inputPseudo" th:field="*{pseudo}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('pseudo')}" th:errors="*{pseudo}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputNom" class="modifier-profil-label">Nom</label>
+                <label for="inputNom" class="modifier-profil-label" th:text="#{profile.edit.nom}">Nom</label>
                 <input type="text" id="inputNom" th:field="*{nom}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputPrenom" class="modifier-profil-label">Prénom</label>
+                <label for="inputPrenom" class="modifier-profil-label" th:text="#{profile.edit.prenom}">Prénom</label>
                 <input type="text" id="inputPrenom" th:field="*{prenom}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputTelephone" class="modifier-profil-label">Téléphone</label>
+                <label for="inputTelephone" class="modifier-profil-label" th:text="#{profile.edit.telephone}">Téléphone</label>
                 <input type="text" id="inputTelephone" th:field="*{telephone}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputEmail" class="modifier-profil-label">Email</label>
+                <label for="inputEmail" class="modifier-profil-label" th:text="#{profile.edit.email}">Email</label>
                 <input type="email" id="inputEmail" th:field="*{email}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputCredit" class="modifier-profil-label">Crédit</label>
+                <label for="inputCredit" class="modifier-profil-label" th:text="#{profile.edit.credit}">Crédit</label>
                 <input type="number" id="inputCredit" th:field="*{credit}" min="0" step="0.01" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('credit')}" th:errors="*{credit}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputMotDePasse" class="modifier-profil-label">Mot de passe (laisser vide si inchangé)</label>
+                <label for="inputMotDePasse" class="modifier-profil-label" th:text="#{profile.edit.password.label}">Mot de passe (laisser vide si inchangé)</label>
                 <input type="password" id="inputMotDePasse" th:field="*{motDePasse}" autocomplete="new-password" class="modifier-profil-input" />
-                <p class="modifier-profil-small">Laisser vide si vous ne souhaitez pas modifier le mot de passe.</p>
+                <p class="modifier-profil-small" th:text="#{profile.edit.password.note}">Laisser vide si vous ne souhaitez pas modifier le mot de passe.</p>
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('motDePasse')}" th:errors="*{motDePasse}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputConfMotDePasse" class="modifier-profil-label">Confirmer le mot de passe</label>
+                <label for="inputConfMotDePasse" class="modifier-profil-label" th:text="#{profile.edit.password.confirm}">Confirmer le mot de passe</label>
                 <input type="password" id="inputConfMotDePasse" name="confirmationMotDePasse" autocomplete="new-password" class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${confirmationMotDePasseError != null}" th:text="${confirmationMotDePasseError}"></p>
             </li>
 
             <!-- Adresse -->
             <li class="modifier-profil-li">
-                <label for="inputRue" class="modifier-profil-label">Rue</label>
+                <label for="inputRue" class="modifier-profil-label" th:text="#{profile.edit.address.street}">Rue</label>
                 <input type="text" id="inputRue" th:field="*{adresse.rue}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('adresse.rue')}" th:errors="*{adresse.rue}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputCodePostal" class="modifier-profil-label">Code Postal</label>
+                <label for="inputCodePostal" class="modifier-profil-label" th:text="#{profile.edit.address.postalCode}">Code Postal</label>
                 <input type="text" id="inputCodePostal" th:field="*{adresse.codePostal}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('adresse.codePostal')}" th:errors="*{adresse.codePostal}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputVille" class="modifier-profil-label">Ville</label>
+                <label for="inputVille" class="modifier-profil-label" th:text="#{profile.edit.address.city}">Ville</label>
                 <input type="text" id="inputVille" th:field="*{adresse.ville}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('adresse.ville')}" th:errors="*{adresse.ville}"></p>
             </li>
 
             <li class="modifier-profil-li">
-                <label for="inputPays" class="modifier-profil-label">Pays</label>
+                <label for="inputPays" class="modifier-profil-label" th:text="#{profile.edit.address.country}">Pays</label>
                 <input type="text" id="inputPays" th:field="*{adresse.pays}" required class="modifier-profil-input" />
                 <p class="modifier-profil-error" th:if="${#fields.hasErrors('adresse.pays')}" th:errors="*{adresse.pays}"></p>
             </li>
@@ -107,12 +106,12 @@
 
             <!-- Rôle utilisateur -->
             <li class="modifier-profil-li-full" th:if="${estSimpleUtilisateur}">
-                <p>Vous êtes un simple utilisateur.</p>
-                <button type="submit" name="action" value="devenirVendeur" class="modifier-profil-button">Devenir vendeur</button>
+                <p th:text="#{profile.edit.user.simple}">Vous êtes un simple utilisateur.</p>
+                <button type="submit" name="action" value="devenirVendeur" class="modifier-profil-button" th:text="#{profile.edit.user.becomeSeller}">Devenir vendeur</button>
             </li>
 
             <li class="modifier-profil-li-full" th:unless="${estSimpleUtilisateur}">
-                <label class="modifier-profil-label">Rôles :</label>
+                <label class="modifier-profil-label" th:text="#{profile.edit.roles.label}">Rôles :</label>
                 <ul class="modifier-profil-roles-list">
                     <li th:each="role : ${utilisateur.roles}" th:text="${role.libelle}"></li>
                 </ul>
@@ -120,16 +119,16 @@
 
             <!-- Boutons Enregistrer/Annuler -->
             <li class="modifier-profil-li-full">
-                <button type="submit" name="action" value="enregistrer" class="modifier-profil-button">Enregistrer</button>
-                <button type="reset" class="modifier-profil-button">Annuler</button>
+                <button type="submit" name="action" value="enregistrer" class="modifier-profil-button" th:text="#{profile.edit.save}">Enregistrer</button>
+                <button type="reset" class="modifier-profil-button" th:text="#{profile.edit.cancel}">Annuler</button>
             </li>
         </ul>
     </form>
 
     <!-- Supprimer mon compte -->
     <form th:action="@{/utilisateur/supprimer}" method="post" class="modifier-profil-suppression-form"
-          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.');">
-        <button type="submit" class="modifier-profil-button-danger">Supprimer mon compte</button>
+          onsubmit="return confirm('#{profile.edit.delete.confirm}' )">
+        <button type="submit" class="modifier-profil-button-danger" th:text="#{profile.edit.delete.button}">Supprimer mon compte</button>
     </form>
 </main>
 </body>

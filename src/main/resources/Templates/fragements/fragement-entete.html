@@ -1,5 +1,6 @@
 <!-- src/main/resources/templates/fragments/nav.html -->
-<div class="main-nav-wrapper" xmlns:sec="http://www.w3.org/1999/xhtml">
+<div class="main-nav-wrapper" xmlns:sec="http://www.w3.org/1999/xhtml"
+     xmlns:th="http://www.thymeleaf.org">
   <nav th:fragment="mainNav" class="main-nav">
     <div class="nav-logo">
       <a th:href="@{/encheres}">
@@ -8,28 +9,38 @@
     </div>
 
     <ul class="nav-list">
-      <li><a th:href="@{/}" class="nav-link">Accueil</a></li>
+      <li><a th:href="@{/}" class="nav-link" th:text="#{nav.home}">Accueil</a></li>
 
       <li sec:authorize="isAuthenticated()">
-        <a th:href="@{/vente/mes-ventes}" class="nav-link">Mes ventes</a>
+        <a th:href="@{/vente/mes-ventes}" class="nav-link" th:text="#{nav.mySales}">Mes ventes</a>
       </li>
       <li sec:authorize="isAuthenticated()">
-        <a th:href="@{/vente/mes-encheres}" class="nav-link">Mes enchères</a>
+        <a th:href="@{/vente/mes-encheres}" class="nav-link" th:text="#{nav.myBids}">Mes enchères</a>
       </li>
       <li sec:authorize="isAuthenticated()">
-        <a th:href="@{/vente/creation}" class="nav-link">Créer une vente</a>
+        <a th:href="@{/vente/creation}" class="nav-link" th:text="#{nav.createSale}">Créer une vente</a>
       </li>
       <li sec:authorize="isAuthenticated()">
-        <a th:href="@{/utilisateur/modifier}" class="nav-link">Profil</a>
+        <a th:href="@{/utilisateur/modifier}" class="nav-link" th:text="#{nav.profile}">Profil</a>
       </li>
       <li sec:authorize="isAuthenticated()">
         <form th:action="@{/logout}" method="post" class="logout-form">
-          <button type="submit" class="btn-logout">Se déconnecter</button>
+          <button type="submit" class="btn-logout" th:text="#{nav.logout}">Se déconnecter</button>
         </form>
       </li>
       <li sec:authorize="!isAuthenticated()">
-        <a th:href="@{/login}" class="nav-link">Se connecter</a>
+        <a th:href="@{/login}" class="nav-link" th:text="#{nav.login}">Se connecter</a>
       </li>
+
+      <li class="language-selector">
+        <form method="get" id="languageForm">
+          <select name="lang" onchange="this.form.submit()">
+            <option value="fr" th:selected="${#locale.language == 'fr'}">Français</option>
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+          </select>
+        </form>
+      </li>
+
     </ul>
   </nav>
 </div>

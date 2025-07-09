@@ -2,63 +2,59 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Profil Utilisateur</title>
+    <title th:text="#{profile.title}">Profil Utilisateur</title>
     <link rel="stylesheet" href="/css/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <div th:replace="fragements/fragement-entete :: mainNav"></div>
 
-
 <div class="user-profile">
     <h1 class="user-profile__title">
-        Profil de <span class="user-profile__pseudo" th:text="${utilisateur.pseudo}">Pseudo</span>
+        <span th:text="#{profile.title}">Profil de</span> <span class="user-profile__pseudo" th:text="${utilisateur.pseudo}">Pseudo</span>
     </h1>
 
     <ul class="user-profile__list">
         <li class="user-profile__item">
-            <div class="user-profile__label">Nom :</div>
+            <div class="user-profile__label" th:text="#{profile.label.nom}">Nom :</div>
             <div class="user-profile__value" th:text="${utilisateur.nom}">Nom</div>
         </li>
         <li class="user-profile__item">
-            <div class="user-profile__label">Prénom :</div>
+            <div class="user-profile__label" th:text="#{profile.label.prenom}">Prénom :</div>
             <div class="user-profile__value" th:text="${utilisateur.prenom}">Prénom</div>
         </li>
         <li class="user-profile__item">
-            <div class="user-profile__label">Téléphone :</div>
+            <div class="user-profile__label" th:text="#{profile.label.telephone}">Téléphone :</div>
             <div class="user-profile__value" th:text="${utilisateur.telephone}">Téléphone</div>
         </li>
         <li class="user-profile__item">
-            <div class="user-profile__label">Email :</div>
+            <div class="user-profile__label" th:text="#{profile.label.email}">Email :</div>
             <div class="user-profile__value" th:text="${utilisateur.email}">Email</div>
         </li>
 
         <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
-            <div class="user-profile__label">Rue :</div>
+            <div class="user-profile__label" th:text="#{profile.label.rue}">Rue :</div>
             <div class="user-profile__value" th:text="${utilisateur.adresse.rue}">Rue</div>
         </li>
         <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
-            <div class="user-profile__label">Code postal :</div>
+            <div class="user-profile__label" th:text="#{profile.label.codePostal}">Code postal :</div>
             <div class="user-profile__value" th:text="${utilisateur.adresse.codePostal}">CodePostal</div>
         </li>
         <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
-            <div class="user-profile__label">Ville :</div>
+            <div class="user-profile__label" th:text="#{profile.label.ville}">Ville :</div>
             <div class="user-profile__value" th:text="${utilisateur.adresse.ville}">Ville</div>
         </li>
         <li class="user-profile__item" th:if="${utilisateur.adresse != null}">
-            <div class="user-profile__label">Pays :</div>
+            <div class="user-profile__label" th:text="#{profile.label.pays}">Pays :</div>
             <div class="user-profile__value" th:text="${utilisateur.adresse.pays}">Pays</div>
         </li>
     </ul>
 
     <div class="user-profile__actions"
          th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == utilisateur.pseudo}">
-        <a th:href="@{/utilisateur/modifier}" class="user-profile__btn">
-            Modifier mon profil
-        </a>
+        <a th:href="@{/utilisateur/modifier}" class="user-profile__btn" th:text="#{profile.modify}">Modifier mon profil</a>
     </div>
 </div>
-
 
 </body>
 </html>

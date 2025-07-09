@@ -2,96 +2,90 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Détail vente</title>
+    <title th:text="#{titre.detailVente}">Détail vente</title>
     <link rel="stylesheet" href="/css/style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
 </head>
 <body>
 <div th:replace="fragements/fragement-entete :: mainNav"></div>
 <div class="page-detail">
 
+    <div th:if="${messageErreur != null}">
+        <p th:text="${messageErreur}">Un message d'erreur s'affichera ici.</p>
+    </div>
 
-<div th:if="${messageErreur != null}">
-    <p th:text="${messageErreur}">Un message d'erreur s'affichera ici.</p>
-</div>
+    <div th:if="${messageEnchere != null}">
+        <p><strong th:text="${messageEnchere}"></strong></p>
+    </div>
 
-<div th:if="${messageEnchere != null}">
-    <p><strong th:text="${messageEnchere}"></strong></p>
-</div>
+    <h1 th:text="#{titre.detailVente}">Détail vente</h1>
+    <h2 th:text="${article.nomArticle}"></h2>
 
-<h1>Détail vente</h1>
-<h2 th:text="${article.nomArticle}"></h2>
+    <p><strong th:text="#{label.description}">Description :</strong></p>
+    <p th:text="${article.description}"></p>
 
-<p><strong>Description :</strong></p>
-<p th:text="${article.description}"</p>
+    <p><strong th:text="#{label.categorie}">Catégorie :</strong> <span th:text="${article.categorie.libelle}"></span></p>
 
-<p><strong>Catégorie :</strong> <span th:text="${article.categorie.libelle}"></span></p>
+    <p>
+        <strong th:text="#{label.meilleureOffre}">Meilleure offre :</strong>
+        <span th:if="${meilleureEnchere != null}"
+              th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}"></span>
+        <span th:if="${meilleureEnchere == null}" th:text="#{label.pasDoffre}"></span>
+    </p>
 
-<p><strong>Meilleure offre :</strong>
-    <span th:if="${meilleureEnchere != null}"
-          th:text="${meilleureEnchere.montant + ' pts par ' + meilleureEnchere.encherisseur.pseudo}"></span>
-    <span th:if="${meilleureEnchere == null}"></span>
-</p>
+    <p><strong th:text="#{label.miseAPrix}">Mise à prix :</strong> <span th:text="${article.miseAPrix}"></span> <span th:text="#{label.points}">points</span></p>
 
-<p><strong>Mise à prix :</strong> <span th:text="${article.miseAPrix}"></span> points</p>
+    <p><strong th:text="#{label.finEnchere}">Fin de l'enchère :</strong>
+        <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
+    </p>
 
-<p><strong>Fin de l'enchère :</strong>
-    <span th:text="${#temporals.format(article.dateFinEncheres, 'dd/MM/yyyy')}"></span>
-</p>
+    <p><strong th:text="#{label.retrait}">Retrait :</strong><br/>
+        <span th:if="${article.adresseRetrait != null}">
+            <span th:text="${article.adresseRetrait.rue}">rue</span><br/>
+            <span th:text="${article.adresseRetrait.codePostal}">code postal</span>
+            <span th:text="${article.adresseRetrait.ville}">ville</span>,
+            <span th:text="${article.adresseRetrait.pays}">pays</span>
+        </span>
+        <span th:if="${article.adresseRetrait == null}" th:text="#{label.adresseNonRenseignee}"></span>
+    </p>
 
-<p><strong>Retrait :</strong><br/>
-    <span th:if="${article.adresseRetrait != null}">
-        <span th:text="${article.adresseRetrait.rue}">rue</span><br/>
-        <span th:text="${article.adresseRetrait.codePostal}">code postal</span>
-        <span th:text="${article.adresseRetrait.ville}">ville</span>,
-        <span th:text="${article.adresseRetrait.pays}">pays</span>
-    </span>
-    <span th:if="${article.adresseRetrait == null}">
-        Adresse de retrait non renseignée
-    </span>
-</p>
+    <p><strong th:text="#{label.vendeur}">Vendeur :</strong>
+        <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}"
+           th:text="${article.vendeur.pseudo}"></a>
+    </p>
 
-<p><strong>Vendeur :</strong>
-    <a th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}"
-       th:text="${article.vendeur.pseudo}"></a>
-</p>
+    <div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == article.vendeur.pseudo}">
+        <a th:href="@{/vente/modifier/{id}(id=${article.idArticle})}" class="blue" th:text="#{bouton.modifierVente}">Modifier la vente</a>
+    </div>
 
-<div th:if="${utilisateurConnecte != null and utilisateurConnecte.pseudo == article.vendeur.pseudo}">
-    <a th:href="@{/vente/modifier/{id}(id=${article.idArticle})}" class="blue">
-        Modifier la vente
-    </a>
-</div>
+    <hr/>
 
-<hr/>
+    <div th:if="${messagesErreur != null}">
+        <ul>
+            <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
+        </ul>
+    </div>
 
-<div th:if="${messagesErreur != null}">
-    <ul>
-        <li th:each="msg : ${messagesErreur}" th:text="${msg}">Erreur</li>
-    </ul>
-</div>
+    <div th:if="${utilisateurConnecte != null and utilisateurConnecte.idUtilisateur != article.vendeur.idUtilisateur}">
+        <form th:action="@{/encherir}" method="post">
+            <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
+            <label for="montant"><strong th:text="#{label.maProposition}">Ma proposition :</strong></label>
+            <input type="number" id="montant" name="montant" min="1" required />
+            <button type="submit" th:text="#{bouton.encherir}">Enchérir</button>
+        </form>
+    </div>
 
-<div th:if="${utilisateurConnecte != null and utilisateurConnecte.idUtilisateur != article.vendeur.idUtilisateur}">
-    <form th:action="@{/encherir}" method="post">
-        <input type="hidden" name="idArticle" th:value="${article.idArticle}" />
-        <label for="montant"><strong>Ma proposition :</strong></label>
-        <input type="number" id="montant" name="montant" min="1" required />
-        <button type="submit">Enchérir</button>
-    </form>
-</div>
+    <div th:if="${utilisateurConnecte != null and utilisateurConnecte.idUtilisateur == article.vendeur.idUtilisateur}">
+        <p><em th:text="#{message.vendeurPasEnchere}">Vous êtes le vendeur de cet article. Vous ne pouvez pas enchérir.</em></p>
+    </div>
 
-<div th:if="${utilisateurConnecte != null and utilisateurConnecte.idUtilisateur == article.vendeur.idUtilisateur}">
-    <p><em>Vous êtes le vendeur de cet article. Vous ne pouvez pas enchérir.</em></p>
-</div>
+    <div th:if="${utilisateurConnecte == null}">
+        <p><a th:href="@{/login}" th:text="#{lien.connectezVous}">Connectez-vous</a> <span th:text="#{message.pourEncherir}">pour pouvoir enchérir.</span></p>
+    </div>
 
-<div th:if="${utilisateurConnecte == null}">
-    <p><a th:href="@{/login}">Connectez-vous</a> pour pouvoir enchérir.</p>
-</div>
-
-<br/>
-    <a class="btn-encheres" th:href="@{/encheres}">Retour à la liste des enchères</a>
+    <br/>
+    <a class="btn-encheres" th:href="@{/encheres}" th:text="#{bouton.retourListe}">Retour à la liste des enchères</a>
 
 </div>
-
 </body>
 </html>

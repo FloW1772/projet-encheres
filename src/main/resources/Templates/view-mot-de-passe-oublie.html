@@ -1,21 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8">
+  <title th:text="#{resetPassword.title}">Réinitialiser le mot de passe</title>
   <link rel="stylesheet" href="/css/style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
 </head>
 <body>
+
 <div th:replace="fragements/fragement-entete :: mainNav"></div>
 
-<form action="/reset-password" method="post">
-  <input type="hidden" name="token" value="${token}" />
-  <input type="password" name="password" placeholder="Nouveau mot de passe" required />
-  <input type="password" name="confirmPassword" placeholder="Confirmer le mot de passe" required />
-  <button type="submit">Valider</button>
+<form th:action="@{/reset-password}" method="post">
+  <input type="hidden" name="token" th:value="${token}" />
+
+  <input type="password"
+         name="password"
+         th:placeholder="#{resetPassword.new}"
+         required />
+
+  <input type="password"
+         name="confirmPassword"
+         th:placeholder="#{resetPassword.confirm}"
+         required />
+
+  <button type="submit" th:text="#{resetPassword.submit}">Valider</button>
 </form>
 
 </body>
