@@ -8,7 +8,7 @@
 			</a>
 		</div>
 		<ul class="nav-list">
-			<li><a th:href="@{/}" class="nav-link" th:text="#{nav.home}">Accueil</a></li>
+			<li><a th:href="@{/encheres}" class="nav-link" th:text="#{nav.home}">Accueil</a></li>
 			<li sec:authorize="isAuthenticated()"><a
 				th:href="@{/vente/mes-ventes}" class="nav-link"
 				th:text="#{nav.mySales}">Mes ventes</a></li>
@@ -23,7 +23,7 @@
 				th:text="#{nav.profile}">Profil</a></li>
 			<li sec:authorize="isAuthenticated()">
 				<form th:action="@{/logout}" method="post" class="logout-form">
-					<button type="submit" class="btn-logout" th:text="#{nav.logout}">Déconnecter</button>
+					<button type="submit" class="nav-link" th:text="#{nav.logout}">Déconnecter</button>
 				</form>
 			</li>
 			<li sec:authorize="!isAuthenticated()"><a th:href="@{/login}"

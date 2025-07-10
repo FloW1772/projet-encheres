@@ -261,47 +261,43 @@ public class UtilisateurController {
 
 	@PostMapping("/utilisateur/supprimer")
 	public String supprimerUtilisateur(Principal principal, Model model) {
-		if (principal == null) {
-			return "redirect:/login";
-		}
+	    if (principal == null) {
+	        return "redirect:/login";
+	    }
 
-		Utilisateur utilisateur = null;
-		try {
-			String pseudo = principal.getName();
-			utilisateur = utilisateurService.selectByLogin(pseudo);
+	    Utilisateur utilisateur = null;
+	    try {
+	        String pseudo = principal.getName();
+	        utilisateur = utilisateurService.selectByLogin(pseudo);
 
-			List<ArticleAVendre> articlesEnCours = articleAVendreService.findArticlesEnCoursByVendeur(pseudo);
-			List<Enchere> encheresEnCours = enchereService.readAll();
+	        List<ArticleAVendre> articlesEnCours = articleAVendreService.findArticlesEnCoursByVendeur(pseudo);
+	        List<Enchere> encheresEnCours = enchereService.readAll();
 
-			long idUtilisateur = utilisateur.getIdUtilisateur();
-			List<Enchere> encheresUtilisateur = encheresEnCours.stream()
+	        long idUtilisateur = utilisateur.getIdUtilisateur();
+	        List<Enchere> encheresUtilisateur = encheresEnCours.stream()
+	                .filter(e -> e.getEncherisseur() != null && e.getEncherisseur().getIdUtilisateur() == idUtilisateur)
+	                .collect(Collectors.toList());
 
-					.filter(e -> e.getEncherisseur() != null && e.getEncherisseur().getIdUtilisateur() == idUtilisateur)
-					.collect(Collectors.toList());
+	        if (!articlesEnCours.isEmpty() || !encheresUtilisateur.isEmpty()) {
+	            throw new BusinessException("Vous ne pouvez pas supprimer votre compte car vous avez des articles ou des enchères en cours.");
+	        }
 
-			if (!articlesEnCours.isEmpty() || !encheresUtilisateur.isEmpty()) {
-				throw new BusinessException(
-						"Vous ne pouvez pas supprimer votre compte car vous avez des articles ou des enchères en cours.");
-			}
+	        utilisateurService.supprimerCompte(idUtilisateur);
+	        return "redirect:/encheres";
 
-			utilisateurService.supprimerCompte(utilisateur.getIdUtilisateur());
-			return "redirect:/encheres";
+	    } catch (BusinessException e) {
+	        model.addAttribute("errors", List.of(e.getMessage()));
 
-		} catch (BusinessException e) {
-			model.addAttribute("errors", List.of(e.getMessage()));
+	        if (utilisateur != null) {
+	            model.addAttribute("utilisateur", utilisateur);
+	            boolean estSimpleUtilisateur = utilisateur.getRoles().size() == 1 &&
+	                "UTILISATEUR".equalsIgnoreCase(utilisateur.getRoles().get(0).getLibelle());
+	            model.addAttribute("estSimpleUtilisateur", estSimpleUtilisateur);
+	        }
 
-		/*	if (utilisateur != null) {
-				model.addAttribute("utilisateur", utilisateur);
-				boolean estSimpleUtilisateur = utilisateur.getRoles().size() == 1
-						&& "UTILISATEUR".equalsIgnoreCase(utilisateur.getRoles().get(0).getLibelle());
-				model.addAttribute("estSimpleUtilisateur", estSimpleUtilisateur);
-			} else {
-				model.addAttribute("errors", List.of("Utilisateur introuvable"));
-				return "redirect:/login";
-			}*/
-
-			return "view-utilisateur";
-		}
+	        
+	        return "view-utilisateur";
+	    }
 	}
 
 }

@@ -1,0 +1,125 @@
+/* Reset de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Style global */
+body {
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0e0e0;; /* fond bleu pâle dégradé */
+  color: #1e1e1e; /* texte sombre pour contraste */
+  line-height: 1.6;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Conteneur principal */
+main {
+  max-width: 800px;      /* Agrandi le conteneur */
+  width: 90%;             /* Largeur responsive */
+  margin: 40px auto;      /* Centrage + marge verticale */
+  background: #55554e;
+  padding: 40px 50px;     /* Plus de padding intérieur */
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Titre */
+main h1 {
+  text-align: center;
+  color: #ff9800;;
+  margin-bottom: 30px;
+}
+
+/* Liste flex */
+.flex-outer {
+  list-style: none;
+  padding: 0;
+}
+
+.flex-outer li {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.flex-outer label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: white;
+}
+
+/* Inputs plein largeur */
+.flex-outer input,
+.flex-outer select {
+  width: 100%;            /* Champs qui remplissent toute la largeur */
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #3471db; /* bleu moyen */
+  border-radius: 6px;
+  color: #1e1e1e;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.flex-outer input:focus,
+.flex-outer select:focus {
+  border-color: #1abc9c;
+  outline: none;
+  box-shadow: 0 0 5px #1abc9c;
+}
+
+/* Erreurs */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Boutons orange doux */
+.flex-outer button {
+  padding: 12px 20px;
+  font-size: 16px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  background: linear-gradient(45deg, #fdd9a0, #f6b26b); /* abricot pastel → pêche douce */
+  color: #222; /* texte noir foncé */
+  box-shadow: 0 5px 20px rgba(246, 178, 107, 0.3);
+}
+
+.flex-outer button:hover {
+  background: linear-gradient(45deg, #f6b26b, #fdd9a0); /* inversion pour effet hover subtil */
+  box-shadow: 0 8px 30px rgba(246, 178, 107, 0.5);
+  transform: scale(1.05);
+}
+
+/* Bouton de réinitialisation (reset) */
+.flex-outer button[type="reset"] {
+  background-color: #e0a96d; /* orange clair doux */
+  color: #222;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.flex-outer button[type="reset"]:hover {
+  background-color: #d18e5d;
+  box-shadow: 0 6px 16px rgba(209, 142, 93, 0.4);
+  transform: scale(1.05);
+}
+
+
+/* Responsive */
+@media (max-width: 600px) {
+  main {
+    padding: 20px;
+  }
+
+  .flex-outer li {
+    flex-direction: column;
+  }
+}

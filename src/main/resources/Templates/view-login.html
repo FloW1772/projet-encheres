@@ -4,11 +4,13 @@
 <head>
 <meta charset="UTF-8" />
 <title th:text="#{login.title}">Connexion</title>
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/styleLogin.css" />
+<link rel="stylesheet" href="/css/styleEnchere.css" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body class="page-login">
-	<div th:replace="fragements/fragement-entete :: mainNav"></div>
+	<div th:replace="~{fragements/fragement-entete :: mainNav}"></div>
 	<main class="login-form">
 		<form th:action="@{/login}" method="post">
 			<input type="text" name="pseudo"

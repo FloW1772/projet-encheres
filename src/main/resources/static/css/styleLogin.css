@@ -1,0 +1,161 @@
+/* Reset de base */
+.page-login * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Style global uniquement pour la page login */
+.page-login {
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0e0e0;
+  color: #1e1e1e;
+  line-height: 1.6;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Conteneur du formulaire de login */
+.page-login .login-form {
+  max-width: 400px;
+  width: 100%;
+  margin: 60px auto;
+  background: #e7f0ff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Champs du formulaire */
+.page-login .login-form input[type="text"],
+.page-login .login-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 2px solid #3471db;
+  border-radius: 6px;
+  color: #1e1e1e;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.page-login .login-form input:focus {
+  border-color: #1abc9c;
+  outline: none;
+  box-shadow: 0 0 5px #1abc9c;
+}
+
+/* Case à cocher */
+.page-login .checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-login .checkbox-container input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.page-login .checkbox-container label {
+  color: #34495e;
+  font-weight: 500;
+}
+
+/* Bouton de connexion */
+.page-login .login-form button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #fdd9a0, #f6b26b);
+  color: #222;
+  box-shadow: 0 5px 20px rgba(246, 178, 107, 0.3);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.page-login .login-form button[type="submit"]:hover {
+  background: linear-gradient(45deg, #f6b26b, #fdd9a0);
+  box-shadow: 0 8px 30px rgba(246, 178, 107, 0.5);
+  transform: scale(1.05);
+}
+
+/* Liens secondaires */
+.page-login .login-form .forgot-password,
+.page-login .login-form .create-account,
+.page-login .login-form a[href="/"] {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #34495e;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.page-login .login-form .forgot-password:hover,
+.page-login .login-form .create-account:hover,
+.page-login .login-form a[href="/"]:hover {
+  color: #8e44ad;
+}
+
+/* Message d’erreur */
+.page-login .login-form .error-message {
+  margin-top: 16px;
+  color: #e74c3c;
+  font-size: 14px;
+  text-align: center;
+}
+
+.language-selector select {
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: none;
+	color: black; /* orange foncé */
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background-color 0.3s ease;
+    appearance: none; /* enlève la flèche par défaut */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234b2e83'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px 6px;
+}
+
+.language-selector select:hover {
+    background-color: #ffcc80;
+}
+.main-nav-wrapper {
+    background: linear-gradient(135deg, #ff9800, #ffb74d) !important;
+    color: #000000 !important;
+}
+
+.nav-link,
+.nav-link:hover,
+.nav-link::after {
+    color: #000000 !important;
+    background-color: #ff9800 !important;
+}
+
+.nav-logo img {
+    height: 80px;
+    transition: transform 0.4s ease, filter 0.3s ease;
+   filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.9));
+    cursor: pointer;
+}
+
+.nav-logo img:hover {
+    transform: scale(1.08) rotate(-2deg);
+    filter: drop-shadow(0 0 8px rgba(255, 152, 0, 0.9)); /* orange vif */
+}
+/* Responsive */
+@media (max-width: 500px) {
+  .page-login .login-form {
+    padding: 20px;
+    margin: 30px auto;
+  }
+}

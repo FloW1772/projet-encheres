@@ -1,0 +1,397 @@
+/* ========== RESET & BASE ========== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body.page-enchere {
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0e0e0; /* gris clair */
+  color: #333333; /* texte gris foncé */
+  line-height: 1.6;
+  padding-bottom: 60px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+/* ========== NAVIGATION ========== */
+.main-nav-wrapper {
+  width: 100%;
+  background: #a0c4ff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  margin-bottom: 30px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.main-nav {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  flex-wrap: wrap;
+}
+
+.nav-logo img {
+  height: 42px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
+  transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+.nav-logo img:hover {
+  transform: scale(1.08) rotate(-2deg);
+  filter: drop-shadow(0 0 8px rgba(186, 104, 200, 0.8));
+}
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2.5px;
+  bottom: 0;
+  left: 0;
+  background-color: #e1bee7;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  background: linear-gradi;
+  color: #fff;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.logout-form {
+  margin: 0;
+}
+
+.btn-logout {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 10px rgba(255, 182, 193, 0.2);
+}
+
+.btn-logout:hover {
+  background: #b615c5;
+  border-color: #b615c5;
+  box-shadow: 0 4px 15px rgba(182, 21, 197, 0.7);
+  color: #fff;
+}
+
+/* ========== HEADER TITRE ========== */
+.titre-responsive {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  padding: 0 24px;
+  font-size: 2.2rem;
+  color: #000 !important;
+  font-weight: 700;
+  text-align: center;
+
+}
+
+/* ========== FORMULAIRE DE FILTRAGE ========== */
+.form-filtres {
+  max-width: 1200px;
+  margin: 0 auto 40px;
+  padding: 0 24px;
+}
+
+.filtres {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.filtres label {
+  font-weight: 600;
+  color: #000; /* noir */
+}
+
+.filtres input[type="text"],
+.filtres select {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 2px solid #ff9800; /* orange */
+  font-size: 1rem;
+  background-color: #fffaf5; /* fond très clair */
+  color: #000; /* texte noir */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filtres input[type="text"]:focus,
+.filtres select:focus {
+  outline: none;
+  border-color: #ef6c00; /* orange foncé */
+  box-shadow: 0 0 8px #ef6c00;
+  background-color: #fff3e0; /* orange très pâle */
+  color: #000; /* texte noir */
+}
+/* Bouton recherche */
+.recherche-btn {
+  margin-top: 8px;
+}
+
+.recherche-btn button {
+  background: linear-gradient(45deg, #ff9800, #ffb74d);
+  color: #fff8f0;
+  border: none;
+  padding: 12px 28px;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.recherche-btn button:hover {
+  background: linear-gradient(45deg, #ef6c00, #ff9800);
+  transform: scale(1.05);
+}
+
+/* ========== FILTRES RADIO ET CHECKBOX ========== */
+.filtresAchat {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.radio-filtres {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+radio-filtres label {
+  cursor: pointer;
+  font-weight: 700; /* encore plus gras */
+  font-size: 1.2rem; /* taille du texte plus grande */
+  color: #ffcc80;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+
+.radio-filtres input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  accent-color: #ffcc80; /* personnalise la couleur du bouton radio si pris en charge */
+}
+
+.filtres-container {
+  display: flex;
+  gap: 32px; /* Espace entre les deux blocs */
+  flex-wrap: wrap; /* Permet le retour à la ligne si l'écran est trop petit */
+  justify-content: flex-start; /* Aligne les blocs à gauche */
+}
+
+
+fieldset {
+  border: 2px solid ;
+  padding: 16px 24px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  max-width: 400px;
+  background: #55554e;
+  color: #eee7e7;
+}
+
+legend {
+  font-weight: 700;
+  color: orange;
+  padding: 0 10px;
+}
+
+fieldset label {
+  display: block;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+fieldset input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* ========== MESSAGE AUCUN RESULTAT ========== */
+.empty-message {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 12px 24px;
+  text-align: center;
+  font-style: italic;
+  color: #d1c4e9;
+  font-size: 1.1rem;
+}
+
+/* ========== LISTE DES ENCHERES ========== */
+.auction-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.auction-card {
+  background: #55554e; /* noir clair / gris très foncé */
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #eee7e7; /* texte clair pour contraste */
+}
+
+.auction-card:hover {
+  transform: translateY(-6px);
+  box-shadow: #ffd180;
+}
+
+.card-content a.auction-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ff9800; /* Orange vif */
+  text-decoration: none;
+  margin-bottom: 8px;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.card-content a.auction-title:hover {
+  color: #ffd180; /* Abricot clair */
+  text-decoration: underline;
+}
+.card-content p {
+  color: #ccc;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.label {
+  font-weight: 600;
+  color: #ccc;
+}
+
+/* Bouton détail */
+.detail-button {
+  margin-top: auto;
+  background: linear-gradient(45deg, #ff9800, #f57c00); /* orange vif → orange foncé */
+  color: #fff;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+}
+
+.detail-button:hover {
+  background: linear-gradient(45deg, #ef6c00, #ff9800); /* orange foncé → orange clair */
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 152, 0, 0.7); /* halo orange */
+}
+
+/* Lien vendeur */
+.card-content p span.label + a {
+  color: #ccc;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.card-content p span.label + a:hover {
+  color: #ff9800; /* orange vif */
+  text-decoration: underline;
+}
+/* ========== FOOTER ========== */
+footer {
+  margin-top: 40px;
+  padding: 20px 24px;
+  background: rgba(30, 30, 30, 0.7);
+  text-align: center;
+  color: #ff9800;
+  font-size: 0.9rem;
+  box-shadow: 0 -2px 8px rgba(255, 178, 102, 0.5);
+  backdrop-filter: blur(5px);
+  border-top: 1px solid rgba(186, 104, 200, 0.3);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .main-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 14px 20px;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .nav-link,
+  .btn-logout {
+    width: 100%;
+    display: block;
+    padding: 12px 18px;
+    font-size: 1.1rem;
+    text-align: left;
+  }
+
+  .btn-logout {
+    border-radius: 12px;
+  }
+
+  .form-filtres {
+    padding: 0 18px;
+  }
+
+  .auction-list {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
