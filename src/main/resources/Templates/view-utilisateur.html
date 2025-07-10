@@ -22,13 +22,13 @@
 			th:object="${utilisateur}" class="modifier-profil-form">
 			<input type="hidden" th:field="*{idUtilisateur}" />
 			<!-- Champs cachés pour les rôles -->
-			<div th:each="role, iterStat : ${utilisateur.roles}">
+		<!-- <div th:each="role, iterStat : ${utilisateur.roles}">
 				<input type="hidden"
 					th:name="'roles[' + ${iterStat.index} + '].idRole'"
 					th:value="${role.idRole}" /> <input type="hidden"
 					th:name="'roles[' + ${iterStat.index} + '].libelle'"
 					th:value="${role.libelle}" />
-			</div>
+			</div>  -->	
 			<ul class="modifier-profil-ul">
 				<li class="modifier-profil-li"><label for="inputPseudo"
 					class="modifier-profil-label" th:text="#{profile.edit.pseudo}">Pseudo</label>
