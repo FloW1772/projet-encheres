@@ -1,0 +1,151 @@
+/* ========== RESET DE BASE ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========== STYLE GLOBAL ========== */
+body {
+ font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #e0e0e0;; /* fond bleu pâle dégradé */
+  color: with; /* texte sombre pour contraste */
+  line-height: 1.6;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========== CONTENEUR PRINCIPAL ========== */
+main.modifier-profil-main {
+  max-width: 800px;
+  width: 90%;
+  margin: 40px auto;
+  background: #55554e;
+  padding: 40px 50px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== TITRE ========== */
+main.modifier-profil-main h1.modifier-profil-titre {
+  text-align: center;
+  color: #ff9800;
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* ========== FORMULAIRES ========== */
+ul.modifier-profil-ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul.modifier-profil-ul > li.modifier-profil-li {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+ul.modifier-profil-ul > li.modifier-profil-li-full {
+  margin-bottom: 30px;
+}
+
+.modifier-profil-label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: white;
+}
+
+/* ========== INPUTS ========== */
+.modifier-profil-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #3471db;
+  border-radius: 6px;
+ 
+  color: #1e1e1e;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modifier-profil-input:focus {
+  border-color: #1abc9c;
+  outline: none;
+  box-shadow: 0 0 5px #1abc9c;
+}
+
+/* ========== MESSAGES D’ERREUR ========== */
+.modifier-profil-error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.modifier-profil-small {
+  font-size: 13px;
+  color: #555;
+  margin-top: 6px;
+}
+
+/* ========== BOUTONS ========== */
+.modifier-profil-button,
+.modifier-profil-button[type="reset"] {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #fdd9a0, #f6b26b);
+  color: #222;
+  box-shadow: 0 5px 20px rgba(246, 178, 107, 0.3);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+/* ========== BOUTONS ========== */
+.modifier-profil-button,
+.modifier-profil-button[type="reset"] {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #fdd9a0, #f6b26b); /* abricot pastel → pêche douce */
+  color: #222;
+  box-shadow: 0 5px 20px rgba(246, 178, 107, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.modifier-profil-button:hover,
+.modifier-profil-button[type="reset"]:hover {
+  background: linear-gradient(45deg, #f6b26b, #fdd9a0); /* effet inversion subtil */
+  box-shadow: 0 8px 30px rgba(246, 178, 107, 0.5);
+  transform: scale(1.05);
+}
+
+.modifier-profil-button-danger {
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #e74c3c, #c0392b); /* rouge vif dégradé */
+  color: white;
+  box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.modifier-profil-button-danger:hover {
+  background: linear-gradient(45deg, #c0392b, #e74c3c);
+  box-shadow: 0 8px 30px rgba(192, 57, 43, 0.5);
+  transform: scale(1.05);
+}
+
+
+/* Erreurs */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}

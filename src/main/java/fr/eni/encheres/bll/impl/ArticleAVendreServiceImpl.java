@@ -250,15 +250,17 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 		return true;
 	}
 
-	 // Toutes les nuits à 1h du matin
-    @Scheduled(cron = "0 0 1 * * ?")
+
+	// Toutes les 2 minutes
+	@Scheduled(cron = "0 */2 * * * ?")
     public void activerVente() {
         int count = articleAVendreDAO.activerVente();
         System.out.println(count + " ventes activées.");
     }
 
-    // Toutes les nuits à 2h du matin
-    @Scheduled(cron = "0 0 2 * * ?")
+
+	// Toutes les 2 minutes
+	@Scheduled(cron = "0 */2 * * * ?")
     public void cloturerVente() {
         int count = articleAVendreDAO.cloturerVente();
         System.out.println(count + " ventes clôturées.");

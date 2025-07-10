@@ -1,0 +1,50 @@
+.user-profile {
+  max-width: 600px;
+  margin: auto;
+  padding: 32px;
+  background-color: #444;
+  color: #eee;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  font-size: 1.2rem; 
+}
+.user-profile__title {
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: #ffcc80;
+}
+
+.user-profile__list {
+  list-style: none;
+  padding: 0;
+}
+
+.user-profile__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #666;
+}
+
+.user-profile__label {
+  font-weight: bold;
+  color: white;
+}
+
+.user-profile__value {
+  color: #eee7e7;
+}
+
+.user-profile__btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #ba68c8;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.user-profile__btn:hover {
+  background: #9c48b2;
+}

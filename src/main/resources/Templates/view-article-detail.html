@@ -4,13 +4,14 @@
 <meta charset="UTF-8" />
 <title th:text="#{titre.detailVente}">Détail vente</title>
 <!--  <title>Détail vente</title>  -->
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/styleDetail.css" />
+<link rel="stylesheet" href="/css/styleFragement.css" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
 	<div th:replace="fragements/fragement-entete :: mainNav"></div>
-
+  <div class="detail-vente-container">
 	<div th:if="${messageSucces}" class="alert-success">
 		<p th:text="${messageSucces}"></p>
 	</div>
@@ -73,7 +74,7 @@
 	<p>
 		<strong th:text="#{label.vendeur}">Vendeur :</strong> <a
 			th:href="@{/utilisateur/profil(pseudo=${article.vendeur.pseudo})}"
-			th:text="${article.vendeur.pseudo}"></a>
+			th:text="${article.vendeur.pseudo}" style="color: orange"></a>
 	</p>
 
 	<div
@@ -122,6 +123,6 @@
 	<br />
 	<a class="btn-encheres" th:href="@{/encheres}" th:text="#{bouton.retourListe}">Retour à la liste des enchères</a>
 	<!-- <a th:href="@{/encheres}">Retour à la liste des enchères</a> -->
-
+  </div>
 </body>
 </html>

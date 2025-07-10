@@ -4,7 +4,8 @@
 <head>
 <meta charset="UTF-8" />
 <title th:text="#{titre.page}">Liste des enchères</title>
-<link rel="stylesheet" href="/css/style.css" />
+<link rel="stylesheet" href="/css/styleEnchere.css" />
+<link rel="stylesheet" href="/css/styleFragement.css" />
 <script th:src="@{/js/script.js}" defer></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -41,6 +42,7 @@
 					<span th:text="#{filtre.vente}">Ventes</span>
 				</label>
 			</div>
+			<div class="filtres-container">
 			<fieldset id="filtresAchat">
 				<legend th:text="#{filtre.achat}">Achat</legend>
 				<label> <input type="checkbox" name="achatEncheresOuvertes"
@@ -80,7 +82,7 @@
 	<div class="auction-list">
 		<div class="auction-card" th:each="enchere : ${encheres}">
 			<div class="card-content">
-				<a th:href="@{/article/{id}(id=${enchere.article.idArticle})}"
+				<a th:href="@{/articles/{id}(id=${enchere.article.idArticle})}"
 					class="auction-title" th:text="${enchere.article.nomArticle}">Nom
 					article</a>
 				<p th:text="${enchere.article.description}">Description</p>

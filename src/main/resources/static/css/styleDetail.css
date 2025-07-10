@@ -1,0 +1,74 @@
+.detail-vente-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 32px;
+  background-color: #444;
+  color: #eee;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  font-size: 1.2rem;
+}
+
+.detail-vente-container h1,
+.detail-vente-container h2 {
+  color: #ffcc80;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.detail-vente-container p,
+.detail-vente-container li {
+  margin: 8px 0;
+}
+
+.detail-vente-container strong {
+  color: white;
+}
+
+.alert-success {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.btn-encheres,
+.detail-vente-container button,
+.detail-vente-container a.blue {
+  display: inline-block;
+  padding: 12px 20px;
+  margin-top: 16px;
+  background-color: #ffcc80;
+  color: black;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.btn-encheres:hover,
+.detail-vente-container button:hover,
+.detail-vente-container a.blue:hover {
+  background-color: white;
+}
+
+.detail-vente-container form input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #eee;
+  font-size: 1rem;
+}
+
+.detail-vente-container ul {
+  padding-left: 20px;
+  margin-top: 10px;
+  color: oronge;
+  font-size: 0.95rem;
+}

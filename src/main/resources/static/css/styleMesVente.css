@@ -1,0 +1,99 @@
+/* ========== PAGE MES VENTES ========== */
+
+body {
+  background: #e0e0e0; /* Actuellement gris clair */
+}
+
+
+.mes-ventes-page {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 24px;
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e0e0e0;
+}
+
+/* TITRE PRINCIPAL */
+.titre-page {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+  color: black;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+}
+
+/* CONTENEUR TABLE */
+.table-container {
+  overflow-x: auto;
+  background: #fffaf5;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.1);
+}
+
+/* TABLE ENCHERES */
+.table-ventes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+  color: #333;
+}
+
+.table-ventes thead {
+  background: linear-gradient(45deg, #ff9800, #ffb74d);
+  color: black;
+  text-transform: uppercase;
+}
+
+.table-ventes th,
+.table-ventes td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.table-ventes tr:hover {
+  background-color: #fff3e0;
+  transition: background 0.3s ease;
+}
+
+/* ========== BOUTONS ACTIONS HARMONISÉS ========== */
+.btnModifier,
+.supprimer {
+  display: inline-block;
+  margin: 4px;
+  padding: 8px 14px;
+  font-weight: 600;
+  border-radius: 30px;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(45deg, #fdd9a0, #f6b26b); /* abricot clair → soutenu */
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.btnModifier:hover,
+.supprimer:hover {
+  background: linear-gradient(45deg, #f6b26b, #fdd9a0); /* inversion douce */
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(246, 178, 107, 0.4); /* ombrage abricot */
+}
+
+.filtres-container {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap; /* permet de revenir à la ligne si écran trop petit */
+  justify-content: flex-start;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .mes-ventes-page {
+    padding: 0 18px;
+  }
+
+  .titre-page {
+    font-size: 2rem;
+  }
+}

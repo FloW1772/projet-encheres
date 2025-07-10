@@ -15,31 +15,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, UserDetailsManager userDetailsManager) throws Exception {
         http
+           
             .authorizeHttpRequests(auth -> auth
-               //.requestMatchers("/admin/**").hasRole("ADMIN")
-              //  .requestMatchers("/vente/**").hasRole("VENDEUR")
-              //  .requestMatchers("/profil/**").hasAnyRole("UTILISATEUR", "VENDEUR", "ADMIN")
-              //  .requestMatchers("/encheres", "/login", "/logout","/vente/**","/profil/**","/inscription/**").permitAll()
-             //   .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-            	.requestMatchers("/**").permitAll()
-                
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers("/login", "/inscription/**", "/encheres","/utilisateur/**").permitAll()
+                .requestMatchers("/vente/**", "/profil/**").authenticated()
+                .anyRequest().authenticated()
             )
+           
             .formLogin(form -> form
-                .loginPage("/login")
+                .loginPage("/login")          
                 .usernameParameter("pseudo")  
                 .passwordParameter("password")
-                .defaultSuccessUrl("/encheres", false) // pour envoyer vers la page demandée precedement
-                .permitAll()
+                .defaultSuccessUrl("/encheres", false) 
+                .permitAll()                  
             )
+            
             .logout(logout -> logout
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
+                .deleteCookies("JSESSIONID", "remember-me") 
+                .permitAll()
             )
+         
             .rememberMe(remember -> remember
-                .tokenValiditySeconds(7 * 24 * 60 * 60)
-                .key("maCleSecretePourRememberMe")
+                .tokenValiditySeconds(7 * 24 * 60 * 60)  
+                .key("maCleSecretePourRememberMe")       
                 .userDetailsService(userDetailsManager)
-            );
+            )
+           
+            ;
 
         return http.build();
     }
@@ -62,6 +67,4 @@ public class SecurityConfig {
 
         return users;
     }
-
-   
 }

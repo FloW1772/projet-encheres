@@ -1,0 +1,95 @@
+.vente-form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 32px;
+  background-color: #444;
+  color: #eee;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  font-size: 1.2rem; 
+}
+
+.vente-form-title {
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: #ffcc80;
+  text-align: center;
+}
+
+.vente-field-group label {
+  font-weight: bold;
+  color: white;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.vente-field-group input,
+.vente-field-group select,
+.vente-field-group textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;;
+  font-size: 1rem;
+}
+
+.vente-field-group textarea {
+  resize: vertical;
+}
+
+.vente-error-list {
+  color: #ff9999;
+  font-size: 0.9rem;
+  list-style-type: disc;
+  margin: 6px 0 12px 20px;
+}
+
+.vente-actions {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vente-btn {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vente-btn-primary {
+  background-color: #ffcc80;
+  color: black;
+  border: none;
+}
+
+.vente-btn-primary:hover {
+  background-color: #777;
+}
+
+.vente-btn-secondary {
+  background-color: #ffcc80;
+  color: black;
+}
+
+.vente-btn-secondary:hover {
+  background-color: #777;
+}
+
+.vente-btn-cancel {
+  background-color: #e57373;
+  color: white;
+}
+
+.vente-btn-cancel:hover {
+  background-color: #d32f2f;
+}
