@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.encheres.bll.EnchereService;
 import fr.eni.encheres.bo.ArticleAVendre;
@@ -81,6 +82,7 @@ public class EnchereServiceImpl implements EnchereService {
 	}
 
 	@Override
+	@Transactional
 	public void encherir(long idArticle, long idUtilisateur, int montant) throws BusinessException {
 
 		Utilisateur utilisateur = utilisateurDAO.selectById(idUtilisateur);

@@ -90,7 +90,7 @@ public class ArticleAVendreController {
                     articleAVendre.getCategorie().getIdCategorie());
         } catch (BusinessException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("etatsVente", EtatVente.values());
+           // model.addAttribute("etatsVente", EtatVente.values());
             preparerModelVente(model, articleAVendre, false);
             return "view-vente-article";
         }

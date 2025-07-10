@@ -1,44 +1,34 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8" />
+<title th:text="#{login.title}">Connexion</title>
 <link rel="stylesheet" href="/css/style.css" />
-<head>
-<head>
-  <meta charset="UTF-8">
-  <title>Connexion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body>
-
-<form th:action="@{/login}" method="post">
-  
-  <input type="text" name="pseudo" placeholder="Login" required />
-  
-  <input type="password" name="password" placeholder="Mot de passe" required />
-  
-  <div>
-    <input type="checkbox" id="remember-me" name="remember-me" />
-    <label for="remember-me">Se souvenir de moi</label>
-  </div>
-
-  <button type="submit">Connexion</button>
-  
-  <div style="margin-top:10px;">
-    <a th:href="@{/mot-de-passe-oublie}">Mot de passe oublié ?</a>
-  </div>
-  
-  <div style="margin-top:20px;">
-    <a th:href="@{/utilisateur/creer}" 
-       style="padding:10px 20px; background-color:#007bff; color:white; text-decoration:none; border-radius:5px;">
-      Créer un compte
-    </a>
-  </div>
-  
-  <div>
-    <p th:if="${param.error}" style="color:red;">
-      Login ou mot de passe incorrect
-    </p>
-  </div>
-   <a href="/">Retour à l'accueil</a>
-</form>
-
+<body class="page-login">
+	<div th:replace="fragements/fragement-entete :: mainNav"></div>
+	<main class="login-form">
+		<form th:action="@{/login}" method="post">
+			<input type="text" name="pseudo"
+				th:placeholder="#{login.placeholder.username}" required /> <input
+				type="password" name="password"
+				th:placeholder="#{login.placeholder.password}" required />
+			<div class="checkbox-container">
+				<input type="checkbox" id="remember-me" name="remember-me" /> <label
+					for="remember-me" th:text="#{login.remember}">Se souvenir
+					de moi</label>
+			</div>
+			<button type="submit" th:text="#{login.submit}">Connexion</button>
+			<a class="forgot-password" th:href="@{/mot-de-passe-oublie}"
+				th:text="#{login.forgotPassword}"> Mot de passe oublié ? </a> <a
+				class="create-account" th:href="@{/utilisateur/creer}"
+				th:text="#{login.createAccount}"> Créer un compte </a>
+			<p class="error-message" th:if="${param.error}"
+				th:text="#{login.error}">Login ou mot de passe incorrect</p>
+				 <a href="/">Retour à l'accueil</a>
+		</form>
+	</main>
 </body>
 </html>

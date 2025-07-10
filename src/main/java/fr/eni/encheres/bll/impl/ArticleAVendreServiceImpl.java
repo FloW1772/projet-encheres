@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import fr.eni.encheres.bll.ArticleAVendreService;
 import fr.eni.encheres.bo.Adresse;
@@ -35,6 +36,7 @@ public class ArticleAVendreServiceImpl implements ArticleAVendreService {
 	}
 
 	@Override
+	@Transactional
 	public void mettreArticleEnVente(ArticleAVendre articleAVendre, Utilisateur utilisateur, int idCategorie)
 			throws BusinessException {
 		BusinessException be = new BusinessException();

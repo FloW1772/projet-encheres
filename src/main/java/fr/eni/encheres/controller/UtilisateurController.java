@@ -285,20 +285,20 @@ public class UtilisateurController {
 			}
 
 			utilisateurService.supprimerCompte(utilisateur.getIdUtilisateur());
-			return "redirect:/logout";
+			return "redirect:/encheres";
 
 		} catch (BusinessException e) {
 			model.addAttribute("errors", List.of(e.getMessage()));
 
-			if (utilisateur != null) {
+		/*	if (utilisateur != null) {
 				model.addAttribute("utilisateur", utilisateur);
 				boolean estSimpleUtilisateur = utilisateur.getRoles().size() == 1
 						&& "UTILISATEUR".equalsIgnoreCase(utilisateur.getRoles().get(0).getLibelle());
 				model.addAttribute("estSimpleUtilisateur", estSimpleUtilisateur);
 			} else {
 				model.addAttribute("errors", List.of("Utilisateur introuvable"));
-				return "/encheres";
-			}
+				return "redirect:/login";
+			}*/
 
 			return "view-utilisateur";
 		}

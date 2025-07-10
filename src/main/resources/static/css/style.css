@@ -1,158 +1,948 @@
-/* Global */
+/* -------------------- RESET GLOBAL -------------------- */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f9f9f9;
-    color: #333;
+	font-family: Arial, sans-serif;
+	background-color: #f5f7fa;
+	color: #333;
+	line-height: 1.5;
+	padding: 2rem;
+} /* -------------------- NAVIGATION -------------------- */
+.main-nav {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 30px;
+	background: #007bff;
+	padding: 10px;
+	width: 100%;
+	border-radius: 15px;
 }
 
+.main-nav .nav-logo img {
+	height: 50px;
+	cursor: pointer;
+}
+
+.main-nav .nav-list {
+	list-style: none;
+	display: flex;
+	gap: 15px;
+}
+
+.main-nav .nav-link {
+	color: white;
+	text-decoration: none;
+}
+
+.main-nav .logout-form {
+	display: inline;
+}
+
+.main-nav .btn-logout {
+	background: none;
+	border: none;
+	color: white;
+	cursor: pointer;
+	padding: 0;
+	font: inherit;
+} /* -------------------- LOGIN -------------------- */
+.page-login .login-form {
+	max-width: 360px;
+	margin: 80px auto;
+	padding: 32px;
+	background-color: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.page-login .login-form input[type="text"], .page-login .login-form input[type="password"]
+	{
+	width: 100%;
+	padding: 12px 14px;
+	margin-bottom: 20px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.page-login .checkbox-container {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.page-login .login-form input[type="checkbox"] {
+	margin-right: 8px;
+}
+
+.page-login .login-form label {
+	font-size: 14px;
+	color: #333;
+	cursor: pointer;
+}
+
+.page-login .login-form button[type="submit"] {
+	width: 100%;
+	padding: 12px 0;
+	background-color: #007bff;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	font-size: 16px;
+	cursor: pointer;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.2s;
+}
+
+.page-login .login-form button[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+.page-login .login-form a {
+	display: block;
+	text-align: center;
+	font-size: 14px;
+	text-decoration: none;
+	margin-top: 10px;
+	transition: color 0.2s;
+}
+
+.page-login .login-form a:hover {
+	color: #0056b3;
+}
+
+.page-login .login-form .create-account {
+	background-color: #007bff;
+	color: #fff;
+	padding: 10px 0;
+	border-radius: 4px;
+	margin-top: 20px;
+}
+
+.page-login .login-form .create-account:hover {
+	background-color: #0056b3;
+}
+
+.page-login .login-form .error-message {
+	margin-top: 20px;
+	color: #d9534f;
+	font-size: 14px;
+	text-align: center;
+} /* -------------------- ENCHERES -------------------- */
+.page-enchere h1 {
+	margin-bottom: 1.5rem;
+	font-size: 2rem;
+}
+
+.page-enchere .search-form {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 1rem 2rem;
+	align-items: end;
+	background-color: #fff;
+	padding: 1.5rem;
+	border-radius: 8px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.page-enchere .form-group label {
+	display: block;
+	margin-bottom: 0.3rem;
+	font-weight: 600;
+}
+
+.page-enchere .form-group input[type="text"], .page-enchere .form-group select
+	{
+	width: 100%;
+	padding: 0.5rem;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+}
+
+.page-enchere .radio-group {
+	display: flex;
+	gap: 1rem;
+}
+
+.page-enchere .radio-label {
+	font-weight: 600;
+}
+
+.page-enchere .filter-section {
+	grid-column: 1/-1;
+	border: 1px solid #ccc;
+	padding: 1rem;
+	border-radius: 6px;
+	background: #fafafa;
+}
+
+.page-enchere fieldset {
+	border: none;
+	padding: 0.5rem 0;
+}
+
+.page-enchere legend {
+	font-weight: 700;
+	margin-bottom: 0.5rem;
+}
+
+.page-enchere .btn {
+	display: inline-block;
+	text-decoration: none;
+	text-align: center;
+	cursor: pointer;
+	border-radius: 4px;
+	font-weight: 600;
+}
+
+.page-enchere .search-button {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	padding: 0.7rem 1.2rem;
+	transition: background 0.2s;
+}
+
+.page-enchere .search-button:hover {
+	background-color: #0056b3;
+}
+
+.page-enchere hr {
+	margin: 2rem 0;
+	border: none;
+	border-top: 1px solid #e0e0e0;
+}
+
+.page-enchere .auction-list {
+	display: grid;
+	gap: 1.5rem;
+}
+
+.page-enchere .empty-message {
+	grid-column: 1/-1;
+	text-align: center;
+	font-style: italic;
+	color: #666;
+}
+
+.page-enchere .auction-card {
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+	overflow: hidden;
+	transition: transform 0.1s;
+}
+
+.page-enchere .auction-card:hover {
+	transform: translateY(-3px);
+}
+
+.page-enchere .card-content {
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.page-enchere .auction-title {
+	color: #007bff;
+	text-decoration: none;
+	font-size: 1.25rem;
+	margin-bottom: 0.5rem;
+}
+
+.page-enchere .auction-title:hover {
+	text-decoration: underline;
+}
+
+.page-enchere .card-content p {
+	margin: 0.4rem 0;
+	font-size: 0.95rem;
+}
+
+.page-enchere .label {
+	font-weight: 600;
+}
+
+.page-enchere .detail-button {
+	margin: 1rem 0;
+	background-color: #007bff;
+	color: #fff;
+	padding: 0.5rem 0.8rem;
+	align-self: flex-start;
+	transition: background 0.2s;
+	border-radius: 10px;
+} /* -------------------- FILTRES PERSONNALISÉS -------------------- */
+.form-filtres {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+
+.filtres {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	flex: 1;
+}
+
+.filtres input[type="text"], .filtres select {
+	padding: 8px 12px;
+	border: 1px solid #aaa;
+	border-radius: 20px;
+	font-size: 14px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.recherche-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.recherche-btn button {
+	padding: 15px 30px;
+	background-color: #007bff;
+	border-radius: 10px;
+	color: white;
+	font-size: 16px;
+	cursor: pointer;
+	border-color: #007bff;
+}
+
+.radio-filtres {
+	margin: 20px 0;
+	display: flex;
+	gap: 20px;
+}
+
+fieldset {
+	margin-top: 10px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+}
+	/* -------------------- AJOUT DES NOUVEAUX BLOCS -------------------- */
 main {
-    max-width: 1000px;
-    margin: auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	max-width: 1100px;
+	margin: 40px auto;
+	padding: 0 20px;
 }
 
-h1, h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
+h1 {
+	font-size: 2rem;
+	margin-bottom: 20px;
+	color: #222;
 }
 
-/* Form Styles */
-form {
-    margin-top: 20px;
+h2 {
+	font-size: 1.5rem;
+	margin: 40px 0 20px;
+	color: #222;
+} /* -------------------- PAGE DETAIL VENTE -------------------- */
+.page-detail {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #fafafa;
+	color: #333;
+	max-width: 800px;
+	margin: 40px auto;
+	padding: 0 20px;
 }
 
-.flex-outer {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.page-detail h1 {
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 0.3rem;
+	text-align: center;
 }
 
-.flex-outer li {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+.page-detail h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+	color: #555;
+	text-align: center;
 }
 
-.flex-outer label {
-    font-weight: bold;
-    margin-bottom: 5px;
+.page-detail p {
+	font-size: 1rem;
+	line-height: 1.5;
+	margin: 0.5rem 0;
+	text-align: center;
 }
 
-.flex-outer input,
-.flex-outer select,
-.flex-outer textarea {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
+.page-detail strong {
+	font-weight: 600;
+	color: #222;
 }
 
-.flex-outer button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-right: 10px;
+.page-detail [th\:if="${messageErreur != null}"] p {
+	background-color: #fdecea;
+	color: #a94442;
+	padding: 0.75rem 1rem;
+	border: 1px solid #f5c6cb;
+	border-radius: 4px;
+	margin-bottom: 1rem;
 }
 
-.flex-outer button[type="reset"] {
-    background-color: #6c757d;
+.page-detail [th\:if="${messageEnchere != null}"] p {
+	background-color: #e9f7ef;
+	color: #155724;
+	padding: 0.75rem 1rem;
+	border: 1px solid #c3e6cb;
+	border-radius: 4px;
+	margin-bottom: 1rem;
 }
 
-.flex-outer button:hover {
-    opacity: 0.9;
+.page-detail strong+span, .page-detail strong+br+span {
+	display: inline-block;
+	margin-left: 0.5rem;
 }
 
-.error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: 5px;
+.page-detail form {
+	margin: 1.5rem auto;
+	padding: 1rem;
+	width: 100%;
+	max-width: 500px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	text-align: center;
 }
 
-/* Table Styles */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: white;
+.page-detail label {
+	display: block;
+	margin-bottom: 0.5rem;
+	font-weight: 500;
 }
 
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
+.page-detail input[type="number"] {
+	width: 100px;
+	padding: 0.4rem;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	margin-right: 0.5rem;
 }
 
-table th {
-    background-color: #007bff;
-    color: white;
+.page-detail button {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: 3px;
+	cursor: pointer;
+	font-size: 1rem;
 }
 
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
+.page-detail button:hover {
+	background-color: #0056b3;
 }
 
-/* Links */
-a {
-    color: #007bff;
-    text-decoration: none;
+.page-detail a {
+	text-decoration: none;
 }
 
-a:hover {
-    text-decoration: underline;
+.page-detail a:hover {
+	text-decoration: underline;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .flex-outer li {
-        flex-direction: column;
-    }
+.page-detail hr {
+	width: 100%;
+	margin: 2rem auto;
+	border: 0;
+	border-top: 1px solid #eee;
+}
 
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
+.btn-encheres {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #007bff; /* bleu */
+	color: white; /* texte blanc */
+	text-decoration: none;
+	border-radius: 5px;
+	font-weight: bold;
+	transition: background-color 0.3s ease;
+	border: none;
+	cursor: pointer;
+}
 
-    table thead {
-        display: none;
-    }
+.btn-encheres:hover {
+	background-color: #0056b3; /* bleu foncé au survol */
+}
 
-    table tr {
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        padding: 10px;
-    }
+.blue {
+	display: inline-block;
+	background-color: #007bff; /* bleu bootstrap */
+	color: white;
+	padding: 10px 20px;
+	text-decoration: none;
+	border-radius: 5px;
+	font-weight: bold;
+	border: none;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+	/* -------------------- PAGE DETAIL VENTE COMPTE -------------------- */
+/* Page "Mes Ventes" */
+.mes-ventes-page {
+	max-width: 1200px;
+	margin: 40px auto;
+	padding: 20px;
+	background-color: #fdfdfd;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    table td {
-        position: relative;
-        padding-left: 50%;
-    }
+.titre-page {
+	text-align: center;
+	font-size: 2em;
+	margin-bottom: 30px;
+	color: #333;
+}
 
-    table td::before {
-        position: absolute;
-        top: 12px;
-        left: 12px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        font-weight: bold;
-    }
+.table-container {
+	overflow-x: auto;
+}
 
-    table td:nth-of-type(1)::before { content: "Nom de l'article"; }
-    table td:nth-of-type(2)::before { content: "Description"; }
-    table td:nth-of-type(3)::before { content: "Catégorie"; }
-    table td:nth-of-type(4)::before { content: "Début enchères"; }
-    table td:nth-of-type(5)::before { content: "Fin enchères"; }
-    table td:nth-of-type(6)::before { content: "Prix départ"; }
-    table td:nth-of-type(7)::before { content: "Prix vente"; }
-    table td:nth-of-type(8)::before { content: "État"; }
+.table-ventes {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: white;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.table-ventes th, .table-ventes td {
+	padding: 12px 15px;
+	text-align: left;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.table-ventes thead {
+	background-color: #007bff;
+	color: white;
+}
+
+.table-ventes tbody tr:hover {
+	background-color: #f1f1f1;
+} /* Boutons d'action */
+.modifier, .supprimer {
+	padding: 8px 12px;
+	border: none;
+	border-radius: 10px;
+	text-decoration: none;
+	color: white;
+	font-weight: bold;
+	margin-right: 5px;
+	display: inline-block;
+	transition: background-color 0.2s ease-in-out;
+	gap: 10px;
+	margin-bottom: 5px;
+}
+
+.modifier {
+	background-color: #007bff;
+}
+
+.modifier:hover {
+	background-color: #007bff;
+}
+
+.supprimer {
+	background-color: #6c757d;
+}
+
+.supprimer:hover {
+	background-color: #6c757d;
+} /* -------------------- PAGE NOUVELLE VENTE -------------------- */
+/* Container principal du formulaire de vente */
+.vente-form-container {
+	background: #fff;
+	padding: 2rem;
+	margin: 2rem auto;
+	max-width: 800px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	font-family: Arial, sans-serif;
+	color: #333;
+} /* Titre */
+.vente-form-title {
+	text-align: center;
+	font-size: 1.8rem;
+	margin-bottom: 1.5rem;
+} /* Ligne flex */
+.vente-form-row {
+	display: flex;
+	gap: 2rem;
+	flex-wrap: wrap;
+	margin-bottom: 1.5rem;
+} /* Colonne */
+.vente-form-col {
+	flex: 1;
+	min-width: 250px;
+} /* Groupe champ */
+.vente-field-group {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 1rem;
+}
+
+.vente-field-group label {
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+	color: #555;
+}
+
+.vente-field-group input, .vente-field-group select, .vente-field-group textarea
+	{
+	padding: 0.6rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	font-size: 1rem;
+	box-sizing: border-box;
+}
+
+.vente-field-group textarea {
+	resize: vertical;
+	min-height: 100px;
+} /* Liste d’erreurs */
+.vente-error-list {
+	margin-top: 0.3rem;
+	font-size: 0.9rem;
+	color: #c00;
+	list-style: none;
+	padding-left: 0;
+} /* Section adresse */
+.vente-section {
+	border-top: 1px solid #eee;
+	padding-top: 1.5rem;
+	margin-top: 2rem;
+}
+
+.vente-section-title {
+	font-size: 1.3rem;
+	margin-bottom: 1rem;
+	color: #333;
+} /* Boutons */
+.vente-actions {
+	display: flex;
+	gap: 1rem;
+	justify-content: flex-end;
+	margin-top: 2rem;
+}
+
+.vente-btn {
+	padding: 0.8rem 1.5rem;
+	border: none;
+	border-radius: 4px;
+	font-size: 1rem;
+	cursor: pointer;
+	text-decoration: none;
+	text-align: center;
+}
+
+.vente-btn-primary {
+	background-color: #007bff;
+	color: #fff;
+}
+
+.vente-btn-cancel {
+	background-color: #dc3545;
+	color: #fff;
+}
+
+.vente-btn-secondary {
+	background-color: #6c757d;
+	color: #fff;
+}
+
+#tag {
+	margin-bottom: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+} /* -------------------- PROFIL UTILISATEUR -------------------- */
+/* Container principal */
+.user-profile {
+	max-width: 600px;
+	margin: 40px auto;
+	padding: 24px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	color: #333;
+} /* Titre */
+.user-profile__title {
+	font-size: 1.75rem;
+	margin-bottom: 24px;
+	text-align: center;
+} /* Liste des champs */
+.user-profile__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+} /* Ligne individuelle */
+.user-profile__item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 16px;
+} /* Label (colonne fixe) */
+.user-profile__label {
+	flex: 0 0 120px;
+	font-weight: 600;
+	color: #555;
+} /* Valeur (colonne fluide) */
+.user-profile__value {
+	flex: 1;
+	color: #444;
+} /* Zone de bouton */
+.user-profile__actions {
+	text-align: right;
+	margin-top: 32px;
+} /* Bouton */
+.user-profile__btn {
+	display: inline-block;
+	padding: 10px 22px;
+	background-color: #007bff;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 4px;
+	transition: background-color 0.3s ease;
+}
+
+.user-profile__btn:hover {
+	background-color: #0056b3;
+}
+	/* ============================   Formulaire : Modifier Profil   ============================ */
+.modifier-profil-main {
+	max-width: 900px;
+	margin: 40px auto;
+	padding: 20px;
+	text-align: center;
+	font-family: Arial, sans-serif;
+}
+
+.modifier-profil-titre {
+	margin-bottom: 30px;
+	font-size: 24px;
+} /* Structure principale du formulaire */
+.modifier-profil-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.modifier-profil-ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 15px 30px;
+	width: 100%;
+	max-width: 800px;
+}
+
+.modifier-profil-li {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.modifier-profil-li-full {
+	grid-column: span 2;
+	align-items: center;
+}
+
+.modifier-profil-label {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.modifier-profil-input {
+	width: 100%;
+	padding: 6px;
+	border: 1px solid #000;
+	border-radius: 4px;
+	box-sizing: border-box;
+} /* Gestion des erreurs */
+.modifier-profil-error {
+	color: red;
+	font-size: 12px;
+	margin-top: 2px;
+} /* Texte secondaire */
+.modifier-profil-small {
+	font-size: 11px;
+	color: #555;
+} /* Boutons */
+.modifier-profil-button {
+	padding: 10px 20px;
+	margin: 10px 5px;
+	font-size: 16px;
+	border: 2px solid #000;
+	background-color: #007bff;
+	color: white;
+	border-radius: 10px;
+	cursor: pointer;
+	border-color: #007bff;
+	transition: 0.2s;
+	font-weight: bold;
+}
+
+.modifier-profil-button:hover {
+	background-color: #f0f0f0;
+} /* Bouton suppression */
+.modifier-profil-suppression-form {
+	margin-top: 20px;
+}
+
+.modifier-profil-button-danger {
+	background-color: #007bff;
+	color: white;
+	border-color: #007bff;
+	border-radius: 10px;
+	padding: 15px;
+	font-weight: bold;
+} /* Rôles */
+.modifier-profil-roles-list {
+	margin: 0;
+	padding-left: 15px;
+}
+
+.auction-list {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+	padding: 1rem;
+}
+
+.language-selector {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.language-selector select {
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	background-color: #f9f9f9;
+	color: #333;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.language-selector select:hover {
+	background-color: #e6e6e6;
+}
+
+.language-selector select:focus {
+	outline: none;
+	border-color: #007BFF;
+	box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+} /* -------------------- RESPONSIVE -------------------- */
+/* TABLETTES (<= 1024px) */
+@media ( max-width : 1024px) {
+	body {
+		padding: 1rem;
+	}
+	.main-nav {
+		flex-wrap: wrap;
+		gap: 10px;
+		padding: 10px 20px;
+	}
+	.main-nav .nav-list {
+		flex-direction: column;
+		gap: 10px;
+		align-items: center;
+	}
+	.titre-responsive {
+		text-align: center;
+	}
+	.form-filtres {
+		margin: 0 auto;
+		padding: 0 1rem; /* petit espace à gauche/droite */
+		width: 100%;
+		max-width: 600px; /* limite la largeur au centre */
+		box-sizing: border-box; /* évite les débordements */
+	}
+	.vente-form-row {
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.page-enchere .search-form {
+		grid-template-columns: 1fr;
+	}
+	.auction-list {
+		grid-template-columns: repeat(2, 1fr);
+	}
+} /* TÉLÉPHONES (<= 768px) */
+@media ( max-width : 768px) {
+	h1 {
+		font-size: 1.5rem;
+	}
+	h2 {
+		font-size: 1.25rem;
+	}
+	.main-nav {
+		flex-direction: column;
+		gap: 10px;
+		text-align: center;
+	}
+	.main-nav .nav-list {
+		flex-direction: column;
+		gap: 8px;
+	}
+	.page-login .login-form {
+		margin: 40px auto;
+		padding: 20px;
+	}
+	.page-detail {
+		padding: 0 10px;
+	}
+	.page-detail form {
+		padding: 0.5rem;
+	}
+	.radio-filtres {
+		flex-direction: column;
+		gap: 10px;
+	}
+	.table-ventes th, .table-ventes td {
+		padding: 8px 10px;
+	}
+	.vente-form-row {
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.vente-form-container {
+		padding: 1rem;
+	}
+	.recherche-btn button {
+		width: 100%;
+	}
+	.page-enchere .auction-card {
+		width: 100%;
+	}
+	.page-enchere .search-form {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+	.auction-list {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+		padding: 1rem;
+	}
 }
