@@ -15,7 +15,7 @@
         <a th:href="@{/vente/mes-ventes}" class="nav-link" th:text="#{nav.mySales}">Mes ventes</a>
       </li>
       <li sec:authorize="isAuthenticated()">
-        <a th:href="@{/vente/mes-encheres}" class="nav-link" th:text="#{nav.myBids}">Mes enchères</a>
+        <a th:href="@{/vente/mes-encheres}" class="nav-link" th:text="#{nav.myBids}">Enchères</a>
       </li>
       <li sec:authorize="isAuthenticated()">
         <a th:href="@{/vente/creation}" class="nav-link" th:text="#{nav.createSale}">Créer une vente</a>
@@ -25,11 +25,11 @@
       </li>
       <li sec:authorize="isAuthenticated()">
         <form th:action="@{/logout}" method="post" class="logout-form">
-          <button type="submit" class="btn-logout" th:text="#{nav.logout}">Se déconnecter</button>
+          <button type="submit" class="btn-logout" th:text="#{nav.logout}">Déconnecter</button>
         </form>
       </li>
       <li sec:authorize="!isAuthenticated()">
-        <a th:href="@{/login}" class="nav-link" th:text="#{nav.login}">Se connecter</a>
+        <a th:href="@{/login}" class="nav-link" th:text="#{nav.login}">S'inscrire - Se connecter</a>
       </li>
 
       <li class="language-selector">

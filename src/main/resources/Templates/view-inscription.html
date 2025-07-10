@@ -13,7 +13,7 @@
 	<h1 th:text="#{profil.monProfil}">Mon profil</h1>
 
 	<div th:if="${errors != null}">
-		<ul style="color: red;">
+		<ul>
 			<li th:each="err : ${errors}" th:text="${err}"></li>
 		</ul>
 	</div>
