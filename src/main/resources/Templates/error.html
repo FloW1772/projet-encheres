@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Erreur</title>
+<title th:text="#{error.title}">Erreur</title>
+<link rel="stylesheet" href="/css/style.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <h1>Une erreur est survenue</h1>
-    <p th:text="${errorMessage}">Erreur inconnue</p>
-    <a href="/">Retour à l'accueil</a>
+	<div th:replace="fragements/fragement-entete :: mainNav"></div>
+	<h1 th:text="#{error.message}">Une erreur est survenue</h1>
+	<p th:text="${errorMessage}">Erreur inconnue</p>
+	<a th:href="@{/'/'}" th:text="#{error.backHome}">Retour à l'accueil</a>
 </body>
 </html>

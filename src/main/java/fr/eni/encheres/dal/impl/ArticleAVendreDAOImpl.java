@@ -54,10 +54,22 @@ public class ArticleAVendreDAOImpl implements ArticleAVendreDAO {
 	private static final String DELETE_VENTE = "UPDATE ArticleAVendre SET etatVente = 2 WHERE idArticle = :idArticle";
 
 	// Requête pour activer les ventes qui commencent aujourd'hui
-	private static final String ACTIVER_VENTE = "UPDATE ArticleAVendre SET etatVente = :etatCible WHERE etatVente = :etatSource AND dateDebutEncheres = CAST(GETDATE() AS DATE)";
+	private static final String ACTIVER_VENTE = """
+		    UPDATE ArticleAVendre
+		    SET etatVente = :etatCible
+		    WHERE etatVente = :etatSource
+		    AND dateDebutEncheres >= CAST(GETDATE() AS DATE)
+		      AND dateDebutEncheres < DATEADD(day, 1, CAST(GETDATE() AS DATE))
+		""";
 
 	// Requête pour clôturer les ventes qui se terminent aujourd'hui
-	private static final String CLOTURER_VENTE = "UPDATE ArticleAVendre SET etatVente = :etatTerminee WHERE etatVente = :etatEnCours AND dateFinEncheres = CAST(GETDATE() AS DATE)";
+	 private static final String CLOTURER_VENTE = """
+			    UPDATE ArticleAVendre
+			    SET etatVente = :etatTerminee
+			    WHERE etatVente = :etatEnCours
+			      AND dateFinEncheres >= CAST(GETDATE() AS DATE)
+			      AND dateFinEncheres < DATEADD(day, 1, CAST(GETDATE() AS DATE))
+			""";
 
 	// Requête pour marquer une vente comme livrée
 	private static final String LIVRER_VENTE = "UPDATE ArticleAVendre SET etatVente = 3 WHERE idArticle = :idArticle";

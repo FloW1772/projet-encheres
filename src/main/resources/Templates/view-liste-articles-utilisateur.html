@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/style.css" />
-<head>
 <head>
 <meta charset="UTF-8" />
-<title>Mes Ventes</title>
+<title th:text="#{titre.mesVentes}">Mes Ventes</title>
+<link rel="stylesheet" href="/css/style.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-
-	<h1>Mes Ventes</h1>
-
-	<table>
-		<thead>
-			<tr>
-				<th>Nom de l'article</th>
-				<th>Description</th>
-				<th>Catégorie</th>
-				<th>Date début enchères</th>
-				<th>Date fin enchères</th>
-				<th>Prix de départ</th>
-				<th>Prix de vente</th>
-				<th>État de la vente</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
+	<div th:replace="fragements/fragement-entete :: mainNav"></div>
+	<div class="mes-ventes-page">
+		<h1 class="titre-page" th:text="#{titre.mesVentes}">Mes Ventes</h1>
+		<div class="table-container">
+			<table class="table-ventes">
+				<thead>
+					<tr>
+						<th th:text="#{table.nomArticle}">Nom de l'article</th>
+						<th th:text="#{table.description}">Description</th>
+						<th th:text="#{table.categorie}">Catégorie</th>
+						<th th:text="#{table.dateDebut}">Date début enchères</th>
+						<th th:text="#{table.dateFin}">Date fin enchères</th>
+						<th th:text="#{table.prixDepart}">Prix de départ</th>
+						<th th:text="#{table.prixVente}">Prix de vente</th>
+						<th th:text="#{table.etatVente}">État de la vente</th>
+						<th th:text="#{table.actions}">Actions</th>
+					</tr>
+				</thead>
 		<tbody>
 			<tr th:each="article : ${articles}">
 				<td th:text="${article.nomArticle}">Nom Article</td>
@@ -41,9 +42,9 @@
 				<td><a th:href="@{'/vente/modifier/' + ${article.idArticle}}"
 					class="btnModifier">Modifier</a> <a
 					th:href="@{'/vente/supprimer/' + ${article.idArticle}}"
-					class="btnSupprimer"
-					onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');">Supprimer</a>
-				</td>
+				class="supprimer"
+				th:onclick="'return confirm(\'' + #{confirmation.supprimerArticle} + '\');'"
+				th:text="#{action.supprimer}">Supprimer</a></td>
 			</tr>
 		</tbody>
 	</table>
