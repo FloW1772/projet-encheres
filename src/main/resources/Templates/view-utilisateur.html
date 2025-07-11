@@ -134,14 +134,14 @@
 						th:text="#{profile.edit.user.becomeSeller}">Devenir
 						vendeur</button>
 				</li> -->
-				<li class="modifier-profil-li-full"
+			<!--	<li class="modifier-profil-li-full"
 					th:unless="${estSimpleUtilisateur}"><label
 					class="modifier-profil-label" th:text="#{profile.edit.roles.label}">Rôles
 						:</label>
 					<ul class="modifier-profil-roles-list">
-						<li th:each="role : ${utilisateur.roles}"
-							th:text="${role.libelle}"></li>
-					</ul></li>
+					  	<li th:each="role : ${utilisateur.roles}"
+							th:text="${role.libelle}"></li> -->
+					
 				<!-- Boutons Enregistrer/Annuler -->
 				<li class="modifier-profil-li-full">
 					<button type="submit" name="action" value="enregistrer"

@@ -97,9 +97,9 @@
 
 /* ========== SELECTEUR DE LANGUE ========== */
 .language-selector select {
-    padding: 8px 12px;
-    border-radius: 20px;
-    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+   
 	color: black; /* orange foncé */
     font-weight: 600;
     cursor: pointer;
@@ -109,7 +109,8 @@
     background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234b2e83'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
-    background-size: 10px 6px;
+    background-size: 8px 6px;
+    transition: color 0.3s ease;
 }
 
 .language-selector select:hover {
